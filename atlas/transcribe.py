@@ -13,9 +13,6 @@ def transcribe_and_search_video(query, url=None, verbose=True):
     # Transcribe the video if a url has been provided and either the video transcript
     # hasn't been uploaded to our database or the video vectors haven't been uploaded to pinecone.
 
-    print('not Document.objects.filter(url=f"https://www.youtube.com?v={video_id}").exists()',
-          not Document.objects.filter(url=f"https://www.youtube.com?v={video_id}").exists()
-          )
     if url and (not Document.objects.filter(url=f"https://www.youtube.com?v={video_id}").exists()
                 or not does_video_exist_in_pinecone(url)):
         video_with_transcript = send_transcription_request(url)
