@@ -14,7 +14,6 @@ class DocumentManager(models.Manager):
 
 
 class Document(models.Model):
-    LONG_CONTENT_MAX_LENGTH = 40
     objects = DocumentManager()
 
     id = models.CharField(max_length=128, primary_key=True, default=random_string)
