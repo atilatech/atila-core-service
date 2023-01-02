@@ -26,7 +26,7 @@ def initialize_pinecone_index():
         )
 
 
-def does_video_exist(video_url):
+def does_video_exist_in_pinecone(video_url):
     # create a placeholder vector of zeros to see if any vectors with the
     # given video_id match.
     video_id = parse_video_id(video_url)
