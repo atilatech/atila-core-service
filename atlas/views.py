@@ -31,10 +31,11 @@ class SearchView(APIView):
             video = YouTube(url)
             if video.length > MAX_VIDEO_LENGTH:
                 return Response({
-                    'error': f"Atlas can currently only transcribe videos less than {int(MAX_VIDEO_LENGTH / 60)} long. "
+                    'error': f"Atlas can currently only transcribe videos less than {int(MAX_VIDEO_LENGTH / 60)} "
+                             f"minutes long. "
                              f"Please try again with a shorter video. "
+                             f"Sorry for the inconvenience, we're working on increasing this limit. "
                              f"The video '{video.title}' is about {int(video.length / 60)} minutes long. "
-                             f"Sorry for the inconvenience, we're working on increasing this limit."
                 }, status=status.HTTP_400_BAD_REQUEST)
 
         results = transcribe_and_search_video(query, url)
