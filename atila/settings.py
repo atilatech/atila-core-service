@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-*vg!wjhf0@^e^i#wihndn2s!m2!t$!pcebuhya5@l)c&_81d_s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['atila-core-service.herokuapp.com']
 
 
 # Application definition
