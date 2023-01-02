@@ -17,8 +17,6 @@ class SearchView(View):
             url = post_body.get('url')
             query = post_body.get('q')
 
-        print('request.body', request.body)
-        print('post_body', post_body)
         transcribed_video = transcribe_and_search_video(query, url)
 
         return JsonResponse({"results": transcribed_video}, status=200)
