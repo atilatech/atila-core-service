@@ -62,12 +62,20 @@ DATABASES = {
 
 ## Troubleshooting
 
-### 
+### Permission denied for table django
 
 ```bash
 psql atila -c "GRANT ALL ON ALL TABLES IN SCHEMA public to tomiwa";
 psql atila -c "GRANT ALL ON ALL SEQUENCES IN SCHEMA public to tomiwa";
 psql atila -c "GRANT ALL ON ALL FUNCTIONS IN SCHEMA public to tomiwa";
+```
+
+### django.db.utils.OperationalError: could not connect to server: Connection refused
+If you get the following error make sure your Postgres server is running:
+```text
+django.db.utils.OperationalError: could not connect to server: Connection refused
+        Is the server running on host "localhost" (::1) and accepting
+        TCP/IP connections on port 5432?
 ```
 
 source: https://stackoverflow.com/a/39070745/5405197

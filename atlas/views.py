@@ -1,4 +1,3 @@
-from django.http import JsonResponse
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -6,6 +5,9 @@ from rest_framework.views import APIView
 from atlas.models import Document
 from atlas.serializers import DocumentSerializer
 from atlas.transcribe import transcribe_and_search_video
+from pytube import YouTube
+
+MAX_VIDEO_LENGTH = 900  # TODO: Fix, can't transcribe videos longer than 900 seconds due to timeout errors.
 
 
 class SearchView(APIView):
@@ -24,6 +26,16 @@ class SearchView(APIView):
             return Response({
                 'error': "missing 'q' parameter"
             }, status=status.HTTP_400_BAD_REQUEST)
+
+        if url:
+            video = YouTube(url)
+            if video.length > MAX_VIDEO_LENGTH:
+                return Response({
+                    'error': f"Atlas can currently only transcribe videos less than {int(MAX_VIDEO_LENGTH / 60)} long. "
+                             f"Please try again with a shorter video. "
+                             f"The video '{video.title}' is about {int(video.length / 60)} minutes long. "
+                             f"Sorry for the inconvenience, we're working on increasing this limit."
+                }, status=status.HTTP_400_BAD_REQUEST)
 
         results = transcribe_and_search_video(query, url)
 
