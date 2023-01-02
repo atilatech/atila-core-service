@@ -57,4 +57,9 @@ Push from a non-master branch: `git push heroku <branch_name>:master`
 
 Worth noting also, when you're ready to go back to master you need to do: `git push -f heroku master:master`
 
-See [Stack Overflow anser for more context](https://stackoverflow.com/a/14593582/5405197)
+See [Stack Overflow answer for more context](https://stackoverflow.com/a/14593582/5405197)
+
+## Deploying Postgres to Heroku
+1. Check that a database doesn't already exist with `heroku addons`
+2. `heroku addons:create heroku-postgresql:mini`
+3. Add to `Procfile`:`release: python manage.py migrate`
