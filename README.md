@@ -53,6 +53,8 @@ DATABASES = {
 6. `python manage.py createsuperuser --username name`
 ## Deploying to Heroku
 
+`git push heroku master`
+
 Push from a non-master branch: `git push heroku <branch_name>:master`
 
 Worth noting also, when you're ready to go back to master you need to do: `git push -f heroku master:master`
