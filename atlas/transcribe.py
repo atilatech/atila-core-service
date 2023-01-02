@@ -4,11 +4,10 @@ from atlas.encode import upload_transcripts_to_vector_db, query_model, does_vide
 from atlas.utils import convert_seconds_to_string, parse_video_id, send_transcription_request
 
 
-
-
-def transcribe_and_search_video(query, url = None, verbose=True):
+def transcribe_and_search_video(query, url=None, verbose=True):
     t0 = time.time()
     video_id = parse_video_id(url)
+    video_with_transcript = {}
     if url and not does_video_exist(url):
         video_with_transcript = send_transcription_request(url)
         upload_transcripts_to_vector_db(video_with_transcript['encoded_segments'])
@@ -17,7 +16,7 @@ def transcribe_and_search_video(query, url = None, verbose=True):
         if not url:
             print('No URL provided, searching all videos')
         else:
-              print(f'Video already exists:{url}')
+            print(f'Video already exists:{url}')
     results = query_model(query, video_id)
     t1 = time.time()
     total = t1 - t0
@@ -26,4 +25,6 @@ def transcribe_and_search_video(query, url = None, verbose=True):
                        "long video" \
             if len(results['matches']) > 0 else 'no video found'
         print(f'Transcribed and searched {video_length} in {total} seconds')
-    return results
+    return {'results': results,
+            'video': {**video_with_transcript} if video_with_transcript else None
+            }

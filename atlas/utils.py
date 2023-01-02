@@ -6,6 +6,7 @@ import requests
 
 from atlas.config import HUGGING_FACE_API_KEY, HUGGING_FACE_ENDPOINT_URL
 
+
 def convert_seconds_to_string(seconds):
     days, seconds = divmod(seconds, 86400)
     return str(timedelta(days=days, seconds=seconds)).split(',')[-1].strip()
