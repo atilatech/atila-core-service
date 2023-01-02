@@ -2,7 +2,7 @@ import time
 
 from atlas.encode import upload_transcripts_to_vector_db, query_model, does_video_exist_in_pinecone
 from atlas.models import Document
-from atlas.models_utils import save_transcribed_video_to_atila_database
+from atlas.models_utils import save_transcribed_video_to_atila_database, YOUTUBE_URL_PREFIX
 from atlas.utils import convert_seconds_to_string, parse_video_id, send_transcription_request
 
 
@@ -12,8 +12,7 @@ def transcribe_and_search_video(query, url=None, verbose=True):
     video_with_transcript = {}
     # Transcribe the video if a url has been provided and either the video transcript
     # hasn't been uploaded to our database or the video vectors haven't been uploaded to pinecone.
-
-    if url and (not Document.objects.filter(url=f"https://www.youtube.com?v={video_id}").exists()
+    if url and (not Document.objects.filter(url=f"{YOUTUBE_URL_PREFIX}?v={video_id}").exists()
                 or not does_video_exist_in_pinecone(url)):
         video_with_transcript = send_transcription_request(url)
         save_transcribed_video_to_atila_database(video_with_transcript)
