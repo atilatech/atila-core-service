@@ -3,7 +3,14 @@
 ## Quickstart
 
 `pip install -r requirements.txt`
-`python manage.py runserver 8001`
+`python manage.py runserver`
+
+Verify it works by navigating to http://127.0.0.1:8000/api/atila/users/
+or running the following command:
+
+```shell
+curl -H 'Accept: application/json; indent=4' -u username:password http://127.0.0.1:8000/api/atila/users/
+```
 
 ## Setup your Database
 
@@ -51,6 +58,19 @@ DATABASES = {
 4. `pip install psycopg2`. Verify it works with: `python -c "import psycopg2"`
 5. `python manage.py migrate`
 6. `python manage.py createsuperuser --username name`
+
+
+## Troubleshooting
+
+### 
+
+```bash
+psql atila -c "GRANT ALL ON ALL TABLES IN SCHEMA public to tomiwa";
+psql atila -c "GRANT ALL ON ALL SEQUENCES IN SCHEMA public to tomiwa";
+psql atila -c "GRANT ALL ON ALL FUNCTIONS IN SCHEMA public to tomiwa";
+```
+
+source: https://stackoverflow.com/a/39070745/5405197
 ## Deploying to Heroku
 
 `git push heroku master`

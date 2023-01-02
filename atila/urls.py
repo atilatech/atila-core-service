@@ -15,8 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework import routers
+
+from atila import views
+
+atila_router = routers.DefaultRouter()
+atila_router.register(r'users', views.UserViewSet)
+atila_router.register(r'groups', views.GroupViewSet)
 
 urlpatterns = [
-    path('api/atlas/', include('atlas.urls')),
     path('admin/', admin.site.urls),
+    path('api-auth/', include('rest_framework.urls')),
+    path('api/atila/', include(atila_router.urls)),
+    path('api/atlas/', include('atlas.urls')),
 ]
