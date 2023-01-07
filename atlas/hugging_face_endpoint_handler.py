@@ -1,3 +1,6 @@
+"""
+See: https://www.philschmid.de/custom-inference-handler
+"""
 from typing import Dict
 
 from sentence_transformers import SentenceTransformer
