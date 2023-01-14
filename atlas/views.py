@@ -47,7 +47,7 @@ class SearchView(APIView):
 
         results = transcribe_and_search_video(query, url)
 
-        user_profile = UserProfile.get_user_profile_from_request(request_data)
+        user_profile = UserProfile.get_user_profile_from_request(request)
 
         if user_profile:
             user_profile.atlas_transcriptions += 1
