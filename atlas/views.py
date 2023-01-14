@@ -7,19 +7,26 @@ from atlas.serializers import DocumentSerializer, DocumentPreviewSerializer
 from atlas.transcribe import transcribe_and_search_video
 from pytube import YouTube
 
+from userprofile.models import UserProfile
+
 MAX_VIDEO_LENGTH = 900  # TODO: Fix, can't transcribe videos longer than 900 seconds due to timeout errors.
 
 
 class SearchView(APIView):
 
     def get(self, request):
-        return self.handle_transcription_request(request.GET)
+        return self.handle_transcription_request(request)
 
     def post(self, request):
-        return self.handle_transcription_request(request.data)
+        return self.handle_transcription_request(request)
 
     @staticmethod
-    def handle_transcription_request(request_data):
+    def handle_transcription_request(request):
+        if request.method == 'GET':
+            request_data = request.GET
+        else:
+            request_data = request.data
+
         url = request_data.get('url')
         query = request_data.get('q')
         if not query:
@@ -39,6 +46,12 @@ class SearchView(APIView):
                 }, status=status.HTTP_400_BAD_REQUEST)
 
         results = transcribe_and_search_video(query, url)
+
+        user_profile = UserProfile.get_user_profile_from_request(request_data)
+
+        if user_profile:
+            user_profile.atlas_transcriptions += 1
+            user_profile.save()
 
         return Response(results, status=200)
 
