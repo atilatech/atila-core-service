@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from atlas.models import Document
-from atlas.serializers import DocumentSerializer
+from atlas.serializers import DocumentSerializer, DocumentPreviewSerializer
 from atlas.transcribe import transcribe_and_search_video
 from pytube import YouTube
 
@@ -46,3 +46,7 @@ class SearchView(APIView):
 class DocumentViewSet(viewsets.ModelViewSet):
     queryset = Document.objects.all()
     serializer_class = DocumentSerializer
+
+    def list(self, request, *args, **kwargs):
+        self.serializer_class = DocumentPreviewSerializer
+        return super().list(request, *args, **kwargs)
