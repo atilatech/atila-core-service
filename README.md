@@ -2,6 +2,9 @@
 
 ## Quickstart
 
+`source install.sh ; source start.sh`
+
+or:
 `pip install -r requirements.txt`
 `python manage.py runserver`
 
@@ -19,8 +22,8 @@ Follow [this tutorial](https://tutorial-extensions.djangogirls.org/en/optional_p
 to install Postgres and add 
 to a Django project.
 
-See [this tutorial](https://blog.nextideatech.com/how-to-create-a-django-app-and-connect-it-to-a-database/) to add some pieces missing in the previously mentioned tutorial such as:
-`GRANT ALL PRIVILEGES ON DATABASE atila TO name;`
+See [this tutorial](https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-your-django-application-on-ubuntu-20-04) 
+to add some pieces missing in the previously mentioned tutorial such as: `GRANT ALL PRIVILEGES`
 
 1. Mac: Install [Postgres.app](https://postgresapp.com/downloads.html). 
 
@@ -28,11 +31,17 @@ See [this tutorial](https://blog.nextideatech.com/how-to-create-a-django-app-and
 
 Run the following commands inside the sql terminal
 
-1. `CREATE USER name WITH PASSWORD 'passwprd';`
+1. `CREATE USER admin WITH PASSWORD 'admin';`
 
-2. `CREATE DATABASE atila OWNER name;`
-3. `GRANT ALL PRIVILEGES ON DATABASE atila TO name;`
-4. Update `settigs.py` (this should already be done but including for completeness)
+2. `CREATE DATABASE atila OWNER admin;`
+3. `GRANT ALL PRIVILEGES ON DATABASE atila TO admin;`
+```bash
+ALTER ROLE admin SET client_encoding TO 'utf8';
+ALTER ROLE admin SET default_transaction_isolation TO 'read committed';
+ALTER ROLE admin SET timezone TO 'UTC';
+```
+4. Create a `DJANGO_SECRET_KEY`: `python3 -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'`
+4. Update `settings.py` (this should already be done but including for completeness)
 
 Confirm the commands work by seeing the first word in the command in your response.
 
@@ -57,18 +66,18 @@ DATABASES = {
 ```
 4. `pip install psycopg2`. Verify it works with: `python -c "import psycopg2"`
 5. `python manage.py migrate`
-6. `python manage.py createsuperuser --username name`
-
-
-## Troubleshooting
+6. `python manage.py createsuperuser --username admin`
 
 ### Permission denied for table django
 
 ```bash
-psql atila -c "GRANT ALL ON ALL TABLES IN SCHEMA public to tomiwa";
-psql atila -c "GRANT ALL ON ALL SEQUENCES IN SCHEMA public to tomiwa";
-psql atila -c "GRANT ALL ON ALL FUNCTIONS IN SCHEMA public to tomiwa";
+psql atila -c "GRANT ALL ON ALL TABLES IN SCHEMA public to admin";
+psql atila -c "GRANT ALL ON ALL SEQUENCES IN SCHEMA public to admin";
+psql atila -c "GRANT ALL ON ALL FUNCTIONS IN SCHEMA public to admin";
 ```
+
+## Troubleshooting
+
 
 ### django.db.utils.OperationalError: could not connect to server: Connection refused
 If you get the following error make sure your Postgres server is running:
