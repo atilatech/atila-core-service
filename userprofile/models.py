@@ -16,6 +16,12 @@ class UserProfile(models.Model):  # add this class and the following fields
     date_created = models.DateTimeField(default=timezone.now)
     date_modified = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ['-date_created', ]
+
+    def __str__(self):
+        return self.user.username
+
     @receiver(post_save, sender=settings.AUTH_USER_MODEL)  # add this
     def create_user_profile(sender, instance, created, **kwargs):
         if created:

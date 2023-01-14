@@ -28,4 +28,5 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api/atila/', include(atila_router.urls)),
     path('api/atlas/', include('atlas.urls')),
+    path('api/userprofile/', include('userprofile.urls')),
 ]
