@@ -102,3 +102,9 @@ See [Stack Overflow answer for more context](https://stackoverflow.com/a/1459358
 1. Check that a database doesn't already exist with `heroku addons`
 2. `heroku addons:create heroku-postgresql:mini`
 3. Add to `Procfile`:`release: python manage.py migrate`
+
+## Loading Data
+
+### Loading Data from Remote Server
+
+`source data.sh ; load_remote_data atlas.document ; python manage.py loaddata dumpdata.json`
