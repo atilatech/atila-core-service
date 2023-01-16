@@ -20,10 +20,11 @@ def transcribe_and_search_video(query, url=None, verbose=True):
 
         try:
             video_with_transcript = get_transcript_from_youtube(url)
+            print('using Youtube Transcript')
             video_with_transcript['encoded_segments'] = send_encoding_request(
                 video_with_transcript['transcript']['segments'])['encoded_segments']
         except NoTranscriptFound as e:
-            print('NoTranscriptFound. Switching to transcription with whisper', e)
+            print('NoTranscriptFound on Youtube. Switching to transcription with whisper', e)
             video_with_transcript = send_transcription_request(url)
             if 'transcription_source' not in video_with_transcript.get('transcript'):
                 video_with_transcript['transcript']['transcription_source'] = 'whisper'
@@ -110,8 +111,8 @@ def add_video_metadata_to_transcript(video_transcript, url):
         "id": video.video_id,
         "thumbnail": video.thumbnail_url,
         "title": video.title,
-        "views": 196244,
-        "length": 218,
+        "views": video.views,
+        "length": video.length,
         "url": f"https://www.youtube.com/watch?v={video.video_id}",
     }
     segments_with_metadata = [{

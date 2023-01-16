@@ -2,7 +2,8 @@ from rest_framework import serializers
 
 from atlas.models import Document
 
-document_fields_preview = ['id', 'url', 'title', 'description', 'image', 'date_created', 'date_modified']
+document_fields_preview = ['id', 'url', 'title', 'description', 'image', 'views', 'transcription_source',
+                           'date_created', 'date_modified']
 document_fields = document_fields_preview + ['text', 'segments']
 
 
