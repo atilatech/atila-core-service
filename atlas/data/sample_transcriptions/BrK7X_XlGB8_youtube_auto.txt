@@ -1,0 +1,282 @@
+a while back I made a video about Bayes
+rule and explained how it had been
+influential in my thinking I didn't
+really however explain how Bayes rule
+works or what it is so I'm gonna do that
+today I'll start with a puzzle imagine
+that you're walking across the campus of
+some large American University and you
+meet a guy let's call him Tom you chat
+with Tom for a few minutes and you
+notice that tom is shy he's not really
+making eye contact very often he's some
+mumbling and my question for you is if
+you had to guess would you guess that
+tom is more likely to be in a math ph.d
+program or in the business school let's
+assume it has to be one or the other so
+I don't know what you guessed but I've
+taught a class on Bayes rule a bunch of
+time so I can tell you what most people
+guess and that is that tom is more
+likely to be a math PhD student the
+reasoning is that shyness is just much
+more common in math PhDs than in
+business schools and I think this is
+accurate based on my experience there's
+an old joke that goes how can you tell
+the extroverted mathematician and the
+answer is he's the one looking at your
+shoes instead of his shoes anyway so I
+think that observation is accurate but
+there's another piece of information
+that's relevant and that people tend to
+forget when answering this question and
+that is how many math PhDs are there
+relative to distance school students
+there's a lot fewer the numbers will
+vary from school to school but it's
+something on the order of ten times as
+many business school students as math
+PhD students so we have these two pieces
+of information about there being many
+more business students than math
+students and also about shyness being
+more common among math students than
+business students and the question is
+how do we combine these two pieces to
+get one overall estimate about Tom this
+is where Bayes rule comes in so you can
+imagine that this divided rectangle
+represents the relative proportions of
+math to business students very roughly
+speaking we'll put it at one to ten and
+now looking just at math students we can
+ask how common is shyness
+I would very roughly guess that it's
+about 75% of math PhD students come off
+as shy and now looking just at business
+school students again guessing roughly
+I'd say about 15% of business school
+students come off as shy so now we've
+represented both of those pieces of
+information in one diagram and we want
+to know whether tom is more likely to be
+in a math program or a business program
+we don't know which one he's in but we
+do know that he's shy which means that
+he must be in one of those lavender
+rectangles right because those represent
+the shy math and the shy business
+students so to get a sense of the
+relative probabilities of him being in
+math versus business we just have to
+compare the relative sizes of those
+lavender rectangles and it looks roughly
+like the lavender business rectangle is
+about twice as big as the lavender math
+rectangle and you can see how the math
+shakes out we just multiplied two linear
+ratios the ratio of math to business
+students which we put at one to ten
+times the ratio of shyness in math
+versus shyness in business which we put
+it 75 215 and multiplying those two
+linear ratios gives us a ratio of areas
+which comes out to about one to two so
+roughly twice as likely for Tom to be in
+the business program even though shyness
+is more common among math students so
+this is the mechanics of Bayes rules how
+it works and now I want to talk about
+how I use it in my everyday thinking I
+don't plug numbers into a formula I
+almost never draw these diagrams in fact
+but there are a few rules principles of
+thinking that fall out of the math of
+Bayes rule that that are really useful
+for me principle number one is something
+like remember your priors so as you saw
+in the Tom example what people naturally
+do is focus on the evidence that tom is
+shy and forget about the prior the sort
+of background knowledge that math is
+just a much less common major or program
+than business and this is a very common
+phenomenon it's called base rate neglect
+and a personal example I have many
+examples of this myself but one example
+comes recently from I
+I rented a house with some friends and
+while we were there we had to call a
+repairman to fix the stove and he made
+us a little bit nervous
+because while he was there we noticed
+him sort of peering into different rooms
+of the house and there's no reason you
+would need to see the bedroom of a house
+if you're here to fix the stove so we
+had heard stories in which repairmen
+come back after having done their
+repairs and robbed a house after having
+had a chance to you know case the joint
+or whatever and so we were worried that
+that was what was going on in this case
+and I think that seeing the repairman's
+snooping is some evidence that should
+make you somewhat more confident that
+he's going to rob you but we had to take
+a step back and remember what is the
+prior on a repairman being honest versus
+a robber and I think that it's not that
+common for someone to be a robber I
+don't know the exact numbers but maybe
+there are a hundred times more honest
+repairmen than robbers something on that
+order so even imagining that snooping is
+much more common among robbers than
+honest repair men let's say 80% of
+robbers will be seen to be snooping and
+maybe 10% of honest repair men even so
+seeing that evidence should only bump
+our probability of this guy wanting to
+rob us from maybe 1% to maybe 8 percent
+so you know we should lock our doors but
+not freak out something like that so
+that's principle number one remember
+your priors principle number two I'll
+illustrate with a another story from my
+life a while ago I was working with a
+guy named let's call him Bob and I had
+reason to believe that Bob might be
+jealous of or competitive with another
+person who worked with us let's call her
+Alice so one day I'm having coffee with
+Bob and he's complaining about Alice I
+think because she hadn't finished some
+projects that she was supposed to have
+finished by that point and I'm thinking
+to myself this just proves that I was
+right about Bob if he was jealous of
+he would want to make her look bad and
+he's complaining about her so I'm right
+and a little while later it occurred to
+me to ask well okay let's assume for the
+moment that I'm wrong and Bob is not
+jealous of Alice how implausible is it
+really in that scenario that he would be
+complaining about her and it's not
+unplanned plausible at all actually
+it often happens that people get annoyed
+when someone doesn't finish something
+that they were supposed to finish and it
+doesn't have anything to do with being
+jealous are competitive and so I may
+still have my prior reasons to suspect
+that Bob is probably jealous of or
+competitive with Alice but seeing this
+new piece of evidence should not make me
+feel significantly more confident that
+I'm right
+maybe complaining about Alice is a
+little bit more likely in the world in
+which he's jealous of her than in the
+world in which he's not but only
+slightly it should not really shift my
+probability that much at all
+that I was right and I think that this
+is a very common thing as well that we
+go around the world seeing pieces of
+evidence that we can explain with our
+current theory with our pet theory and
+that makes us feel all the more
+confident that were right and we don't
+take that extra step of asking well what
+if I were wrong what would I expect to
+see then and how different is it if at
+all from what I see now so I keep this
+principle in mind when let's say I try
+some new diet and I notice that I have
+more energy this week well how likely is
+that in the world in which the diet
+doesn't work compared to the world which
+it does
+maybe my energy is really very variable
+so it's not really that implausible that
+my energy would happen to be higher
+right after trying the diet or let's say
+I give someone a paper or an idea to
+evaluate and he thinks it's great I have
+to ask myself well how common is it for
+him to think that bad ideas are great
+how much evidence is his approval that
+my idea is in fact great
+so that's principle number two ask
+yourself what if I were wrong what would
+I expect to see and how is it different
+from what I currently see pencil number
+three is sort of the flipside of
+principle number two you could you could
+call
+would update incrementally so another
+story when I first moved to Berkeley I
+was pretty confident that meditation was
+for lack of a better word fake and so I
+was surprised when I when one of my
+friends that I met in Berkeley who's
+very smart and thoughtful he raved about
+meditation and said it had made him much
+happier as a person and I think it's
+very easy to explain this evidence away
+by saying well there's a placebo effect
+there he expected meditation to work and
+so he felt that it did or maybe there
+was something else in his life that
+changed around the time he started
+meditating and that was actually making
+him happier
+not the meditation and I think both of
+these stories are totally plausible but
+I have to admit that it seems at least a
+little bit more likely that my smart
+thoughtful friend would report benefits
+from meditation in the world in which
+meditation is real than in the world in
+which it's not and so maybe I shouldn't
+change my mind significantly about
+whether meditation works or not but it
+should it should update my probability a
+little bit towards meditation being real
+and if I encounter additional pieces of
+small-to-medium-sized evidence as time
+goes on all of which are more likely in
+the world in which meditation works than
+the world in which it doesn't
+I should gradually you know change my
+mind maybe there will be a tipping point
+where cumulatively it's just more likely
+overall that meditation works than that
+it doesn't given all the evidence I've
+encountered and I think it's important
+to pay attention to these these
+snowflakes of evidence that maybe weigh
+very little on their own but if you pay
+attention to them and notice how they
+accumulate gradually their their
+collective weight becomes enough to
+break a tree branch
+so that's principle number three update
+incrementally and I hope that you've
+gotten some sense now for Bayes rule how
+it works the intuition behind it and and
+how it can be useful and informing your
+thinking I don't think that it's the
+be-all end-all of how to think about
+everything as some people hold it up to
+be but I do think it's a really
+essential framework for thinking about
+what
+believe how confident to be and how to
+shift your beliefs as you encounter new
+information about the world
+you

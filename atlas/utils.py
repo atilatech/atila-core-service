@@ -1,6 +1,7 @@
 from datetime import timedelta
 import json
 import urllib
+from typing import Union
 
 import requests
 
@@ -43,10 +44,10 @@ def send_transcription_request(url: str):
     return response.json()
 
 
-def send_encoding_request(phrase: str):
+def send_encoding_request(query: Union[str, list]):
     payload = json.dumps({
         "inputs": "",  # inputs key is not used but our endpoint expects it
-        "query": phrase,
+        "query": query,
     })
     headers = {
         'Authorization': f'Bearer {HUGGING_FACE_API_KEY}',

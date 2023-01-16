@@ -1,6 +1,3 @@
-"""
-See: https://www.philschmid.de/custom-inference-handler
-"""
 from typing import Dict
 
 from sentence_transformers import SentenceTransformer
@@ -12,23 +9,24 @@ import time
 
 
 class EndpointHandler():
+    # load the model
+    WHISPER_MODEL_NAME = "tiny.en"
+    SENTENCE_TRANSFORMER_MODEL_NAME = "multi-qa-mpnet-base-dot-v1"
+
     def __init__(self, path=""):
-        # load the model
-        WHISPER_MODEL_NAME = "tiny.en"
-        SENTENCE_TRANSFORMER_MODEL_NAME = "multi-qa-mpnet-base-dot-v1"
 
         device = "cuda" if torch.cuda.is_available() else "cpu"
         print(f'whisper will use: {device}')
 
         t0 = time.time()
-        self.whisper_model = whisper.load_model(WHISPER_MODEL_NAME).to(device)
+        self.whisper_model = whisper.load_model(self.WHISPER_MODEL_NAME).to(device)
         t1 = time.time()
 
         total = t1 - t0
         print(f'Finished loading whisper_model in {total} seconds')
 
         t0 = time.time()
-        self.sentence_transformer_model = SentenceTransformer(SENTENCE_TRANSFORMER_MODEL_NAME)
+        self.sentence_transformer_model = SentenceTransformer(self.SENTENCE_TRANSFORMER_MODEL_NAME)
         t1 = time.time()
 
         total = t1 - t0
@@ -53,6 +51,7 @@ class EndpointHandler():
         encoded_segments = {}
         if video_url:
             video_with_transcript = self.transcribe_video(video_url)
+            video_with_transcript['transcript']['transcription_source'] = f"whisper_{self.WHISPER_MODEL_NAME}"
             encode_transcript = data.pop("encode_transcript", True)
             if encode_transcript:
                 encoded_segments = self.combine_transcripts(video_with_transcript)
@@ -64,7 +63,7 @@ class EndpointHandler():
                 **encoded_segments
             }
         elif query:
-            query = [{"text": query, "id": ""}]
+            query = [{"text": query, "id": ""}] if isinstance(query, str) else query
             encoded_segments = self.encode_sentences(query)
 
             return {
@@ -134,7 +133,7 @@ class EndpointHandler():
             batch_details = [
                 {
                     **batch_meta[x],
-                    'vectors':batch_vectors[x]
+                    'vectors': batch_vectors[x]
                 } for x in range(0, len(batch_meta))
             ]
             all_batches.extend(batch_details)
