@@ -3,9 +3,10 @@ import time
 from atlas.encode import upload_transcripts_to_vector_db, query_model, does_video_exist_in_pinecone
 from atlas.models import Document
 from atlas.models_utils import save_transcribed_video_to_atila_database, YOUTUBE_URL_PREFIX
-from atlas.utils import convert_seconds_to_string, parse_video_id, send_transcription_request
-from youtube_transcript_api import YouTubeTranscriptApi
+from atlas.utils import convert_seconds_to_string, parse_video_id, send_transcription_request, send_encoding_request
+from youtube_transcript_api import YouTubeTranscriptApi, NoTranscriptFound
 from youtube_transcript_api.formatters import TextFormatter, JSONFormatter
+from pytube import YouTube
 
 
 def transcribe_and_search_video(query, url=None, verbose=True):
@@ -16,7 +17,20 @@ def transcribe_and_search_video(query, url=None, verbose=True):
     # hasn't been uploaded to our database or the video vectors haven't been uploaded to Pinecone.
     if url and (not Document.objects.filter(url=f"{YOUTUBE_URL_PREFIX}?v={video_id}").exists()
                 or not does_video_exist_in_pinecone(url)):
-        video_with_transcript = send_transcription_request(url)
+
+        try:
+            video_with_transcript = get_transcript_from_youtube(url)
+            video_with_transcript['encoded_segments'] = send_encoding_request(
+                video_with_transcript['transcript']['segments'])['encoded_segments']
+            formatted = JSONFormatter().format_transcript(video_with_transcript, indent=4)
+            with open(f'{video_id}_encoded.json', 'w', encoding='utf-8') as file:
+                file.write(formatted)
+        except NoTranscriptFound as e:
+            print('NoTranscriptFound. Switching to transcription with whisper', e)
+            video_with_transcript = send_transcription_request(url)
+            if 'transcription_source' not in video_with_transcript.get('transcript'):
+                video_with_transcript['transcript']['transcription_source'] = 'whisper'
+
         save_transcribed_video_to_atila_database(video_with_transcript)
         upload_transcripts_to_vector_db(video_with_transcript['encoded_segments'])
     else:
@@ -38,22 +52,84 @@ def transcribe_and_search_video(query, url=None, verbose=True):
             }
 
 
-def get_transcript_from_youtube(url, save_to_file=None):
+def get_transcript_from_youtube(url, add_metadata=True, save_to_file=None):
     # filter for manually created transcripts
 
     video_id = parse_video_id(url)
     transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
-    print('transcript_list', transcript_list)
     transcript = transcript_list.find_transcript(['en-US', 'en'])
+    segments = combine_segments(transcript.fetch())
+    transcript = {
+        "transcript": {
+            "text": ' '.join([s["text"] for s in segments]),
+            "segments": segments,
+            "language": transcript.language_code,
+            "transcription_source": "youtube_auto_generated" if transcript.is_generated else "youtube_manual",
+        }
+    }
+    if add_metadata:
+        transcript = add_video_metadata_to_transcript(transcript, url)
     if save_to_file:
         if save_to_file == 'json':
             formatter = JSONFormatter()
         else:
             formatter = TextFormatter()
-        json_formatted = formatter.format_transcript(transcript.fetch(), indent=4)
-        with open(f'{video_id}.{save_to_file}', 'w', encoding='utf-8') as json_file:
-            json_file.write(json_formatted)
-    print('transcript', transcript)
-    # print('transcript.fetch()', transcript.fetch())
+        formatted = formatter.format_transcript(transcript, indent=4)
+        with open(f'{video_id}.{save_to_file}', 'w', encoding='utf-8') as file:
+            file.write(formatted)
 
     return transcript
+
+
+def combine_segments(segments, group_size=5):
+    combined_segments = []
+    current_group = []
+    for segment in segments:
+        current_group.append(segment)
+        if len(current_group) == group_size:
+            combined_segments.append(combine_group(current_group))
+            current_group = []
+    if current_group:
+        combined_segments.append(combine_group(current_group))
+    return combined_segments
+
+
+def combine_group(group):
+    text = ' '.join([s["text"] for s in group])
+    start = int(group[0]["start"])
+    end = int(group[-1]["start"] + group[-1]["duration"])
+    duration = end - start
+    return {
+        "text": text,
+        "start": start,
+        "duration": duration,
+        "end": end
+    }
+
+
+def add_video_metadata_to_transcript(video_transcript, url):
+    video = YouTube(url)
+    video_metadata = {
+        "id": video.video_id,
+        "thumbnail": video.thumbnail_url,
+        "title": video.title,
+        "views": 196244,
+        "length": 218,
+        "url": f"https://www.youtube.com/watch?v={video.video_id}",
+    }
+    segments_with_metadata = [{
+        **segment,
+        **video_metadata,
+        'id': f"{video_metadata['id']}-t{segment['start']}",
+        "url": f"https://www.youtube.com/watch?v={video.video_id}&t={segment['start']}",
+        'video_id': video.video_id,
+    } for segment in video_transcript['transcript']['segments']
+    ]
+
+    return {
+        "video": video_metadata,
+        "transcript": {
+            **video_transcript['transcript'],
+            "segments": segments_with_metadata
+        },
+    }
