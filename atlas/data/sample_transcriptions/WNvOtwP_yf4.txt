@@ -1,0 +1,706 @@
+CASSIE KOZYRKOV:
+Regression was first
+used in 1805 by Legendre, who
+doesn't have a nice painting
+of him on Wikipedia.
+So I picked the one
+for the second person
+to use it in 1807, Gauss.
+So that's more
+than 200 years ago.
+This has been around
+for a really long time.
+And it's still a really
+popular standard approach
+to machine learning today.
+So let's have a look.
+For our example, we will
+be making smoothies.
+Every smoothie will have
+one cup of plain yogurt,
+one secret ingredient, and
+a bunch of random food dyes
+so that you cannot
+tell what is in there.
+I blend it up.
+I serve it to you.
+And your goal now is to
+shout at me, what are
+the calories in this smoothie?
+Go.
+What do I hear?
+AUDIENCE: 100.
+CASSIE KOZYRKOV: 100,
+going once, going twice.
+AUDIENCE: 300.
+CASSIE KOZYRKOV: 300.
+AUDIENCE: 500.
+CASSIE KOZYRKOV: 500.
+Now, I'm doing a
+little test here.
+I'm seeing who's
+got the strongest
+aptitude in the audience
+for machine learning.
+Because the machine
+learning attitude is not
+the attitude of perfectionism,
+of think carefully
+and get the answer
+right on the first go,
+and don't even try it unless
+it's going to be perfect.
+No.
+The attitude is go for
+it, see what happens.
+Get it wrong, because
+you're going to have
+to do it over and over again.
+You're going to fail, fall
+down over and over again.
+Pick yourself up.
+Try again until
+finally, it works.
+And you have to try something
+to know what to do next.
+And so if you're
+too afraid to start,
+you tend not to do well in
+applied machine learning.
+So those of you who are brave
+enough to just go for it, even
+though you didn't know the right
+answer, yeah, that was what's
+going to get me to
+move to the next slide
+and give you more information.
+And we'll be able to iterate
+towards correct together.
+OK, so you've unlocked
+the next slide.
+Turns out this was-- what
+was the secret ingredient?
+58 delicious grams of sardines.
+With 265 calories
+in there, lovely.
+I see you don't
+want to drink it.
+Fine.
+I make you a different one.
+Guess the calories now.
+AUDIENCE: 80.
+AUDIENCE: 400.
+CASSIE KOZYRKOV: 80, 400.
+AUDIENCE: 180.
+CASSIE KOZYRKOV: 180.
+All right, I'm hearing some
+more responses and rumblings.
+Now, let me tell you
+what was in here.
+50 grams of not delicious
+waffles that I've shown you
+in the picture, no, no.
+The raw stuff, waffle mix.
+And this is actually in homage
+to a standard hazing experience
+that happens on the fifth
+floor of the Google office
+here in New York, which is most
+new Googlers, myself included,
+I've done this.
+You done this, Sam?
+You walk up.
+And you see this
+delicious smoothie.
+And you try it.
+And it is not a smoothie.
+So standard newbie
+hazing experience here.
+OK, so you do want
+to drink this one.
+Fine, I make you a third one.
+But before I make you
+guess, I'm going to give you
+a little more information.
+This is the 16th
+smoothie that I've made.
+And here are the 15
+previous calorie amounts.
+Your first reaction
+to this should
+be not trying to read it.
+But instead, stamping your
+foot and saying, I'm a human.
+I don't add numbers up.
+That's what machines are for.
+Indeed, correct.
+So the machine is going to
+help us out and summarize them.
+And we find out that
+the average is 237.
+And the middle thing is 240.
+Have a guess now as to
+the calories of this one.
+AUDIENCE: [INAUDIBLE]
+CASSIE KOZYRKOV: 237
+I'm hearing, 238, 240.
+Notice how your range
+has narrowed a whole lot,
+as I give you more information.
+That's going to be
+key to our discussion.
+OK, I'll go for 237.
+Ah, it turns out to be 88 grams
+of quiche Lorraine clocking in
+at a whopping 445
+calories and proving
+to us that any liquid
+diet is beatable.
+So how did we do?
+We had an underestimate of 208
+calories with that strategy.
+Can we do better?
+Well, maybe it would
+help to have the weight
+of the secret ingredient.
+So what we'll do as analysts
+is we'll make a little plot.
+And we'll have the weight from
+0 to 200 grams on the x-axis
+and calories from 0
+to 500 on the y-axis.
+And as we look at
+this, we ask ourselves,
+is there anything going on?
+Or is weight completely
+useless here?
+What do you say?
+Completely useless?
+Something to it.
+And since there's something
+to it, maybe we'll go ahead
+and we'll try it out.
+Shall we?
+And regression is about
+putting lines through stuff.
+So why don't we put
+a line through it.
+Like that line?
+Good line?
+We missed.
+Where should we put this line?
+By the way, those who
+forgot how lines work,
+here's a handy cheat sheet.
+The recipe, the model,
+is simply intercept
+plus slope times the weight.
+So we'll have two
+numbers here in red
+that we have to
+find, or discover,
+that determine
+where the line goes.
+And then we pop
+the weight in there
+and read the calories off of it.
+So that's what we're dealing
+with, straightforward stuff.
+So you don't like my line.
+OK, fair enough.
+How about that one?
+You don't like that one.
+This one?
+Tough crowd.
+That one?
+No.
+This one?
+You look offended.
+Why do you look
+offended by this?
+Because let me remind you
+of something real quick.
+This right here, this
+is your previous model.
+And now you're offended.
+But before, you were very happy
+to just guest 237 every time.
+I think 237 and 0
+times the weight
+means I ignore the weight
+and say 237 every time.
+And you were so
+fine to use it then.
+Check your feature
+engineering privilege.
+What is feature engineering?
+That's when we
+create inputs that we
+might use to learn from.
+Stuff that might
+inform our solution.
+And when we have a
+feature that we might use,
+suddenly we can do better.
+So that's kind of going
+to be the point here.
+As we get information
+that's going
+to be relevant to
+solving this thing,
+we expect to do
+better and better.
+And it's going to be up to us
+to think about what information
+might be worth putting into
+the system in the first place.
+OK, so let's do better,
+if we can do better.
+We're going to find a line
+that's as close to the points
+as possible.
+Because you seemed offended
+when I wasn't doing that.
+Fine.
+So we better define
+a notion of an error.
+What's an error?
+It's just the point
+minus the line.
+The truth minus what we were
+saying we should predict.
+And because we all have
+type A personalities here,
+we hate errors.
+So we are going to minimize
+a function of these errors.
+And that is going
+to be the score
+for how this thing performs.
+And a good score is
+to have fewer errors.
+And we will use the RMSE here.
+And this thing is
+very creatively named.
+It's actually the recipe for
+calculating it backwards.
+Get the error, square the
+error, take the mean or average,
+and take the square
+root of that.
+Root mean squared
+error, or RMSE.
+OK.
+Or you could just
+think of the RMSE
+as the calories we're
+off by on average.
+Not technically
+correct, but good enough
+for government work.
+We're off by about maybe
+five calories on average.
+And that'll do.
+That's fine for a morning.
+OK, so now we're off by 85.
+And we want to be off by fewer.
+So let's see if we can just
+jiggle those two red parameters
+there in the recipe
+to make things better.
+What do you want to do?
+Maybe you want to
+increase the slope a bit?
+OK, that's getting better.
+Good.
+How about we increase
+the slope a little more?
+Not so much better.
+Maybe now we want to
+move the intercept down.
+So let's do that.
+And what we could do
+is we could continue
+tinkering with these
+two numbers in red
+with slow boring tinkering.
+Or we could get on with it.
+So what are our options?
+Just play by hand with
+those two numbers,
+which is what we were doing.
+Or we could use calculus.
+But who even does
+calculus anymore?
+So old school.
+Or we could just use an
+optimization algorithm
+to get us the
+answer immediately.
+So what does an
+optimization algorithm do?
+It says, for this setting, you
+are trying-- what's your goal--
+you are trying to get
+this function right here
+to be as low as possible.
+Let me figure out for you
+what settings, on those two
+parameters that I'm
+allowed to play with,
+give me the best possible
+performance here.
+And then it outputs
+you that answer.
+And that's going to be in the
+heart of every machine learning
+algorithm.
+So we're going to need to
+know what the scoring is,
+what the goal is.
+And then it's
+going to figure out
+where to set the free parameters
+in the recipe based on that.
+OK, great.
+And we have come a long way.
+I'm impressed with this.
+Nice.
+Let's look at quiche
+Lorraine though.
+It's taunting us.
+We did not predict
+quiche Lorraine well.
+How did we do?
+Better.
+Our underestimate has gone down.
+OK.
+Can we do even better?
+Can we?
+Well, there ain't no such
+thing as a free lunch,
+she says at Google.
+To do better, we actually
+need something else.
+So what is it going to take?
+We need-- want to guess this?
+AUDIENCE: More
+information [INAUDIBLE]..
+CASSIE KOZYRKOV: More
+information, exactly.
+That was very nicely put.
+Because that says
+two things at once,
+more information in the sense
+of just more of the same data,
+or more information in the sense
+of other kinds of information
+that might be helpful.
+That's more features.
+Features in this setting refers
+to variables, attributes,
+and other settings.
+So I'm going to be generous.
+And I'm going to give
+you the fat percentage.
+How do you feel about that?
+Is that going to be helpful?
+All right, so let's see.
+So this is what we were
+working with before.
+This is our form.
+And we just had to muck about
+with these two parameters here.
+And we used an optimization
+algorithm to set them.
+And notice, who here has taken
+a stats course of some kind?
+You probably saw regression.
+It was an entirely different
+story in that course,
+the way that you
+were going about it.
+It was all this other
+stuff about what
+it means and p-values
+values and t-tests.
+None of that is relevant here.
+All we are trying
+to do is optimize
+that function to set
+these two numbers.
+So that the difference
+between the calories
+predicted and the
+actual calories
+is as good as possible.
+That's it.
+That's all there is to it here.
+Much, much simpler than
+what the stats course did.
+So there we go.
+Those are our answers.
+Lovely.
+Now, it's not going
+to be a line anymore,
+if we add fat percentage.
+It's a bird.
+It's a plane.
+Same structure, just we add
+another one of these right
+here.
+And now, the only pertinent
+thing for you to realize
+is that there are three
+widgets to tinker with.
+Nice.
+And plotting it there, we
+need to add a dimension.
+I can't make heads
+or tails of this.
+So a little shout out
+to better plotting.
+How about adding color?
+OK.
+Still not enough.
+Because I can't see
+what's going on.
+The color is more calories.
+It gets redder.
+But I can't see what's going
+on with this fat percentage
+and weight plane.
+So OK, now I can kind
+see what's going on.
+And if you're used to
+looking at these things,
+you kind of see the
+punch line that's coming.
+But even if you
+don't see it, let's
+find out what happens
+if we run the algorithm.
+So again, our job is to
+get those three numbers
+to be as good as possible.
+We have our three options.
+I pick the getting on with it.
+And so we have this
+mosquito netting
+fitted through our data for us.
+What is it trying to do?
+Get as close to our
+points as possible.
+And those are the
+numbers that do it.
+Quiche Lorraine is
+still taunting us.
+How did we do?
+We are now off by 47
+calories on average.
+Before it was 49.
+I don't know.
+I'm not feeling it.
+I had to double the number of
+ingredients into my recipe.
+And all I get for that is
+this measly, tiny improvement?
+Maybe after all, this isn't such
+a promising direction to go in.
+Maybe I would prefer
+the simpler model.
+But of course, don't
+worry about that too much.
+You can always try both
+of them in a new data set
+and see which one
+is working better.
+So how are we doing so
+far using only the mean?
+There's our underestimate.
+With simple linear regression,
+that means one ingredient.
+We've improved and only
+a slight improvement
+with multiple linear regression.
+That means more than one
+input into the model.
+All right, I'll take a question.
+AUDIENCE: Can you
+do a model that has
+fat percentage times weight?
+That's actually tells you
+how much fat content it is.
+CASSIE KOZYRKOV:
+Can you do a model
+that does fat
+percentage times weight?
+Absolutely.
+And there's a good reason
+to think about doing that.
+Like, the bit about
+the water amount
+of the secret ingredient.
+We didn't even cover that.
+Right?
+If I just dilute the
+secret ingredient
+I can mess about with
+the fat percentage.
+So-- but the reasoning--
+that's a good one.
+It's a good one.
+The reasoning around
+whether or not
+you should go ahead and try
+a model like that is, does it
+take a long time to try it?
+If no, just do it.
+Even if you don't have a
+solid of a logical argument,
+try it anyway.
+You can always try
+something like that.
+And yes, it's very, very
+easy to adjust the method
+to input something like that.
+You just make the feature
+by multiplying them first.
+And in it goes.
+Job done.
+So certainly could try that.
+OK, can we do even better,
+even better than that?
+Sure.
+How about if I'm
+really generous?
+This is non-alcoholic.
+And I'm going to give
+you the fat in grams,
+the carbohydrate in grams,
+and the protein in grams
+of our secret ingredient.
+Does anyone want to spoil
+the punchline for us?
+Who knows about nutrition?
+Let's have it.
+AUDIENCE: Fat times fat
+plus 4 times carbohydrates
+plus 4 times--
+CASSIE KOZYRKOV: Nine, four,
+and four, the magic numbers.
+Because we as humanity have
+figured out a whole lot
+about nutrition.
+And we already know the answer.
+Well, doesn't matter
+if we know the answer.
+Why don't we see if we can
+recover that same answer
+from this data set
+with machine learning?
+But yeah, let's hope
+that our final answer
+is going to look something
+like that answer.
+So here we go.
+This thing is now
+not a plane anymore.
+It's now a hyperplane.
+So let's go ahead and plot it.
+Let's not.
+There's no real reason
+to be plotting it here.
+Because at the end of the
+day, the way that we check
+how well we're doing, how
+we get that score that we're
+optimizing, it happens the same
+way no matter what is in here.
+All we need to know about is
+that we take what's predicted.
+We compare it with the truth.
+And we see how we did.
+And inside this thing,
+however beastly it
+is, there are some numbers that
+we are allowed to tinker with.
+And we'll use an
+optimization algorithm
+to do the tinkering for us.
+And hopefully, some
+researcher somewhere
+has written that optimization
+code, so we don't have to.
+So that's a much better
+thing to spend your time on,
+if you're in a research
+division, or research
+in the industry, or research
+division in academia.
+Good and they have.
+And so we don't have
+to worry about it.
+All we need to know is
+four things to tinker with.
+We'll still assess the
+results the same way.
+Doesn't matter what's there.
+So let's get on with it and use
+that optimization algorithm,
+which we don't need
+to know how it works.
+And there you go.
+How did we do?
+Nine, four, four,
+something like that.
+Looks pretty good to me.
+FDA, by the way,
+confirms what you say.
+This is a quote
+from their website.
+Carbohydrate provides
+four calories
+per gram, protein
+four, and fat nine.
+So very good general knowledge.
+What on earth is this 143 thing?
+Well, we ask ourselves, if
+there is no fat, no carbs,
+and no protein, if our
+secret ingredient was
+water, what's left?
+Well, there was yogurt
+in there every time.
+Now, it turns out, our
+yogurt base had 145 calories.
+We're predicting 143.
+There's a little
+bit of a mismatch.
+So maybe there was
+some error in our data.
+But you know what?
+Our score is getting
+pretty good, not perfect,
+but pretty good.
+We're off by four calories on
+average, when it used to be 47.
+And this is, again, a shout
+out to feature engineering.
+The fact that you had the
+knowledge about this domain
+and realized that having
+the weights in grams
+of all of these things
+was going to be useful,
+that is the reason that
+you get a model that's
+this good in the end.
+It pays off.
+You can convert your domain
+knowledge into good solutions.
+And how did we do in the end?
+Our underestimate for quiche
+Lorraine is only four calories.
+I say, good enough.
+Let's drink it.

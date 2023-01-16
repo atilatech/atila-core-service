@@ -1,0 +1,2267 @@
+[
+    {
+        "text": "CASSIE KOZYRKOV:\nRegression was first",
+        "start": 4.42,
+        "duration": 2.16
+    },
+    {
+        "text": "used in 1805 by Legendre, who\ndoesn't have a nice painting",
+        "start": 6.58,
+        "duration": 6.21
+    },
+    {
+        "text": "of him on Wikipedia.",
+        "start": 12.79,
+        "duration": 1.39
+    },
+    {
+        "text": "So I picked the one\nfor the second person",
+        "start": 14.18,
+        "duration": 2.33
+    },
+    {
+        "text": "to use it in 1807, Gauss.",
+        "start": 16.51,
+        "duration": 4.15
+    },
+    {
+        "text": "So that's more\nthan 200 years ago.",
+        "start": 20.66,
+        "duration": 4.23
+    },
+    {
+        "text": "This has been around\nfor a really long time.",
+        "start": 24.89,
+        "duration": 2.76
+    },
+    {
+        "text": "And it's still a really\npopular standard approach",
+        "start": 27.65,
+        "duration": 3.45
+    },
+    {
+        "text": "to machine learning today.",
+        "start": 31.1,
+        "duration": 1.75
+    },
+    {
+        "text": "So let's have a look.",
+        "start": 32.85,
+        "duration": 1.73
+    },
+    {
+        "text": "For our example, we will\nbe making smoothies.",
+        "start": 34.58,
+        "duration": 3.42
+    },
+    {
+        "text": "Every smoothie will have\none cup of plain yogurt,",
+        "start": 38.0,
+        "duration": 2.64
+    },
+    {
+        "text": "one secret ingredient, and\na bunch of random food dyes",
+        "start": 40.64,
+        "duration": 2.79
+    },
+    {
+        "text": "so that you cannot\ntell what is in there.",
+        "start": 43.43,
+        "duration": 3.36
+    },
+    {
+        "text": "I blend it up.",
+        "start": 46.79,
+        "duration": 0.63
+    },
+    {
+        "text": "I serve it to you.",
+        "start": 47.42,
+        "duration": 0.96
+    },
+    {
+        "text": "And your goal now is to\nshout at me, what are",
+        "start": 48.38,
+        "duration": 3.33
+    },
+    {
+        "text": "the calories in this smoothie?",
+        "start": 51.71,
+        "duration": 1.96
+    },
+    {
+        "text": "Go.",
+        "start": 53.67,
+        "duration": 0.5
+    },
+    {
+        "text": "What do I hear?",
+        "start": 57.155,
+        "duration": 0.625
+    },
+    {
+        "text": "AUDIENCE: 100.",
+        "start": 57.78,
+        "duration": 1.084
+    },
+    {
+        "text": "CASSIE KOZYRKOV: 100,\ngoing once, going twice.",
+        "start": 58.864,
+        "duration": 1.916
+    },
+    {
+        "text": "AUDIENCE: 300.",
+        "start": 60.78,
+        "duration": 0.65
+    },
+    {
+        "text": "CASSIE KOZYRKOV: 300.",
+        "start": 61.43,
+        "duration": 1.284
+    },
+    {
+        "text": "AUDIENCE: 500.",
+        "start": 62.714,
+        "duration": 0.856
+    },
+    {
+        "text": "CASSIE KOZYRKOV: 500.",
+        "start": 63.57,
+        "duration": 2.26
+    },
+    {
+        "text": "Now, I'm doing a\nlittle test here.",
+        "start": 65.83,
+        "duration": 4.38
+    },
+    {
+        "text": "I'm seeing who's\ngot the strongest",
+        "start": 70.21,
+        "duration": 2.29
+    },
+    {
+        "text": "aptitude in the audience\nfor machine learning.",
+        "start": 72.5,
+        "duration": 3.81
+    },
+    {
+        "text": "Because the machine\nlearning attitude is not",
+        "start": 76.31,
+        "duration": 4.29
+    },
+    {
+        "text": "the attitude of perfectionism,\nof think carefully",
+        "start": 80.6,
+        "duration": 3.93
+    },
+    {
+        "text": "and get the answer\nright on the first go,",
+        "start": 84.53,
+        "duration": 2.85
+    },
+    {
+        "text": "and don't even try it unless\nit's going to be perfect.",
+        "start": 87.38,
+        "duration": 2.68
+    },
+    {
+        "text": "No.",
+        "start": 90.06,
+        "duration": 0.5
+    },
+    {
+        "text": "The attitude is go for\nit, see what happens.",
+        "start": 90.56,
+        "duration": 3.78
+    },
+    {
+        "text": "Get it wrong, because\nyou're going to have",
+        "start": 94.34,
+        "duration": 2.55
+    },
+    {
+        "text": "to do it over and over again.",
+        "start": 96.89,
+        "duration": 1.96
+    },
+    {
+        "text": "You're going to fail, fall\ndown over and over again.",
+        "start": 98.85,
+        "duration": 2.9
+    },
+    {
+        "text": "Pick yourself up.",
+        "start": 101.75,
+        "duration": 1.5
+    },
+    {
+        "text": "Try again until\nfinally, it works.",
+        "start": 103.25,
+        "duration": 2.31
+    },
+    {
+        "text": "And you have to try something\nto know what to do next.",
+        "start": 105.56,
+        "duration": 4.42
+    },
+    {
+        "text": "And so if you're\ntoo afraid to start,",
+        "start": 109.98,
+        "duration": 1.58
+    },
+    {
+        "text": "you tend not to do well in\napplied machine learning.",
+        "start": 111.56,
+        "duration": 2.74
+    },
+    {
+        "text": "So those of you who are brave\nenough to just go for it, even",
+        "start": 114.3,
+        "duration": 3.137
+    },
+    {
+        "text": "though you didn't know the right\nanswer, yeah, that was what's",
+        "start": 117.437,
+        "duration": 2.583
+    },
+    {
+        "text": "going to get me to\nmove to the next slide",
+        "start": 120.02,
+        "duration": 1.89
+    },
+    {
+        "text": "and give you more information.",
+        "start": 121.91,
+        "duration": 1.33
+    },
+    {
+        "text": "And we'll be able to iterate\ntowards correct together.",
+        "start": 123.24,
+        "duration": 2.87
+    },
+    {
+        "text": "OK, so you've unlocked\nthe next slide.",
+        "start": 126.11,
+        "duration": 2.04
+    },
+    {
+        "text": "Turns out this was-- what\nwas the secret ingredient?",
+        "start": 128.15,
+        "duration": 2.87
+    },
+    {
+        "text": "58 delicious grams of sardines.",
+        "start": 131.02,
+        "duration": 3.75
+    },
+    {
+        "text": "With 265 calories\nin there, lovely.",
+        "start": 134.77,
+        "duration": 3.045
+    },
+    {
+        "text": "I see you don't\nwant to drink it.",
+        "start": 137.815,
+        "duration": 1.375
+    },
+    {
+        "text": "Fine.",
+        "start": 139.19,
+        "duration": 0.499
+    },
+    {
+        "text": "I make you a different one.",
+        "start": 139.689,
+        "duration": 2.987
+    },
+    {
+        "text": "Guess the calories now.",
+        "start": 142.676,
+        "duration": 1.889
+    },
+    {
+        "text": "AUDIENCE: 80.",
+        "start": 144.565,
+        "duration": 0.541
+    },
+    {
+        "text": "AUDIENCE: 400.",
+        "start": 145.106,
+        "duration": 0.583
+    },
+    {
+        "text": "CASSIE KOZYRKOV: 80, 400.",
+        "start": 145.689,
+        "duration": 1.207
+    },
+    {
+        "text": "AUDIENCE: 180.",
+        "start": 146.896,
+        "duration": 1.359
+    },
+    {
+        "text": "CASSIE KOZYRKOV: 180.",
+        "start": 148.255,
+        "duration": 1.365
+    },
+    {
+        "text": "All right, I'm hearing some\nmore responses and rumblings.",
+        "start": 149.62,
+        "duration": 3.69
+    },
+    {
+        "text": "Now, let me tell you\nwhat was in here.",
+        "start": 153.31,
+        "duration": 2.25
+    },
+    {
+        "text": "50 grams of not delicious\nwaffles that I've shown you",
+        "start": 155.56,
+        "duration": 4.13
+    },
+    {
+        "text": "in the picture, no, no.",
+        "start": 159.69,
+        "duration": 1.44
+    },
+    {
+        "text": "The raw stuff, waffle mix.",
+        "start": 161.13,
+        "duration": 2.58
+    },
+    {
+        "text": "And this is actually in homage\nto a standard hazing experience",
+        "start": 163.71,
+        "duration": 5.34
+    },
+    {
+        "text": "that happens on the fifth\nfloor of the Google office",
+        "start": 169.05,
+        "duration": 3.36
+    },
+    {
+        "text": "here in New York, which is most\nnew Googlers, myself included,",
+        "start": 172.41,
+        "duration": 4.8
+    },
+    {
+        "text": "I've done this.",
+        "start": 177.21,
+        "duration": 0.855
+    },
+    {
+        "text": "You done this, Sam?",
+        "start": 178.065,
+        "duration": 1.275
+    },
+    {
+        "text": "You walk up.",
+        "start": 179.34,
+        "duration": 0.69
+    },
+    {
+        "text": "And you see this\ndelicious smoothie.",
+        "start": 180.03,
+        "duration": 1.595
+    },
+    {
+        "text": "And you try it.",
+        "start": 181.625,
+        "duration": 0.625
+    },
+    {
+        "text": "And it is not a smoothie.",
+        "start": 182.25,
+        "duration": 1.66
+    },
+    {
+        "text": "So standard newbie\nhazing experience here.",
+        "start": 183.91,
+        "duration": 4.299
+    },
+    {
+        "text": "OK, so you do want\nto drink this one.",
+        "start": 188.209,
+        "duration": 1.541
+    },
+    {
+        "text": "Fine, I make you a third one.",
+        "start": 189.75,
+        "duration": 1.208
+    },
+    {
+        "text": "But before I make you\nguess, I'm going to give you",
+        "start": 190.958,
+        "duration": 2.152
+    },
+    {
+        "text": "a little more information.",
+        "start": 193.11,
+        "duration": 1.77
+    },
+    {
+        "text": "This is the 16th\nsmoothie that I've made.",
+        "start": 194.88,
+        "duration": 2.76
+    },
+    {
+        "text": "And here are the 15\nprevious calorie amounts.",
+        "start": 197.64,
+        "duration": 5.16
+    },
+    {
+        "text": "Your first reaction\nto this should",
+        "start": 202.8,
+        "duration": 1.68
+    },
+    {
+        "text": "be not trying to read it.",
+        "start": 204.48,
+        "duration": 2.51
+    },
+    {
+        "text": "But instead, stamping your\nfoot and saying, I'm a human.",
+        "start": 206.99,
+        "duration": 3.33
+    },
+    {
+        "text": "I don't add numbers up.",
+        "start": 210.32,
+        "duration": 1.68
+    },
+    {
+        "text": "That's what machines are for.",
+        "start": 212.0,
+        "duration": 2.37
+    },
+    {
+        "text": "Indeed, correct.",
+        "start": 214.37,
+        "duration": 2.1
+    },
+    {
+        "text": "So the machine is going to\nhelp us out and summarize them.",
+        "start": 216.47,
+        "duration": 3.3
+    },
+    {
+        "text": "And we find out that\nthe average is 237.",
+        "start": 219.77,
+        "duration": 3.09
+    },
+    {
+        "text": "And the middle thing is 240.",
+        "start": 222.86,
+        "duration": 2.73
+    },
+    {
+        "text": "Have a guess now as to\nthe calories of this one.",
+        "start": 225.59,
+        "duration": 5.309
+    },
+    {
+        "text": "AUDIENCE: [INAUDIBLE]",
+        "start": 230.899,
+        "duration": 1.481
+    },
+    {
+        "text": "CASSIE KOZYRKOV: 237\nI'm hearing, 238, 240.",
+        "start": 232.38,
+        "duration": 2.59
+    },
+    {
+        "text": "Notice how your range\nhas narrowed a whole lot,",
+        "start": 234.97,
+        "duration": 3.81
+    },
+    {
+        "text": "as I give you more information.",
+        "start": 238.78,
+        "duration": 2.52
+    },
+    {
+        "text": "That's going to be\nkey to our discussion.",
+        "start": 241.3,
+        "duration": 2.26
+    },
+    {
+        "text": "OK, I'll go for 237.",
+        "start": 243.56,
+        "duration": 3.484
+    },
+    {
+        "text": "Ah, it turns out to be 88 grams\nof quiche Lorraine clocking in",
+        "start": 247.044,
+        "duration": 4.606
+    },
+    {
+        "text": "at a whopping 445\ncalories and proving",
+        "start": 251.65,
+        "duration": 2.82
+    },
+    {
+        "text": "to us that any liquid\ndiet is beatable.",
+        "start": 254.47,
+        "duration": 2.13
+    },
+    {
+        "text": "So how did we do?",
+        "start": 259.51,
+        "duration": 1.949
+    },
+    {
+        "text": "We had an underestimate of 208\ncalories with that strategy.",
+        "start": 261.459,
+        "duration": 5.311
+    },
+    {
+        "text": "Can we do better?",
+        "start": 266.77,
+        "duration": 1.78
+    },
+    {
+        "text": "Well, maybe it would\nhelp to have the weight",
+        "start": 268.55,
+        "duration": 2.6
+    },
+    {
+        "text": "of the secret ingredient.",
+        "start": 271.15,
+        "duration": 1.11
+    },
+    {
+        "text": "So what we'll do as analysts\nis we'll make a little plot.",
+        "start": 272.26,
+        "duration": 5.2
+    },
+    {
+        "text": "And we'll have the weight from\n0 to 200 grams on the x-axis",
+        "start": 277.46,
+        "duration": 2.99
+    },
+    {
+        "text": "and calories from 0\nto 500 on the y-axis.",
+        "start": 280.45,
+        "duration": 3.07
+    },
+    {
+        "text": "And as we look at\nthis, we ask ourselves,",
+        "start": 283.52,
+        "duration": 2.39
+    },
+    {
+        "text": "is there anything going on?",
+        "start": 285.91,
+        "duration": 1.32
+    },
+    {
+        "text": "Or is weight completely\nuseless here?",
+        "start": 287.23,
+        "duration": 2.844
+    },
+    {
+        "text": "What do you say?",
+        "start": 290.074,
+        "duration": 0.666
+    },
+    {
+        "text": "Completely useless?",
+        "start": 290.74,
+        "duration": 2.1
+    },
+    {
+        "text": "Something to it.",
+        "start": 292.84,
+        "duration": 0.949
+    },
+    {
+        "text": "And since there's something\nto it, maybe we'll go ahead",
+        "start": 293.789,
+        "duration": 2.291
+    },
+    {
+        "text": "and we'll try it out.",
+        "start": 296.08,
+        "duration": 1.89
+    },
+    {
+        "text": "Shall we?",
+        "start": 297.97,
+        "duration": 1.06
+    },
+    {
+        "text": "And regression is about\nputting lines through stuff.",
+        "start": 299.03,
+        "duration": 2.76
+    },
+    {
+        "text": "So why don't we put\na line through it.",
+        "start": 301.79,
+        "duration": 2.99
+    },
+    {
+        "text": "Like that line?",
+        "start": 304.78,
+        "duration": 0.87
+    },
+    {
+        "text": "Good line?",
+        "start": 305.65,
+        "duration": 1.17
+    },
+    {
+        "text": "We missed.",
+        "start": 306.82,
+        "duration": 1.59
+    },
+    {
+        "text": "Where should we put this line?",
+        "start": 308.41,
+        "duration": 1.86
+    },
+    {
+        "text": "By the way, those who\nforgot how lines work,",
+        "start": 310.27,
+        "duration": 2.37
+    },
+    {
+        "text": "here's a handy cheat sheet.",
+        "start": 312.64,
+        "duration": 1.68
+    },
+    {
+        "text": "The recipe, the model,\nis simply intercept",
+        "start": 314.32,
+        "duration": 2.26
+    },
+    {
+        "text": "plus slope times the weight.",
+        "start": 316.58,
+        "duration": 1.5
+    },
+    {
+        "text": "So we'll have two\nnumbers here in red",
+        "start": 318.08,
+        "duration": 2.27
+    },
+    {
+        "text": "that we have to\nfind, or discover,",
+        "start": 320.35,
+        "duration": 1.572
+    },
+    {
+        "text": "that determine\nwhere the line goes.",
+        "start": 321.922,
+        "duration": 1.458
+    },
+    {
+        "text": "And then we pop\nthe weight in there",
+        "start": 323.38,
+        "duration": 1.92
+    },
+    {
+        "text": "and read the calories off of it.",
+        "start": 325.3,
+        "duration": 1.405
+    },
+    {
+        "text": "So that's what we're dealing\nwith, straightforward stuff.",
+        "start": 326.705,
+        "duration": 2.375
+    },
+    {
+        "text": "So you don't like my line.",
+        "start": 329.08,
+        "duration": 2.19
+    },
+    {
+        "text": "OK, fair enough.",
+        "start": 331.27,
+        "duration": 0.709
+    },
+    {
+        "text": "How about that one?",
+        "start": 331.979,
+        "duration": 0.791
+    },
+    {
+        "text": "You don't like that one.",
+        "start": 332.77,
+        "duration": 1.0
+    },
+    {
+        "text": "This one?",
+        "start": 333.77,
+        "duration": 1.37
+    },
+    {
+        "text": "Tough crowd.",
+        "start": 335.14,
+        "duration": 1.38
+    },
+    {
+        "text": "That one?",
+        "start": 336.52,
+        "duration": 1.25
+    },
+    {
+        "text": "No.",
+        "start": 337.77,
+        "duration": 0.74
+    },
+    {
+        "text": "This one?",
+        "start": 338.51,
+        "duration": 0.5
+    },
+    {
+        "text": "You look offended.",
+        "start": 341.96,
+        "duration": 1.55
+    },
+    {
+        "text": "Why do you look\noffended by this?",
+        "start": 343.51,
+        "duration": 3.54
+    },
+    {
+        "text": "Because let me remind you\nof something real quick.",
+        "start": 347.05,
+        "duration": 2.73
+    },
+    {
+        "text": "This right here, this\nis your previous model.",
+        "start": 349.78,
+        "duration": 3.71
+    },
+    {
+        "text": "And now you're offended.",
+        "start": 353.49,
+        "duration": 2.64
+    },
+    {
+        "text": "But before, you were very happy\nto just guest 237 every time.",
+        "start": 356.13,
+        "duration": 4.29
+    },
+    {
+        "text": "I think 237 and 0\ntimes the weight",
+        "start": 360.42,
+        "duration": 2.97
+    },
+    {
+        "text": "means I ignore the weight\nand say 237 every time.",
+        "start": 363.39,
+        "duration": 3.12
+    },
+    {
+        "text": "And you were so\nfine to use it then.",
+        "start": 366.51,
+        "duration": 3.69
+    },
+    {
+        "text": "Check your feature\nengineering privilege.",
+        "start": 370.2,
+        "duration": 3.09
+    },
+    {
+        "text": "What is feature engineering?",
+        "start": 373.29,
+        "duration": 1.31
+    },
+    {
+        "text": "That's when we\ncreate inputs that we",
+        "start": 374.6,
+        "duration": 2.38
+    },
+    {
+        "text": "might use to learn from.",
+        "start": 376.98,
+        "duration": 2.91
+    },
+    {
+        "text": "Stuff that might\ninform our solution.",
+        "start": 379.89,
+        "duration": 2.05
+    },
+    {
+        "text": "And when we have a\nfeature that we might use,",
+        "start": 381.94,
+        "duration": 4.73
+    },
+    {
+        "text": "suddenly we can do better.",
+        "start": 386.67,
+        "duration": 3.08
+    },
+    {
+        "text": "So that's kind of going\nto be the point here.",
+        "start": 389.75,
+        "duration": 2.24
+    },
+    {
+        "text": "As we get information\nthat's going",
+        "start": 391.99,
+        "duration": 1.56
+    },
+    {
+        "text": "to be relevant to\nsolving this thing,",
+        "start": 393.55,
+        "duration": 2.124
+    },
+    {
+        "text": "we expect to do\nbetter and better.",
+        "start": 395.674,
+        "duration": 1.416
+    },
+    {
+        "text": "And it's going to be up to us\nto think about what information",
+        "start": 397.09,
+        "duration": 2.97
+    },
+    {
+        "text": "might be worth putting into\nthe system in the first place.",
+        "start": 400.06,
+        "duration": 3.09
+    },
+    {
+        "text": "OK, so let's do better,\nif we can do better.",
+        "start": 403.15,
+        "duration": 2.827
+    },
+    {
+        "text": "We're going to find a line\nthat's as close to the points",
+        "start": 405.977,
+        "duration": 2.333
+    },
+    {
+        "text": "as possible.",
+        "start": 408.31,
+        "duration": 1.47
+    },
+    {
+        "text": "Because you seemed offended\nwhen I wasn't doing that.",
+        "start": 409.78,
+        "duration": 3.24
+    },
+    {
+        "text": "Fine.",
+        "start": 413.02,
+        "duration": 1.35
+    },
+    {
+        "text": "So we better define\na notion of an error.",
+        "start": 414.37,
+        "duration": 2.184
+    },
+    {
+        "text": "What's an error?",
+        "start": 416.554,
+        "duration": 0.666
+    },
+    {
+        "text": "It's just the point\nminus the line.",
+        "start": 417.22,
+        "duration": 2.97
+    },
+    {
+        "text": "The truth minus what we were\nsaying we should predict.",
+        "start": 420.19,
+        "duration": 5.7
+    },
+    {
+        "text": "And because we all have\ntype A personalities here,",
+        "start": 425.89,
+        "duration": 2.91
+    },
+    {
+        "text": "we hate errors.",
+        "start": 428.8,
+        "duration": 2.49
+    },
+    {
+        "text": "So we are going to minimize\na function of these errors.",
+        "start": 431.29,
+        "duration": 4.66
+    },
+    {
+        "text": "And that is going\nto be the score",
+        "start": 435.95,
+        "duration": 2.9
+    },
+    {
+        "text": "for how this thing performs.",
+        "start": 438.85,
+        "duration": 1.83
+    },
+    {
+        "text": "And a good score is\nto have fewer errors.",
+        "start": 440.68,
+        "duration": 3.27
+    },
+    {
+        "text": "And we will use the RMSE here.",
+        "start": 443.95,
+        "duration": 2.85
+    },
+    {
+        "text": "And this thing is\nvery creatively named.",
+        "start": 446.8,
+        "duration": 2.46
+    },
+    {
+        "text": "It's actually the recipe for\ncalculating it backwards.",
+        "start": 449.26,
+        "duration": 3.18
+    },
+    {
+        "text": "Get the error, square the\nerror, take the mean or average,",
+        "start": 452.44,
+        "duration": 4.35
+    },
+    {
+        "text": "and take the square\nroot of that.",
+        "start": 456.79,
+        "duration": 2.13
+    },
+    {
+        "text": "Root mean squared\nerror, or RMSE.",
+        "start": 458.92,
+        "duration": 2.82
+    },
+    {
+        "text": "OK.",
+        "start": 461.74,
+        "duration": 2.422
+    },
+    {
+        "text": "Or you could just\nthink of the RMSE",
+        "start": 464.162,
+        "duration": 1.458
+    },
+    {
+        "text": "as the calories we're\noff by on average.",
+        "start": 465.62,
+        "duration": 3.7
+    },
+    {
+        "text": "Not technically\ncorrect, but good enough",
+        "start": 469.32,
+        "duration": 1.83
+    },
+    {
+        "text": "for government work.",
+        "start": 471.15,
+        "duration": 1.5
+    },
+    {
+        "text": "We're off by about maybe\nfive calories on average.",
+        "start": 472.65,
+        "duration": 2.556
+    },
+    {
+        "text": "And that'll do.",
+        "start": 475.206,
+        "duration": 0.624
+    },
+    {
+        "text": "That's fine for a morning.",
+        "start": 475.83,
+        "duration": 3.12
+    },
+    {
+        "text": "OK, so now we're off by 85.",
+        "start": 478.95,
+        "duration": 2.34
+    },
+    {
+        "text": "And we want to be off by fewer.",
+        "start": 481.29,
+        "duration": 2.43
+    },
+    {
+        "text": "So let's see if we can just\njiggle those two red parameters",
+        "start": 483.72,
+        "duration": 4.311
+    },
+    {
+        "text": "there in the recipe\nto make things better.",
+        "start": 488.031,
+        "duration": 1.749
+    },
+    {
+        "text": "What do you want to do?",
+        "start": 489.78,
+        "duration": 0.958
+    },
+    {
+        "text": "Maybe you want to\nincrease the slope a bit?",
+        "start": 490.738,
+        "duration": 2.069
+    },
+    {
+        "text": "OK, that's getting better.",
+        "start": 492.807,
+        "duration": 1.083
+    },
+    {
+        "text": "Good.",
+        "start": 493.89,
+        "duration": 0.63
+    },
+    {
+        "text": "How about we increase\nthe slope a little more?",
+        "start": 494.52,
+        "duration": 3.42
+    },
+    {
+        "text": "Not so much better.",
+        "start": 497.94,
+        "duration": 1.51
+    },
+    {
+        "text": "Maybe now we want to\nmove the intercept down.",
+        "start": 499.45,
+        "duration": 2.97
+    },
+    {
+        "text": "So let's do that.",
+        "start": 502.42,
+        "duration": 2.29
+    },
+    {
+        "text": "And what we could do\nis we could continue",
+        "start": 504.71,
+        "duration": 2.39
+    },
+    {
+        "text": "tinkering with these\ntwo numbers in red",
+        "start": 507.1,
+        "duration": 3.12
+    },
+    {
+        "text": "with slow boring tinkering.",
+        "start": 510.22,
+        "duration": 3.089
+    },
+    {
+        "text": "Or we could get on with it.",
+        "start": 513.309,
+        "duration": 2.11
+    },
+    {
+        "text": "So what are our options?",
+        "start": 515.419,
+        "duration": 1.791
+    },
+    {
+        "text": "Just play by hand with\nthose two numbers,",
+        "start": 517.21,
+        "duration": 2.13
+    },
+    {
+        "text": "which is what we were doing.",
+        "start": 519.34,
+        "duration": 1.449
+    },
+    {
+        "text": "Or we could use calculus.",
+        "start": 520.789,
+        "duration": 1.431
+    },
+    {
+        "text": "But who even does\ncalculus anymore?",
+        "start": 522.22,
+        "duration": 1.5
+    },
+    {
+        "text": "So old school.",
+        "start": 523.72,
+        "duration": 2.07
+    },
+    {
+        "text": "Or we could just use an\noptimization algorithm",
+        "start": 525.79,
+        "duration": 2.97
+    },
+    {
+        "text": "to get us the\nanswer immediately.",
+        "start": 528.76,
+        "duration": 2.2
+    },
+    {
+        "text": "So what does an\noptimization algorithm do?",
+        "start": 530.96,
+        "duration": 1.97
+    },
+    {
+        "text": "It says, for this setting, you\nare trying-- what's your goal--",
+        "start": 532.93,
+        "duration": 3.304
+    },
+    {
+        "text": "you are trying to get\nthis function right here",
+        "start": 536.234,
+        "duration": 1.916
+    },
+    {
+        "text": "to be as low as possible.",
+        "start": 538.15,
+        "duration": 1.83
+    },
+    {
+        "text": "Let me figure out for you\nwhat settings, on those two",
+        "start": 539.98,
+        "duration": 3.78
+    },
+    {
+        "text": "parameters that I'm\nallowed to play with,",
+        "start": 543.76,
+        "duration": 2.1
+    },
+    {
+        "text": "give me the best possible\nperformance here.",
+        "start": 545.86,
+        "duration": 3.66
+    },
+    {
+        "text": "And then it outputs\nyou that answer.",
+        "start": 549.52,
+        "duration": 3.0
+    },
+    {
+        "text": "And that's going to be in the\nheart of every machine learning",
+        "start": 552.52,
+        "duration": 2.7
+    },
+    {
+        "text": "algorithm.",
+        "start": 555.22,
+        "duration": 0.82
+    },
+    {
+        "text": "So we're going to need to\nknow what the scoring is,",
+        "start": 556.04,
+        "duration": 2.27
+    },
+    {
+        "text": "what the goal is.",
+        "start": 558.31,
+        "duration": 1.145
+    },
+    {
+        "text": "And then it's\ngoing to figure out",
+        "start": 559.455,
+        "duration": 1.375
+    },
+    {
+        "text": "where to set the free parameters\nin the recipe based on that.",
+        "start": 560.83,
+        "duration": 6.35
+    },
+    {
+        "text": "OK, great.",
+        "start": 567.18,
+        "duration": 1.21
+    },
+    {
+        "text": "And we have come a long way.",
+        "start": 568.39,
+        "duration": 1.98
+    },
+    {
+        "text": "I'm impressed with this.",
+        "start": 570.37,
+        "duration": 1.44
+    },
+    {
+        "text": "Nice.",
+        "start": 571.81,
+        "duration": 1.23
+    },
+    {
+        "text": "Let's look at quiche\nLorraine though.",
+        "start": 573.04,
+        "duration": 3.15
+    },
+    {
+        "text": "It's taunting us.",
+        "start": 576.19,
+        "duration": 1.96
+    },
+    {
+        "text": "We did not predict\nquiche Lorraine well.",
+        "start": 578.15,
+        "duration": 3.98
+    },
+    {
+        "text": "How did we do?",
+        "start": 582.13,
+        "duration": 1.04
+    },
+    {
+        "text": "Better.",
+        "start": 583.17,
+        "duration": 0.83
+    },
+    {
+        "text": "Our underestimate has gone down.",
+        "start": 584.0,
+        "duration": 1.49
+    },
+    {
+        "text": "OK.",
+        "start": 585.49,
+        "duration": 1.23
+    },
+    {
+        "text": "Can we do even better?",
+        "start": 586.72,
+        "duration": 1.87
+    },
+    {
+        "text": "Can we?",
+        "start": 588.59,
+        "duration": 1.34
+    },
+    {
+        "text": "Well, there ain't no such\nthing as a free lunch,",
+        "start": 589.93,
+        "duration": 2.97
+    },
+    {
+        "text": "she says at Google.",
+        "start": 592.9,
+        "duration": 0.81
+    },
+    {
+        "text": "To do better, we actually\nneed something else.",
+        "start": 596.32,
+        "duration": 4.36
+    },
+    {
+        "text": "So what is it going to take?",
+        "start": 600.68,
+        "duration": 3.03
+    },
+    {
+        "text": "We need-- want to guess this?",
+        "start": 603.71,
+        "duration": 2.012
+    },
+    {
+        "text": "AUDIENCE: More\ninformation [INAUDIBLE]..",
+        "start": 605.722,
+        "duration": 1.848
+    },
+    {
+        "text": "CASSIE KOZYRKOV: More\ninformation, exactly.",
+        "start": 607.57,
+        "duration": 1.46
+    },
+    {
+        "text": "That was very nicely put.",
+        "start": 609.03,
+        "duration": 1.18
+    },
+    {
+        "text": "Because that says\ntwo things at once,",
+        "start": 610.21,
+        "duration": 2.13
+    },
+    {
+        "text": "more information in the sense\nof just more of the same data,",
+        "start": 612.34,
+        "duration": 3.8
+    },
+    {
+        "text": "or more information in the sense\nof other kinds of information",
+        "start": 616.14,
+        "duration": 4.54
+    },
+    {
+        "text": "that might be helpful.",
+        "start": 620.68,
+        "duration": 1.57
+    },
+    {
+        "text": "That's more features.",
+        "start": 622.25,
+        "duration": 1.55
+    },
+    {
+        "text": "Features in this setting refers\nto variables, attributes,",
+        "start": 623.8,
+        "duration": 5.175
+    },
+    {
+        "text": "and other settings.",
+        "start": 628.975,
+        "duration": 1.161
+    },
+    {
+        "text": "So I'm going to be generous.",
+        "start": 632.674,
+        "duration": 1.166
+    },
+    {
+        "text": "And I'm going to give\nyou the fat percentage.",
+        "start": 633.84,
+        "duration": 3.775
+    },
+    {
+        "text": "How do you feel about that?",
+        "start": 637.615,
+        "duration": 1.125
+    },
+    {
+        "text": "Is that going to be helpful?",
+        "start": 638.74,
+        "duration": 1.38
+    },
+    {
+        "text": "All right, so let's see.",
+        "start": 640.12,
+        "duration": 2.13
+    },
+    {
+        "text": "So this is what we were\nworking with before.",
+        "start": 642.25,
+        "duration": 2.13
+    },
+    {
+        "text": "This is our form.",
+        "start": 644.38,
+        "duration": 0.87
+    },
+    {
+        "text": "And we just had to muck about\nwith these two parameters here.",
+        "start": 645.25,
+        "duration": 4.02
+    },
+    {
+        "text": "And we used an optimization\nalgorithm to set them.",
+        "start": 649.27,
+        "duration": 2.76
+    },
+    {
+        "text": "And notice, who here has taken\na stats course of some kind?",
+        "start": 652.03,
+        "duration": 4.28
+    },
+    {
+        "text": "You probably saw regression.",
+        "start": 656.31,
+        "duration": 2.41
+    },
+    {
+        "text": "It was an entirely different\nstory in that course,",
+        "start": 658.72,
+        "duration": 2.92
+    },
+    {
+        "text": "the way that you\nwere going about it.",
+        "start": 661.64,
+        "duration": 1.7
+    },
+    {
+        "text": "It was all this other\nstuff about what",
+        "start": 663.34,
+        "duration": 2.55
+    },
+    {
+        "text": "it means and p-values\nvalues and t-tests.",
+        "start": 665.89,
+        "duration": 3.59
+    },
+    {
+        "text": "None of that is relevant here.",
+        "start": 669.48,
+        "duration": 2.07
+    },
+    {
+        "text": "All we are trying\nto do is optimize",
+        "start": 671.55,
+        "duration": 2.43
+    },
+    {
+        "text": "that function to set\nthese two numbers.",
+        "start": 673.98,
+        "duration": 2.94
+    },
+    {
+        "text": "So that the difference\nbetween the calories",
+        "start": 676.92,
+        "duration": 2.31
+    },
+    {
+        "text": "predicted and the\nactual calories",
+        "start": 679.23,
+        "duration": 1.62
+    },
+    {
+        "text": "is as good as possible.",
+        "start": 680.85,
+        "duration": 1.95
+    },
+    {
+        "text": "That's it.",
+        "start": 682.8,
+        "duration": 0.64
+    },
+    {
+        "text": "That's all there is to it here.",
+        "start": 683.44,
+        "duration": 1.46
+    },
+    {
+        "text": "Much, much simpler than\nwhat the stats course did.",
+        "start": 684.9,
+        "duration": 3.51
+    },
+    {
+        "text": "So there we go.",
+        "start": 688.41,
+        "duration": 0.82
+    },
+    {
+        "text": "Those are our answers.",
+        "start": 689.23,
+        "duration": 0.98
+    },
+    {
+        "text": "Lovely.",
+        "start": 690.21,
+        "duration": 1.3
+    },
+    {
+        "text": "Now, it's not going\nto be a line anymore,",
+        "start": 691.51,
+        "duration": 4.08
+    },
+    {
+        "text": "if we add fat percentage.",
+        "start": 695.59,
+        "duration": 2.03
+    },
+    {
+        "text": "It's a bird.",
+        "start": 697.62,
+        "duration": 0.51
+    },
+    {
+        "text": "It's a plane.",
+        "start": 698.13,
+        "duration": 1.47
+    },
+    {
+        "text": "Same structure, just we add\nanother one of these right",
+        "start": 699.6,
+        "duration": 2.28
+    },
+    {
+        "text": "here.",
+        "start": 701.88,
+        "duration": 0.499
+    },
+    {
+        "text": "And now, the only pertinent\nthing for you to realize",
+        "start": 702.379,
+        "duration": 2.321
+    },
+    {
+        "text": "is that there are three\nwidgets to tinker with.",
+        "start": 704.7,
+        "duration": 3.03
+    },
+    {
+        "text": "Nice.",
+        "start": 707.73,
+        "duration": 1.89
+    },
+    {
+        "text": "And plotting it there, we\nneed to add a dimension.",
+        "start": 709.62,
+        "duration": 2.43
+    },
+    {
+        "text": "I can't make heads\nor tails of this.",
+        "start": 712.05,
+        "duration": 2.32
+    },
+    {
+        "text": "So a little shout out\nto better plotting.",
+        "start": 714.37,
+        "duration": 2.87
+    },
+    {
+        "text": "How about adding color?",
+        "start": 717.24,
+        "duration": 1.29
+    },
+    {
+        "text": "OK.",
+        "start": 718.53,
+        "duration": 0.81
+    },
+    {
+        "text": "Still not enough.",
+        "start": 719.34,
+        "duration": 1.05
+    },
+    {
+        "text": "Because I can't see\nwhat's going on.",
+        "start": 720.39,
+        "duration": 1.98
+    },
+    {
+        "text": "The color is more calories.",
+        "start": 722.37,
+        "duration": 1.125
+    },
+    {
+        "text": "It gets redder.",
+        "start": 723.495,
+        "duration": 1.215
+    },
+    {
+        "text": "But I can't see what's going\non with this fat percentage",
+        "start": 724.71,
+        "duration": 2.55
+    },
+    {
+        "text": "and weight plane.",
+        "start": 727.26,
+        "duration": 0.82
+    },
+    {
+        "text": "So OK, now I can kind\nsee what's going on.",
+        "start": 728.08,
+        "duration": 4.974
+    },
+    {
+        "text": "And if you're used to\nlooking at these things,",
+        "start": 733.054,
+        "duration": 1.916
+    },
+    {
+        "text": "you kind of see the\npunch line that's coming.",
+        "start": 734.97,
+        "duration": 3.12
+    },
+    {
+        "text": "But even if you\ndon't see it, let's",
+        "start": 738.09,
+        "duration": 1.74
+    },
+    {
+        "text": "find out what happens\nif we run the algorithm.",
+        "start": 739.83,
+        "duration": 2.71
+    },
+    {
+        "text": "So again, our job is to\nget those three numbers",
+        "start": 742.54,
+        "duration": 3.08
+    },
+    {
+        "text": "to be as good as possible.",
+        "start": 745.62,
+        "duration": 2.4
+    },
+    {
+        "text": "We have our three options.",
+        "start": 748.02,
+        "duration": 1.2
+    },
+    {
+        "text": "I pick the getting on with it.",
+        "start": 749.22,
+        "duration": 2.49
+    },
+    {
+        "text": "And so we have this\nmosquito netting",
+        "start": 751.71,
+        "duration": 3.29
+    },
+    {
+        "text": "fitted through our data for us.",
+        "start": 755.0,
+        "duration": 1.95
+    },
+    {
+        "text": "What is it trying to do?",
+        "start": 756.95,
+        "duration": 1.11
+    },
+    {
+        "text": "Get as close to our\npoints as possible.",
+        "start": 758.06,
+        "duration": 3.659
+    },
+    {
+        "text": "And those are the\nnumbers that do it.",
+        "start": 761.719,
+        "duration": 1.541
+    },
+    {
+        "text": "Quiche Lorraine is\nstill taunting us.",
+        "start": 763.26,
+        "duration": 3.42
+    },
+    {
+        "text": "How did we do?",
+        "start": 766.68,
+        "duration": 0.69
+    },
+    {
+        "text": "We are now off by 47\ncalories on average.",
+        "start": 767.37,
+        "duration": 4.24
+    },
+    {
+        "text": "Before it was 49.",
+        "start": 771.61,
+        "duration": 3.419
+    },
+    {
+        "text": "I don't know.",
+        "start": 775.029,
+        "duration": 0.541
+    },
+    {
+        "text": "I'm not feeling it.",
+        "start": 775.57,
+        "duration": 1.29
+    },
+    {
+        "text": "I had to double the number of\ningredients into my recipe.",
+        "start": 776.86,
+        "duration": 4.38
+    },
+    {
+        "text": "And all I get for that is\nthis measly, tiny improvement?",
+        "start": 781.24,
+        "duration": 6.4
+    },
+    {
+        "text": "Maybe after all, this isn't such\na promising direction to go in.",
+        "start": 787.64,
+        "duration": 4.9
+    },
+    {
+        "text": "Maybe I would prefer\nthe simpler model.",
+        "start": 792.54,
+        "duration": 2.42
+    },
+    {
+        "text": "But of course, don't\nworry about that too much.",
+        "start": 794.96,
+        "duration": 4.34
+    },
+    {
+        "text": "You can always try both\nof them in a new data set",
+        "start": 799.3,
+        "duration": 3.5
+    },
+    {
+        "text": "and see which one\nis working better.",
+        "start": 802.8,
+        "duration": 3.89
+    },
+    {
+        "text": "So how are we doing so\nfar using only the mean?",
+        "start": 806.69,
+        "duration": 3.36
+    },
+    {
+        "text": "There's our underestimate.",
+        "start": 810.05,
+        "duration": 1.94
+    },
+    {
+        "text": "With simple linear regression,\nthat means one ingredient.",
+        "start": 811.99,
+        "duration": 3.09
+    },
+    {
+        "text": "We've improved and only\na slight improvement",
+        "start": 815.08,
+        "duration": 2.897
+    },
+    {
+        "text": "with multiple linear regression.",
+        "start": 817.977,
+        "duration": 1.333
+    },
+    {
+        "text": "That means more than one\ninput into the model.",
+        "start": 819.31,
+        "duration": 3.79
+    },
+    {
+        "text": "All right, I'll take a question.",
+        "start": 823.1,
+        "duration": 2.03
+    },
+    {
+        "text": "AUDIENCE: Can you\ndo a model that has",
+        "start": 825.13,
+        "duration": 2.46
+    },
+    {
+        "text": "fat percentage times weight?",
+        "start": 827.59,
+        "duration": 2.22
+    },
+    {
+        "text": "That's actually tells you\nhow much fat content it is.",
+        "start": 829.81,
+        "duration": 4.472
+    },
+    {
+        "text": "CASSIE KOZYRKOV:\nCan you do a model",
+        "start": 834.282,
+        "duration": 1.458
+    },
+    {
+        "text": "that does fat\npercentage times weight?",
+        "start": 835.74,
+        "duration": 3.66
+    },
+    {
+        "text": "Absolutely.",
+        "start": 839.4,
+        "duration": 1.41
+    },
+    {
+        "text": "And there's a good reason\nto think about doing that.",
+        "start": 840.81,
+        "duration": 3.63
+    },
+    {
+        "text": "Like, the bit about\nthe water amount",
+        "start": 844.44,
+        "duration": 3.93
+    },
+    {
+        "text": "of the secret ingredient.",
+        "start": 848.37,
+        "duration": 2.07
+    },
+    {
+        "text": "We didn't even cover that.",
+        "start": 850.44,
+        "duration": 1.62
+    },
+    {
+        "text": "Right?",
+        "start": 852.06,
+        "duration": 1.02
+    },
+    {
+        "text": "If I just dilute the\nsecret ingredient",
+        "start": 853.08,
+        "duration": 3.64
+    },
+    {
+        "text": "I can mess about with\nthe fat percentage.",
+        "start": 856.72,
+        "duration": 2.99
+    },
+    {
+        "text": "So-- but the reasoning--",
+        "start": 859.71,
+        "duration": 8.611
+    },
+    {
+        "text": "that's a good one.",
+        "start": 868.321,
+        "duration": 0.749
+    },
+    {
+        "text": "It's a good one.",
+        "start": 869.07,
+        "duration": 2.43
+    },
+    {
+        "text": "The reasoning around\nwhether or not",
+        "start": 871.5,
+        "duration": 3.33
+    },
+    {
+        "text": "you should go ahead and try\na model like that is, does it",
+        "start": 874.83,
+        "duration": 4.8
+    },
+    {
+        "text": "take a long time to try it?",
+        "start": 879.63,
+        "duration": 1.56
+    },
+    {
+        "text": "If no, just do it.",
+        "start": 881.19,
+        "duration": 2.43
+    },
+    {
+        "text": "Even if you don't have a\nsolid of a logical argument,",
+        "start": 883.62,
+        "duration": 4.06
+    },
+    {
+        "text": "try it anyway.",
+        "start": 887.68,
+        "duration": 1.096
+    },
+    {
+        "text": "You can always try\nsomething like that.",
+        "start": 888.776,
+        "duration": 1.624
+    },
+    {
+        "text": "And yes, it's very, very\neasy to adjust the method",
+        "start": 890.4,
+        "duration": 2.97
+    },
+    {
+        "text": "to input something like that.",
+        "start": 893.37,
+        "duration": 1.77
+    },
+    {
+        "text": "You just make the feature\nby multiplying them first.",
+        "start": 895.14,
+        "duration": 4.62
+    },
+    {
+        "text": "And in it goes.",
+        "start": 899.76,
+        "duration": 1.74
+    },
+    {
+        "text": "Job done.",
+        "start": 901.5,
+        "duration": 1.23
+    },
+    {
+        "text": "So certainly could try that.",
+        "start": 902.73,
+        "duration": 2.0
+    },
+    {
+        "text": "OK, can we do even better,\neven better than that?",
+        "start": 904.73,
+        "duration": 6.2
+    },
+    {
+        "text": "Sure.",
+        "start": 910.93,
+        "duration": 0.54
+    },
+    {
+        "text": "How about if I'm\nreally generous?",
+        "start": 911.47,
+        "duration": 2.49
+    },
+    {
+        "text": "This is non-alcoholic.",
+        "start": 913.96,
+        "duration": 2.49
+    },
+    {
+        "text": "And I'm going to give\nyou the fat in grams,",
+        "start": 916.45,
+        "duration": 2.76
+    },
+    {
+        "text": "the carbohydrate in grams,\nand the protein in grams",
+        "start": 919.21,
+        "duration": 3.45
+    },
+    {
+        "text": "of our secret ingredient.",
+        "start": 922.66,
+        "duration": 1.53
+    },
+    {
+        "text": "Does anyone want to spoil\nthe punchline for us?",
+        "start": 924.19,
+        "duration": 2.91
+    },
+    {
+        "text": "Who knows about nutrition?",
+        "start": 927.1,
+        "duration": 1.097
+    },
+    {
+        "text": "Let's have it.",
+        "start": 928.197,
+        "duration": 0.583
+    },
+    {
+        "text": "AUDIENCE: Fat times fat\nplus 4 times carbohydrates",
+        "start": 928.78,
+        "duration": 2.79
+    },
+    {
+        "text": "plus 4 times--",
+        "start": 931.57,
+        "duration": 0.74
+    },
+    {
+        "text": "CASSIE KOZYRKOV: Nine, four,\nand four, the magic numbers.",
+        "start": 932.31,
+        "duration": 2.82
+    },
+    {
+        "text": "Because we as humanity have\nfigured out a whole lot",
+        "start": 935.13,
+        "duration": 4.2
+    },
+    {
+        "text": "about nutrition.",
+        "start": 939.33,
+        "duration": 1.36
+    },
+    {
+        "text": "And we already know the answer.",
+        "start": 940.69,
+        "duration": 2.1
+    },
+    {
+        "text": "Well, doesn't matter\nif we know the answer.",
+        "start": 942.79,
+        "duration": 2.0
+    },
+    {
+        "text": "Why don't we see if we can\nrecover that same answer",
+        "start": 944.79,
+        "duration": 2.4
+    },
+    {
+        "text": "from this data set\nwith machine learning?",
+        "start": 947.19,
+        "duration": 2.41
+    },
+    {
+        "text": "But yeah, let's hope\nthat our final answer",
+        "start": 949.6,
+        "duration": 3.14
+    },
+    {
+        "text": "is going to look something\nlike that answer.",
+        "start": 952.74,
+        "duration": 3.7
+    },
+    {
+        "text": "So here we go.",
+        "start": 956.44,
+        "duration": 1.22
+    },
+    {
+        "text": "This thing is now\nnot a plane anymore.",
+        "start": 957.66,
+        "duration": 3.39
+    },
+    {
+        "text": "It's now a hyperplane.",
+        "start": 961.05,
+        "duration": 1.5
+    },
+    {
+        "text": "So let's go ahead and plot it.",
+        "start": 962.55,
+        "duration": 3.35
+    },
+    {
+        "text": "Let's not.",
+        "start": 965.9,
+        "duration": 1.8
+    },
+    {
+        "text": "There's no real reason\nto be plotting it here.",
+        "start": 967.7,
+        "duration": 2.23
+    },
+    {
+        "text": "Because at the end of the\nday, the way that we check",
+        "start": 969.93,
+        "duration": 4.17
+    },
+    {
+        "text": "how well we're doing, how\nwe get that score that we're",
+        "start": 974.1,
+        "duration": 4.05
+    },
+    {
+        "text": "optimizing, it happens the same\nway no matter what is in here.",
+        "start": 978.15,
+        "duration": 5.77
+    },
+    {
+        "text": "All we need to know about is\nthat we take what's predicted.",
+        "start": 983.92,
+        "duration": 3.12
+    },
+    {
+        "text": "We compare it with the truth.",
+        "start": 987.04,
+        "duration": 1.93
+    },
+    {
+        "text": "And we see how we did.",
+        "start": 988.97,
+        "duration": 1.73
+    },
+    {
+        "text": "And inside this thing,\nhowever beastly it",
+        "start": 990.7,
+        "duration": 3.87
+    },
+    {
+        "text": "is, there are some numbers that\nwe are allowed to tinker with.",
+        "start": 994.57,
+        "duration": 4.5
+    },
+    {
+        "text": "And we'll use an\noptimization algorithm",
+        "start": 999.07,
+        "duration": 1.8
+    },
+    {
+        "text": "to do the tinkering for us.",
+        "start": 1000.87,
+        "duration": 1.86
+    },
+    {
+        "text": "And hopefully, some\nresearcher somewhere",
+        "start": 1002.73,
+        "duration": 1.92
+    },
+    {
+        "text": "has written that optimization\ncode, so we don't have to.",
+        "start": 1004.65,
+        "duration": 3.36
+    },
+    {
+        "text": "So that's a much better\nthing to spend your time on,",
+        "start": 1008.01,
+        "duration": 2.19
+    },
+    {
+        "text": "if you're in a research\ndivision, or research",
+        "start": 1010.2,
+        "duration": 4.29
+    },
+    {
+        "text": "in the industry, or research\ndivision in academia.",
+        "start": 1014.49,
+        "duration": 3.08
+    },
+    {
+        "text": "Good and they have.",
+        "start": 1017.57,
+        "duration": 0.875
+    },
+    {
+        "text": "And so we don't have\nto worry about it.",
+        "start": 1018.445,
+        "duration": 1.625
+    },
+    {
+        "text": "All we need to know is\nfour things to tinker with.",
+        "start": 1020.07,
+        "duration": 2.083
+    },
+    {
+        "text": "We'll still assess the\nresults the same way.",
+        "start": 1022.153,
+        "duration": 2.926
+    },
+    {
+        "text": "Doesn't matter what's there.",
+        "start": 1025.079,
+        "duration": 1.661
+    },
+    {
+        "text": "So let's get on with it and use\nthat optimization algorithm,",
+        "start": 1026.74,
+        "duration": 3.03
+    },
+    {
+        "text": "which we don't need\nto know how it works.",
+        "start": 1029.77,
+        "duration": 3.53
+    },
+    {
+        "text": "And there you go.",
+        "start": 1033.3,
+        "duration": 2.67
+    },
+    {
+        "text": "How did we do?",
+        "start": 1035.97,
+        "duration": 1.5
+    },
+    {
+        "text": "Nine, four, four,\nsomething like that.",
+        "start": 1037.47,
+        "duration": 4.379
+    },
+    {
+        "text": "Looks pretty good to me.",
+        "start": 1041.849,
+        "duration": 2.581
+    },
+    {
+        "text": "FDA, by the way,\nconfirms what you say.",
+        "start": 1044.43,
+        "duration": 2.01
+    },
+    {
+        "text": "This is a quote\nfrom their website.",
+        "start": 1046.44,
+        "duration": 2.04
+    },
+    {
+        "text": "Carbohydrate provides\nfour calories",
+        "start": 1048.48,
+        "duration": 1.56
+    },
+    {
+        "text": "per gram, protein\nfour, and fat nine.",
+        "start": 1050.04,
+        "duration": 2.79
+    },
+    {
+        "text": "So very good general knowledge.",
+        "start": 1052.83,
+        "duration": 2.76
+    },
+    {
+        "text": "What on earth is this 143 thing?",
+        "start": 1055.59,
+        "duration": 4.65
+    },
+    {
+        "text": "Well, we ask ourselves, if\nthere is no fat, no carbs,",
+        "start": 1060.24,
+        "duration": 2.64
+    },
+    {
+        "text": "and no protein, if our\nsecret ingredient was",
+        "start": 1062.88,
+        "duration": 3.24
+    },
+    {
+        "text": "water, what's left?",
+        "start": 1066.12,
+        "duration": 2.779
+    },
+    {
+        "text": "Well, there was yogurt\nin there every time.",
+        "start": 1068.899,
+        "duration": 1.791
+    },
+    {
+        "text": "Now, it turns out, our\nyogurt base had 145 calories.",
+        "start": 1070.69,
+        "duration": 3.15
+    },
+    {
+        "text": "We're predicting 143.",
+        "start": 1073.84,
+        "duration": 2.01
+    },
+    {
+        "text": "There's a little\nbit of a mismatch.",
+        "start": 1075.85,
+        "duration": 1.66
+    },
+    {
+        "text": "So maybe there was\nsome error in our data.",
+        "start": 1077.51,
+        "duration": 2.36
+    },
+    {
+        "text": "But you know what?",
+        "start": 1079.87,
+        "duration": 1.76
+    },
+    {
+        "text": "Our score is getting\npretty good, not perfect,",
+        "start": 1081.63,
+        "duration": 3.23
+    },
+    {
+        "text": "but pretty good.",
+        "start": 1084.86,
+        "duration": 1.65
+    },
+    {
+        "text": "We're off by four calories on\naverage, when it used to be 47.",
+        "start": 1086.51,
+        "duration": 6.14
+    },
+    {
+        "text": "And this is, again, a shout\nout to feature engineering.",
+        "start": 1092.65,
+        "duration": 4.77
+    },
+    {
+        "text": "The fact that you had the\nknowledge about this domain",
+        "start": 1097.42,
+        "duration": 5.1
+    },
+    {
+        "text": "and realized that having\nthe weights in grams",
+        "start": 1102.52,
+        "duration": 3.33
+    },
+    {
+        "text": "of all of these things\nwas going to be useful,",
+        "start": 1105.85,
+        "duration": 3.27
+    },
+    {
+        "text": "that is the reason that\nyou get a model that's",
+        "start": 1109.12,
+        "duration": 2.67
+    },
+    {
+        "text": "this good in the end.",
+        "start": 1111.79,
+        "duration": 2.31
+    },
+    {
+        "text": "It pays off.",
+        "start": 1114.1,
+        "duration": 1.92
+    },
+    {
+        "text": "You can convert your domain\nknowledge into good solutions.",
+        "start": 1116.02,
+        "duration": 3.18
+    },
+    {
+        "text": "And how did we do in the end?",
+        "start": 1121.84,
+        "duration": 2.22
+    },
+    {
+        "text": "Our underestimate for quiche\nLorraine is only four calories.",
+        "start": 1124.06,
+        "duration": 4.23
+    },
+    {
+        "text": "I say, good enough.",
+        "start": 1128.29,
+        "duration": 0.82
+    },
+    {
+        "text": "Let's drink it.",
+        "start": 1129.11,
+        "duration": 1.93
+    }
+]
