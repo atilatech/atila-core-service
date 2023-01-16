@@ -12,8 +12,8 @@ def transcribe_and_search_video(query, url=None, verbose=True):
     t0 = time.time()
     video_id = parse_video_id(url)
     video_with_transcript = {}
-    # Transcribe the video if a url has been provided and either the video transcript
-    # hasn't been uploaded to our database or the video vectors haven't been uploaded to pinecone.
+    # Transcribe the video if a video url has been provided and either the video transcript
+    # hasn't been uploaded to our database or the video vectors haven't been uploaded to Pinecone.
     if url and (not Document.objects.filter(url=f"{YOUTUBE_URL_PREFIX}?v={video_id}").exists()
                 or not does_video_exist_in_pinecone(url)):
         video_with_transcript = send_transcription_request(url)
