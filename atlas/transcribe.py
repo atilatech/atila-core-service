@@ -22,9 +22,6 @@ def transcribe_and_search_video(query, url=None, verbose=True):
             video_with_transcript = get_transcript_from_youtube(url)
             video_with_transcript['encoded_segments'] = send_encoding_request(
                 video_with_transcript['transcript']['segments'])['encoded_segments']
-            formatted = JSONFormatter().format_transcript(video_with_transcript, indent=4)
-            with open(f'{video_id}_encoded.json', 'w', encoding='utf-8') as file:
-                file.write(formatted)
         except NoTranscriptFound as e:
             print('NoTranscriptFound. Switching to transcription with whisper', e)
             video_with_transcript = send_transcription_request(url)
