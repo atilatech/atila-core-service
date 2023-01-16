@@ -12,6 +12,8 @@ def save_transcribed_video_to_atila_database(video_data):
         else '',
         'image': video_data['video']['thumbnail'],
         'text': video_data['transcript']['text'],
+        'views': video_data.get('views'),
+        'transcription_source': video_data['transcript'].get('transcription_source'),
         'segments': video_data['transcript']['segments'],
     }
     serializer = DocumentSerializer(data=document)

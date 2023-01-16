@@ -127,3 +127,31 @@ sys.path.append("atila")
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "atila.settings")
 django.setup()
 ```
+
+## Troubleshooting
+
+### Permission denied for table django
+```bash
+psql atila
+ALTER TABLE public.atlas_document OWNER TO admin;
+# or to change multiple owners in a schema
+ALTER SCHEMA public OWNER TO admin;
+# verify it works
+select * from pg_tables;
+```
+
+One Liner:
+```bash
+for tbl in `psql -qAt -c "select tablename from pg_tables where schemaname = 'public';" atila` ; do  psql -c "alter table \"$tbl\" owner to admin" atila ; done
+# verify it works
+psql atila
+select * from pg_tables;
+```
+see: [PostgreSQL: Modify OWNER on all tables simultaneously in PostgreSQL](https://stackoverflow.com/a/2686185/5405197)
+
+The following may not work, leaving for the sake of completeness:
+```bash
+psql atila -c "GRANT ALL ON ALL TABLES IN SCHEMA public to admin";
+psql atila -c "GRANT ALL ON ALL SEQUENCES IN SCHEMA public to admin";
+psql atila -c "GRANT ALL ON ALL FUNCTIONS IN SCHEMA public to admin";
+```

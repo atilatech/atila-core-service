@@ -25,6 +25,9 @@ class Document(models.Model):
     segments = JSONField(default=ModelUtils.empty_list, blank=True, null=True)
     image = models.URLField(max_length=500, blank=True, null=True, default="")
 
+    views = models.IntegerField(default=0)
+    transcription_source = models.CharField(max_length=128, blank=True, null=True, default="")
+
     date_created = models.DateTimeField(default=timezone.now)
     date_modified = models.DateTimeField(auto_now=True)
 
