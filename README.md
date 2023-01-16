@@ -108,3 +108,22 @@ See [Stack Overflow answer for more context](https://stackoverflow.com/a/1459358
 ### Loading Data from Remote Server
 
 `source data.sh ; load_remote_data atlas.document ; python manage.py loaddata dumpdata.json`
+
+## Running Standalone scripts
+Sometimes you just want to quickly run a function without running the entire Django server or submitting a request.
+
+You can run this in the `quick_scripts.py` file using `python quick_scripts.py`
+
+You can also make your own file and put the following at the top of the file, making sure to
+put any Django-specific imports after you call `django.setup()`
+
+```python
+import django
+import os
+import sys
+
+
+sys.path.append("atila")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "atila.settings")
+django.setup()
+```

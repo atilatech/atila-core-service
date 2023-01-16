@@ -4,6 +4,8 @@ from atlas.encode import upload_transcripts_to_vector_db, query_model, does_vide
 from atlas.models import Document
 from atlas.models_utils import save_transcribed_video_to_atila_database, YOUTUBE_URL_PREFIX
 from atlas.utils import convert_seconds_to_string, parse_video_id, send_transcription_request
+from youtube_transcript_api import YouTubeTranscriptApi
+from youtube_transcript_api.formatters import TextFormatter, JSONFormatter
 
 
 def transcribe_and_search_video(query, url=None, verbose=True):
@@ -34,3 +36,24 @@ def transcribe_and_search_video(query, url=None, verbose=True):
     return {'results': results,
             'video': {**video_with_transcript} if video_with_transcript else None
             }
+
+
+def get_transcript_from_youtube(url, save_to_file=None):
+    # filter for manually created transcripts
+
+    video_id = parse_video_id(url)
+    transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+    print('transcript_list', transcript_list)
+    transcript = transcript_list.find_transcript(['en-US', 'en'])
+    if save_to_file:
+        if save_to_file == 'json':
+            formatter = JSONFormatter()
+        else:
+            formatter = TextFormatter()
+        json_formatted = formatter.format_transcript(transcript.fetch(), indent=4)
+        with open(f'{video_id}.{save_to_file}', 'w', encoding='utf-8') as json_file:
+            json_file.write(json_formatted)
+    print('transcript', transcript)
+    # print('transcript.fetch()', transcript.fetch())
+
+    return transcript

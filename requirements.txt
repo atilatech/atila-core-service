@@ -30,3 +30,4 @@ tqdm==4.64.1
 typing_extensions==4.4.0
 urllib3==1.26.13
 whitenoise==6.2.0
+youtube-transcript-api==0.5.0
