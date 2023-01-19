@@ -1,7 +1,15 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
-from rest_framework import permissions
-from atila.serializers import UserSerializer, GroupSerializer
+from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
+
+from atila.serializers import UserSerializer, GroupSerializer, AtilaTokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+
+class AtilaTokenObtainPairView(TokenObtainPairView):
+    serializer_class = AtilaTokenObtainPairSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -10,7 +18,29 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = (IsAdminUser,)
+
+    def get_permissions(self):
+        if self.action == 'create':
+            return [AllowAny()]
+        return [permission() for permission in self.permission_classes]
+
+    def create(self, request, *args, **kwargs):
+        user_data = request.data['user']
+
+        req_username = user_data['username']
+        req_password = user_data['password']
+        req_email = user_data['email']
+
+        user = User.objects.create_user(req_username, req_email, req_password)
+        user.save()
+
+        refresh = AtilaTokenObtainPairSerializer.get_token(user)
+
+        return Response({
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        })
 
 
 class GroupViewSet(viewsets.ModelViewSet):
@@ -19,4 +49,4 @@ class GroupViewSet(viewsets.ModelViewSet):
     """
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = (IsAdminUser,)
