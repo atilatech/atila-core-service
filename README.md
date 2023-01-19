@@ -15,6 +15,22 @@ or running the following command:
 curl -H 'Accept: application/json; indent=4' -u username:password http://127.0.0.1:8000/api/atila/users/
 ```
 
+Verify that token authentication works. By pasting the following command and `copy-pasting` access into jwt.io.
+Don't do this for production JWT tokens.
+```shell
+curl \
+  -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"username": "admin", "password": "admin"}' \
+  http://127.0.0.1:8000/api/token/
+
+# ...
+#{
+#  "access":"<part_a>.<part_b>.<part_c>",
+#  "refresh":"<part_a>.<part_b>.<part_c>"
+#}
+```
+
 ## Setup your Database
 
 Follow [this tutorial](https://tutorial-extensions.djangogirls.org/en/optional_postgresql_installation/) 
