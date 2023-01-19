@@ -21,9 +21,14 @@ class UserProfile(models.Model):  # add this class and the following fields
     id = models.CharField(max_length=128, primary_key=True, default=random_string)
 
     atlas_searches = models.IntegerField(default=0)
+    atlas_searches_custom_limit = models.IntegerField(default=0,
+                                                      help_text='Allow certain users to bypass the '
+                                                                'MAX_REGISTERED_FREE_SEARCHES.')
     atlas_transcriptions = models.IntegerField(default=0)
     date_created = models.DateTimeField(default=timezone.now)
     date_modified = models.DateTimeField(auto_now=True)
+
+    is_premium = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-date_created', ]

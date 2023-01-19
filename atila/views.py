@@ -2,7 +2,6 @@ from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
 
 from atila.serializers import UserSerializer, GroupSerializer, AtilaTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView

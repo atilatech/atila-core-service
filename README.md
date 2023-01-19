@@ -25,10 +25,19 @@ curl \
   http://127.0.0.1:8000/api/token/
 
 # ...
-#{
-#  "access":"<part_a>.<part_b>.<part_c>",
-#  "refresh":"<part_a>.<part_b>.<part_c>"
-#}
+{
+  "refresh":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY3NDE3NTUzMCwiaWF0IjoxNjc0MDg5MTMwLCJqdGkiOiJkOWEyYmU1M2IyNzU0Mzc3OGI5NDc1MWQ4ZWI1N2MwOSIsInVzZXJfaWQiOjF9.ILWp0YkhXCmLmFWf3o1IOdIM5UDN4EDpnxJiuXXRvfo",
+  "access":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjc0MDg5NDMwLCJpYXQiOjE2NzQwODkxMzAsImp0aSI6ImZlOTM3MDJkZWI4MzRjZTM5ODVmOTRjZjJhMGM4OTk5IiwidXNlcl9pZCI6MX0.5ytin4jxFv-h_iu3dWTfcvZnMo0-YwedK6GSKcyTUYk"
+}
+```
+
+Try it on a protected view
+```shell
+curl \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjc0MTMzNjk1LCJpYXQiOjE2NzQxMzMzOTUsImp0aSI6ImVhNjlmZDU0Y2JmZTRiZTk5M2JlZWZjZjk3ZGIyMzFiIiwidXNlcl9pZCI6MSwidXNlcnByb2ZpbGVfaWQiOiJkaXpnbGxkb2c2c211ZnFtIn0.Vf36M0KinwrWzRFcNe9oFZ-p8a0zpcfNWzpqtpihiJk" \
+  http://127.0.0.1:8000/api/atila/users/1/
+# ...
+{"id":1,"username":"admin","email":"info@atila.ca"}
 ```
 
 ## Setup your Database
