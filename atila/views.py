@@ -1,11 +1,13 @@
 from django.contrib.auth.models import User, Group
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from atila.serializers import UserSerializer, GroupSerializer, AtilaTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+
+from userprofile.models import UserProfile
 
 
 class AtilaTokenObtainPairView(TokenObtainPairView):
@@ -28,11 +30,16 @@ class UserViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         user_data = request.data['user']
 
-        req_username = user_data['username']
-        req_password = user_data['password']
-        req_email = user_data['email']
+        username = user_data['username']
+        password = user_data['password']
+        email = user_data['email']
 
-        user = User.objects.create_user(req_username, req_email, req_password)
+        validate_user_response = UserProfile.verify_user_creation(username, email, password)
+
+        if 'error' in validate_user_response:
+            return Response(validate_user_response, status=status.HTTP_400_BAD_REQUEST)
+
+        user = User.objects.create_user(username, email, password)
         user.save()
 
         refresh = AtilaTokenObtainPairSerializer.get_token(user)
