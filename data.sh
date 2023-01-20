@@ -11,8 +11,8 @@ load_remote_data(){
  fi
 }
 
-load_local_data(){
- # example: load_local_data atlas.document
+dump_local_data(){
+ # example: dump_local_data atlas.document
  if [ -z "$2" ]
    then
      python manage.py dumpdata $1 --indent 4 --natural-primary --natural-foreign > dumpdata.json ;
