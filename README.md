@@ -130,9 +130,20 @@ See [Stack Overflow answer for more context](https://stackoverflow.com/a/1459358
 
 ## Loading Data
 
-### Loading Data from Remote Server
+To run any of the following commands, you must first run `source data.sh`.
 
-`source data.sh ; load_remote_data atlas.document ; python manage.py loaddata dumpdata.json`
+### Download Data from Prod
+
+`load_remote_data atlas.document ; python manage.py loaddata dumpdata.json`
+
+## Export Local Data to Local File
+`dump_local_data atlas.document`
+
+### Upload Local Data to Prod
+`upload_local_data_to_prod <filename>`
+`<filename>` is optional. If none is provided, it defaults to `dumpdata.json`.
+
+see: https://stackoverflow.com/a/49152992/5405197
 
 ## Running Standalone scripts
 Sometimes you just want to quickly run a function without running the entire Django server or submitting a request.
