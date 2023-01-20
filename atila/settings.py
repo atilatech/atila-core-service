@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'userprofile',
     'atlas',
     'rest_framework',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
