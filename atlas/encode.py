@@ -5,7 +5,7 @@ from atlas.utils import parse_video_id, send_encoding_request, send_generate_ans
 from atlas.config import PINECONE_API_KEY
 
 sentence_transformer_model_model_id = "multi-qa-mpnet-base-dot-v1"
-pinecone_index_id = "youtube-search"
+PINECONE_INDEX_ID = "youtube-search"
 batch_size = 64
 
 pinecone.init(
@@ -13,14 +13,14 @@ pinecone.init(
     environment="us-west1-gcp"
 )
 
-pinecone_index = pinecone.Index(pinecone_index_id)
+pinecone_index = pinecone.Index(PINECONE_INDEX_ID)
 
 
 def initialize_pinecone_index():
     dimensions = 768
-    if pinecone_index_id not in pinecone.list_indexes():
+    if PINECONE_INDEX_ID not in pinecone.list_indexes():
         pinecone.create_index(
-            pinecone_index_id,
+            PINECONE_INDEX_ID,
             dimensions,
             metric="dotproduct"
         )

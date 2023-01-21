@@ -1,4 +1,5 @@
 import time
+from typing import Union
 
 from atlas.encode import upload_transcripts_to_vector_db, query_model, does_video_exist_in_pinecone
 from atlas.models import Document
@@ -56,7 +57,7 @@ def get_transcript_from_youtube(url, add_metadata=True, save_to_file=None):
     video_id = parse_video_id(url)
     transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
     transcript = transcript_list.find_transcript(['en-US', 'en'])
-    segments = combine_segments(transcript.fetch())
+    segments = combine_segments(transcript.fetch(), group_size=None)
     transcript = {
         "transcript": {
             "text": ' '.join([s["text"] for s in segments]),
@@ -79,7 +80,7 @@ def get_transcript_from_youtube(url, add_metadata=True, save_to_file=None):
     return transcript
 
 
-def combine_segments(segments, group_size=5, character_size=450):
+def combine_segments(segments, group_size: Union[int, None] = 5, character_size=300):
     """
     Combine segments based on either a max group size or a max character size.
     """
@@ -88,7 +89,7 @@ def combine_segments(segments, group_size=5, character_size=450):
     for segment in segments:
         current_group.append(segment)
         current_group_combined = combine_group(current_group)
-        if group_size is None and len(current_group_combined['text']) >= character_size \
+        if (group_size is None and len(current_group_combined['text']) >= character_size) \
                 or len(current_group) == group_size:
             combined_segments.append(current_group_combined)
             current_group = []
