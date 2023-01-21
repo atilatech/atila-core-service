@@ -68,13 +68,12 @@ def upload_transcripts_to_vector_db(transcripts):
 
 def requires_long_form_answer(query: str):
     """
-    If the query starts with who, what, when, where, why or how and is 3 words or longer,
+    If the query starts with who, what, when, where, why or how or is 3 words or longer,
     assume that this type of question requires a long form answer and return true
     """
     query_words = query.split()
-    if len(query_words) < 3:
-        return False
-    if query_words[0].lower() in ["who", "what", "when", "where", "why", "how"]:
+    question_words = ["who", "what", "when", "where", "why", "how"]
+    if len(query_words) >= 3 or any(query.lower().startswith(word) for word in question_words):
         return True
     return False
 
