@@ -79,13 +79,18 @@ def get_transcript_from_youtube(url, add_metadata=True, save_to_file=None):
     return transcript
 
 
-def combine_segments(segments, group_size=5):
+def combine_segments(segments, group_size=5, character_size=450):
+    """
+    Combine segments based on either a max group size or a max character size.
+    """
     combined_segments = []
     current_group = []
     for segment in segments:
         current_group.append(segment)
-        if len(current_group) == group_size:
-            combined_segments.append(combine_group(current_group))
+        current_group_combined = combine_group(current_group)
+        if group_size is None and len(current_group_combined['text']) >= character_size \
+                or len(current_group) == group_size:
+            combined_segments.append(current_group_combined)
             current_group = []
     if current_group:
         combined_segments.append(combine_group(current_group))
