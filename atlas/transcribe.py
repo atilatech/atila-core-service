@@ -1,10 +1,11 @@
 import time
+from typing import Union
 
 from atlas.encode import upload_transcripts_to_vector_db, query_model, does_video_exist_in_pinecone
 from atlas.models import Document
 from atlas.models_utils import save_transcribed_video_to_atila_database, YOUTUBE_URL_PREFIX
 from atlas.utils import convert_seconds_to_string, parse_video_id, send_transcription_request, send_encoding_request
-from youtube_transcript_api import YouTubeTranscriptApi, NoTranscriptFound
+from youtube_transcript_api import YouTubeTranscriptApi, CouldNotRetrieveTranscript
 from youtube_transcript_api.formatters import TextFormatter, JSONFormatter
 from pytube import YouTube
 
@@ -23,8 +24,8 @@ def transcribe_and_search_video(query, url=None, verbose=True):
             print('using Youtube Transcript')
             video_with_transcript['encoded_segments'] = send_encoding_request(
                 video_with_transcript['transcript']['segments'])['encoded_segments']
-        except NoTranscriptFound as e:
-            print('NoTranscriptFound on Youtube. Switching to transcription with whisper', e)
+        except CouldNotRetrieveTranscript as e:
+            print('CouldNotRetrieveTranscript on Youtube. Switching to transcription with whisper', e)
             video_with_transcript = send_transcription_request(url)
             if 'transcription_source' not in video_with_transcript.get('transcript'):
                 video_with_transcript['transcript']['transcription_source'] = 'whisper'
@@ -56,7 +57,7 @@ def get_transcript_from_youtube(url, add_metadata=True, save_to_file=None):
     video_id = parse_video_id(url)
     transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
     transcript = transcript_list.find_transcript(['en-US', 'en'])
-    segments = combine_segments(transcript.fetch())
+    segments = combine_segments(transcript.fetch(), group_size=None)
     transcript = {
         "transcript": {
             "text": ' '.join([s["text"] for s in segments]),
@@ -79,13 +80,18 @@ def get_transcript_from_youtube(url, add_metadata=True, save_to_file=None):
     return transcript
 
 
-def combine_segments(segments, group_size=5):
+def combine_segments(segments, group_size: Union[int, None] = 5, character_size=300):
+    """
+    Combine segments based on either a max group size or a max character size.
+    """
     combined_segments = []
     current_group = []
     for segment in segments:
         current_group.append(segment)
-        if len(current_group) == group_size:
-            combined_segments.append(combine_group(current_group))
+        current_group_combined = combine_group(current_group)
+        if (group_size is None and len(current_group_combined['text']) >= character_size) \
+                or len(current_group) == group_size:
+            combined_segments.append(current_group_combined)
             current_group = []
     if current_group:
         combined_segments.append(combine_group(current_group))

@@ -1,11 +1,11 @@
 import pinecone
 from tqdm import tqdm
 
-from atlas.utils import parse_video_id, send_encoding_request
+from atlas.utils import parse_video_id, send_encoding_request, send_generate_answer_request
 from atlas.config import PINECONE_API_KEY
 
 sentence_transformer_model_model_id = "multi-qa-mpnet-base-dot-v1"
-pinecone_index_id = "youtube-search"
+PINECONE_INDEX_ID = "youtube-search"
 batch_size = 64
 
 pinecone.init(
@@ -13,14 +13,14 @@ pinecone.init(
     environment="us-west1-gcp"
 )
 
-pinecone_index = pinecone.Index(pinecone_index_id)
+pinecone_index = pinecone.Index(PINECONE_INDEX_ID)
 
 
 def initialize_pinecone_index():
     dimensions = 768
-    if pinecone_index_id not in pinecone.list_indexes():
+    if PINECONE_INDEX_ID not in pinecone.list_indexes():
         pinecone.create_index(
-            pinecone_index_id,
+            PINECONE_INDEX_ID,
             dimensions,
             metric="dotproduct"
         )
@@ -66,10 +66,38 @@ def upload_transcripts_to_vector_db(transcripts):
         print(f'Uploaded Batches: {i} to {i_end}')
 
 
-def query_model(query, video_id=""):
+def requires_long_form_answer(query: str):
+    """
+    If the query starts with who, what, when, where, why or how or is 3 words or longer,
+    assume that this type of question requires a long form answer and return true
+    """
+    query_words = query.split()
+    question_words = ["who", "what", "when", "where", "why", "how"]
+    if len(query_words) >= 3 or any(query.lower().startswith(word) for word in question_words):
+        return True
+    return False
+
+
+def query_model(query, video_id="", generate_answer=None):
+    """
+    Return a list of matches for a given query and then optionally generate a summarized answer based on the matches.
+    """
     encoded_query = send_encoding_request(query)
     metadata_filter = {"video_id": {"$eq": video_id}} if video_id else None
     vectors = encoded_query['encoded_segments'][0]['vectors']
-    return pinecone_index.query(vectors, top_k=5,
-                                include_metadata=True,
-                                filter=metadata_filter).to_dict()
+
+    long_form_answer_required = requires_long_form_answer(query)
+    if generate_answer is None and long_form_answer_required:
+        generate_answer = True
+
+    results = pinecone_index.query(vectors, top_k=5,
+                                   include_metadata=True,
+                                   filter=metadata_filter).to_dict()
+
+    if generate_answer:
+        answer_context = [sentence['metadata']['text'] for sentence in results['matches']]
+
+        answer = send_generate_answer_request(query, answer_context)
+        results['answer'] = answer['answer']
+
+    return results
