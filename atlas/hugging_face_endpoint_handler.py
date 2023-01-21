@@ -3,6 +3,7 @@ from typing import Dict
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 import whisper
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import torch
 import pytube
 import time
@@ -12,11 +13,13 @@ class EndpointHandler():
     # load the model
     WHISPER_MODEL_NAME = "tiny.en"
     SENTENCE_TRANSFORMER_MODEL_NAME = "multi-qa-mpnet-base-dot-v1"
+    QUESTION_ANSWER_MODEL_NAME = "vblagoje/bart_lfqa"
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     def __init__(self, path=""):
 
         device = "cuda" if torch.cuda.is_available() else "cpu"
-        print(f'whisper will use: {device}')
+        print(f'whisper and question_answer_model will use: {device}')
 
         t0 = time.time()
         self.whisper_model = whisper.load_model(self.WHISPER_MODEL_NAME).to(device)
@@ -31,6 +34,13 @@ class EndpointHandler():
 
         total = t1 - t0
         print(f'Finished loading sentence_transformer_model in {total} seconds')
+        
+        self.question_answer_tokenizer = AutoTokenizer.from_pretrained(self.QUESTION_ANSWER_MODEL_NAME)
+        t0 = time.time()
+        self.question_answer_model = AutoModelForSeq2SeqLM.from_pretrained(self.QUESTION_ANSWER_MODEL_NAME).to(device)
+        t1 = time.time()
+        total = t1 - t0
+        print(f'Finished loading question_answer_model in {total} seconds')
 
     def __call__(self, data: Dict[str, str]) -> Dict:
         """
@@ -48,6 +58,7 @@ class EndpointHandler():
                             f" See: https://huggingface.co/docs/inference-endpoints/guides/custom_handler#2-create-endpointhandler-cp")
         video_url = data.pop("video_url", None)
         query = data.pop("query", None)
+        long_form_answer = data.pop("long_form_answer", None)
         encoded_segments = {}
         if video_url:
             video_with_transcript = self.transcribe_video(video_url)
@@ -63,11 +74,27 @@ class EndpointHandler():
                 **encoded_segments
             }
         elif query:
-            query = [{"text": query, "id": ""}] if isinstance(query, str) else query
-            encoded_segments = self.encode_sentences(query)
+            if long_form_answer:
+                context = data.pop("context", None)
+                answer = self.generate_answer(query, context)
+                response = {
+                    "answer": answer
+                }
 
+                return response
+            else:
+                query = [{"text": query, "id": ""}] if isinstance(query, str) else query
+                encoded_segments = self.encode_sentences(query)
+
+                response = {
+                    "encoded_segments": encoded_segments
+                }
+
+                return response
+
+        else:
             return {
-                "encoded_segments": encoded_segments
+                "error": "'video_url' or 'query' must be provided"
             }
 
     def transcribe_video(self, video_url):
@@ -139,6 +166,30 @@ class EndpointHandler():
             all_batches.extend(batch_details)
 
         return all_batches
+
+    def generate_answer(self, query, documents):
+
+        # concatenate question and support documents into BART input
+        conditioned_doc = "<P> " + " <P> ".join([d for d in documents])
+        query_and_docs = "question: {} context: {}".format(query, conditioned_doc)
+
+        model_input = self.question_answer_tokenizer(query_and_docs, truncation=False, padding=True, return_tensors="pt")
+
+        generated_answers_encoded = self.question_answer_model.generate(input_ids=model_input["input_ids"].to(self.device),
+                                                attention_mask=model_input["attention_mask"].to(self.device),
+                                                min_length=64,
+                                                max_length=256,
+                                                do_sample=False, 
+                                                early_stopping=True,
+                                                num_beams=8,
+                                                temperature=1.0,
+                                                top_k=None,
+                                                top_p=None,
+                                                eos_token_id=self.question_answer_tokenizer.eos_token_id,
+                                                no_repeat_ngram_size=3,
+                                                num_return_sequences=1)
+        answer = self.question_answer_tokenizer.batch_decode(generated_answers_encoded, skip_special_tokens=True,clean_up_tokenization_spaces=True)
+        return answer
 
     @staticmethod
     def combine_transcripts(video, window=6, stride=3):
