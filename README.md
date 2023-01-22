@@ -15,8 +15,10 @@ or running the following command:
 curl -H 'Accept: application/json; indent=4' -u username:password http://127.0.0.1:8000/api/atila/users/
 ```
 
+## Authentication
 Verify that token authentication works. By pasting the following command and `copy-pasting` access into jwt.io.
 Don't do this for production JWT tokens.
+
 ```shell
 curl \
   -X POST \
@@ -129,6 +131,10 @@ See [Stack Overflow answer for more context](https://stackoverflow.com/a/1459358
 3. Add to `Procfile`:`release: python manage.py migrate`
 
 ## Loading Data
+
+### Seed Database with Pre-Transcribed Videos
+
+`python manage.py loaddata atlas/data/transcribed_videos.json`
 
 To run any of the following commands, you must first run `source data.sh`.
 
