@@ -1,5 +1,6 @@
 # Atila Core Service
 
+
 ## Quickstart
 
 `source install.sh ; source start.sh`
@@ -14,6 +15,12 @@ or running the following command:
 ```shell
 curl -H 'Accept: application/json; indent=4' -u username:password http://127.0.0.1:8000/api/atila/users/
 ```
+
+## Services
+
+Atila Core Service contains the following services:
+
+1. [Atlas: Find Anything on Youtube](https://github.com/atilatech/atila-core-service/tree/master/atlas)
 
 ## Authentication
 Verify that token authentication works. By pasting the following command and `copy-pasting` access into jwt.io.
