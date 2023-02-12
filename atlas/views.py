@@ -34,7 +34,7 @@ class SearchView(APIView):
         query = request_data.get('q')
 
         summarize = request_data.get('summarize')
-
+        print('request_data', request_data)
         if summarize:
             return self.handle_summarization_request(url)
 
@@ -73,7 +73,7 @@ class SearchView(APIView):
 
         results = summarize_video(url)
 
-        return Response({**results}, status=200)
+        return Response({**results}, status=400 if "error" in results else 200)
 
     @staticmethod
     def validate_if_user_can_make_atlas_request(request):

@@ -46,9 +46,13 @@ def summarize_video(url):
         return {"error": f"No video with url {url} exists. Please transcribe video first before summarizing"}
 
     video = document_filter.first()
+    print("video", video)
+    print("video.summaries", video.summaries)
     if len(video.summaries) == 0:
         segments = get_evenly_spaced_elements(combine_segments(video.segments))
         summaries = send_huggingface_request({"summarize": True, "segments": segments})
+        if "error" in summaries:
+            return {"error": summaries}
         video.summaries = summaries
         video.save()
 

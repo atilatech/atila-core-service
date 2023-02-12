@@ -50,6 +50,7 @@ def send_huggingface_request(payload_args: dict):
         "inputs": "",  # inputs key is not used but our endpoint requires it
         **payload_args
     })
+    print("payload", payload)
     headers = {
         'Authorization': f'Bearer {HUGGING_FACE_API_KEY}',
         'Content-Type': 'application/json'
