@@ -3,7 +3,7 @@ from typing import Dict
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 import whisper
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
 import torch
 import pytube
 import time
@@ -14,7 +14,9 @@ class EndpointHandler():
     WHISPER_MODEL_NAME = "tiny.en"
     SENTENCE_TRANSFORMER_MODEL_NAME = "multi-qa-mpnet-base-dot-v1"
     QUESTION_ANSWER_MODEL_NAME = "vblagoje/bart_lfqa"
+    SUMMARIZER_MODEL_NAME = "philschmid/bart-large-cnn-samsum"
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device_number = 0 if torch.cuda.is_available() else -1
 
     def __init__(self, path=""):
 
@@ -34,6 +36,13 @@ class EndpointHandler():
 
         total = t1 - t0
         print(f'Finished loading sentence_transformer_model in {total} seconds')
+
+        t0 = time.time()
+        self.summarizer = pipeline("summarization", model=self.SUMMARIZER_MODEL_NAME, device=device)
+        t1 = time.time()
+
+        total = t1 - t0
+        print(f'Finished loading summarizer in {total} seconds')
         
         self.question_answer_tokenizer = AutoTokenizer.from_pretrained(self.QUESTION_ANSWER_MODEL_NAME)
         t0 = time.time()
@@ -59,6 +68,7 @@ class EndpointHandler():
         video_url = data.pop("video_url", None)
         query = data.pop("query", None)
         long_form_answer = data.pop("long_form_answer", None)
+        summarize = data.pop("summarize", False)
         encoded_segments = {}
         if video_url:
             video_with_transcript = self.transcribe_video(video_url)
@@ -73,6 +83,9 @@ class EndpointHandler():
                 **video_with_transcript,
                 **encoded_segments
             }
+        if summarize:
+            summary = self.summarize_video(data["segments"])
+            return {"summary": summary}
         elif query:
             if long_form_answer:
                 context = data.pop("context", None)
@@ -166,6 +179,17 @@ class EndpointHandler():
             all_batches.extend(batch_details)
 
         return all_batches
+
+    def summarize_video(self, segments):
+        for index, segment in enumerate(segments):
+            segment['summary'] = self.summarizer(segment['text'])
+            segment['summary'] = segment['summary'][0]['summary_text']
+            print('index', index)
+            print('length', segment['length'])
+            print('text', segment['text'])
+            print('summary', segment['summary'])
+
+        return segments
 
     def generate_answer(self, query, documents):
 
