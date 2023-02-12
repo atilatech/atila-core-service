@@ -1,3 +1,6 @@
+"""
+https://huggingface.co/tomiwa1a/video-search
+"""
 from typing import Dict
 
 from sentence_transformers import SentenceTransformer
@@ -83,7 +86,7 @@ class EndpointHandler():
                 **video_with_transcript,
                 **encoded_segments
             }
-        if summarize:
+        elif summarize:
             summary = self.summarize_video(data["segments"])
             return {"summary": summary}
         elif query:

@@ -6,6 +6,7 @@ from atlas.constants import MAX_GUEST_SEARCHES, GUEST_SEARCH_LIMIT_REACHED, MAX_
     REGISTERED_FREE_SEARCH_LIMIT_REACHED
 from atlas.models import Document
 from atlas.serializers import DocumentSerializer, DocumentPreviewSerializer
+from atlas.summarize import summarize_video
 from atlas.transcribe import transcribe_and_search_video
 from pytube import YouTube
 
@@ -24,12 +25,6 @@ class SearchView(APIView):
 
     def handle_transcription_request(self, request):
 
-        user_can_make_atlas_request = self.validate_if_user_can_make_atlas_request(request)
-
-        print('user_can_make_atlas_request', user_can_make_atlas_request)
-        if 'error' in user_can_make_atlas_request:
-            return Response(user_can_make_atlas_request, status=status.HTTP_400_BAD_REQUEST)
-
         if request.method == 'GET':
             request_data = request.GET
         else:
@@ -37,6 +32,18 @@ class SearchView(APIView):
 
         url = request_data.get('url')
         query = request_data.get('q')
+
+        summarize = request_data.get('summarize')
+
+        if summarize:
+            return self.handle_summarization_request(url)
+
+        user_can_make_atlas_request = self.validate_if_user_can_make_atlas_request(request)
+
+        print('user_can_make_atlas_request', user_can_make_atlas_request)
+        if 'error' in user_can_make_atlas_request:
+            return Response(user_can_make_atlas_request, status=status.HTTP_400_BAD_REQUEST)
+
         video = None
         if not query:
             return Response({
@@ -51,6 +58,22 @@ class SearchView(APIView):
         atlas_searches = self.update_atlas_searches_count(request)
 
         return Response({**results, 'atlas_searches': atlas_searches}, status=200)
+
+    @staticmethod
+    def handle_summarization_request(url):
+        """
+        Decided to handle transcription and summarization in 2 separate request cycles to manage
+        separation of concerns and allow both to operate independently.
+        """
+
+        if not url:
+            return Response({
+                'error': "missing 'url'"
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        results = summarize_video(url)
+
+        return Response({**results}, status=200)
 
     @staticmethod
     def validate_if_user_can_make_atlas_request(request):

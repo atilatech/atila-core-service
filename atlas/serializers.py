@@ -4,7 +4,7 @@ from atlas.models import Document
 
 document_fields_preview = ['id', 'url', 'title', 'description', 'image', 'views', 'transcription_source',
                            'date_created', 'date_modified']
-document_fields = document_fields_preview + ['text', 'segments']
+document_fields = document_fields_preview + ['text', 'segments', 'summaries']
 
 
 class DocumentPreviewSerializer(serializers.ModelSerializer):

@@ -23,6 +23,9 @@ class Document(models.Model):
     description = models.TextField(max_length=1000, blank=True, null=True, default="")
     text = models.TextField(blank=True, null=True, default="")
     segments = JSONField(default=ModelUtils.empty_list, blank=True, null=True)
+
+    summaries = JSONField(default=ModelUtils.empty_list, blank=True, null=True)
+
     image = models.URLField(max_length=500, blank=True, null=True, default="")
 
     views = models.IntegerField(default=0)
