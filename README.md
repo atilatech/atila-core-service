@@ -1,5 +1,9 @@
 # Atila Core Service
+The primary backend service for Atila apps.
 
+## Atlas
+
+To see how [Atlas](https://atlas.atila.ca/) works, see: [Atlas: Find Anything on Youtube](https://atila.ca/blog/tomiwa/atlas), [atlas app inside this repo](https://github.com/atilatech/atila-core-service/tree/master/atlas), [Atlas Notebooks](https://github.com/atilatech/atila-core-service/tree/master/atlas/notebooks) and [atlas-ui](https://github.com/atilatech/atlas-ui).
 
 ## Quickstart
 
