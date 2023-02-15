@@ -1,5 +1,5 @@
 import hashlib
-from typing import Union
+from typing import Union, Sized
 
 from django.db.models import JSONField
 from django.db import models
@@ -23,6 +23,9 @@ class Document(models.Model):
     description = models.TextField(max_length=1000, blank=True, null=True, default="")
     text = models.TextField(blank=True, null=True, default="")
     segments = JSONField(default=ModelUtils.empty_list, blank=True, null=True)
+
+    summaries = JSONField(default=ModelUtils.empty_list, blank=True, null=True)
+
     image = models.URLField(max_length=500, blank=True, null=True, default="")
 
     views = models.IntegerField(default=0)
@@ -42,6 +45,9 @@ class Document(models.Model):
         if self._state.adding:
             self.id = self.url_to_object_id(self.url)
 
+        if self.summaries and isinstance(self.summaries, Sized) and len(self.summaries) > 0:
+            self.description = self.summaries[0]['summary']
+
         super().save(*args, **kwargs)
 
     @staticmethod
@@ -51,4 +57,3 @@ class Document(models.Model):
         hash_object.update(url.encode())
         object_id = hash_object.hexdigest()
         return object_id
-

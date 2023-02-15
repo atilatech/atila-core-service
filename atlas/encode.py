@@ -1,7 +1,7 @@
 import pinecone
 from tqdm import tqdm
 
-from atlas.utils import parse_video_id, send_encoding_request, send_generate_answer_request
+from atlas.utils import parse_video_id, send_encoding_request
 from atlas.config import PINECONE_API_KEY
 
 sentence_transformer_model_model_id = "multi-qa-mpnet-base-dot-v1"
@@ -66,19 +66,7 @@ def upload_transcripts_to_vector_db(transcripts):
         print(f'Uploaded Batches: {i} to {i_end}')
 
 
-def requires_long_form_answer(query: str):
-    """
-    If the query starts with who, what, when, where, why or how or is 3 words or longer,
-    assume that this type of question requires a long form answer and return true
-    """
-    query_words = query.split()
-    question_words = ["who", "what", "when", "where", "why", "how"]
-    if len(query_words) >= 3 or any(query.lower().startswith(word) for word in question_words):
-        return True
-    return False
-
-
-def query_model(query, video_id="", generate_answer=None):
+def query_model(query, video_id=""):
     """
     Return a list of matches for a given query and then optionally generate a summarized answer based on the matches.
     """
@@ -86,18 +74,8 @@ def query_model(query, video_id="", generate_answer=None):
     metadata_filter = {"video_id": {"$eq": video_id}} if video_id else None
     vectors = encoded_query['encoded_segments'][0]['vectors']
 
-    long_form_answer_required = requires_long_form_answer(query)
-    if generate_answer is None and long_form_answer_required:
-        generate_answer = True
-
     results = pinecone_index.query(vectors, top_k=5,
                                    include_metadata=True,
                                    filter=metadata_filter).to_dict()
-
-    if generate_answer:
-        answer_context = [sentence['metadata']['text'] for sentence in results['matches']]
-
-        answer = send_generate_answer_request(query, answer_context)
-        results['answer'] = answer['answer']
 
     return results

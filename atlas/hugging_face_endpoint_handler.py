@@ -1,9 +1,12 @@
+"""
+https://huggingface.co/tomiwa1a/video-search
+"""
 from typing import Dict
 
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 import whisper
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
 import torch
 import pytube
 import time
@@ -14,15 +17,19 @@ class EndpointHandler():
     WHISPER_MODEL_NAME = "tiny.en"
     SENTENCE_TRANSFORMER_MODEL_NAME = "multi-qa-mpnet-base-dot-v1"
     QUESTION_ANSWER_MODEL_NAME = "vblagoje/bart_lfqa"
+    SUMMARIZER_MODEL_NAME = "philschmid/bart-large-cnn-samsum"
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device_number = 0 if torch.cuda.is_available() else -1
 
     def __init__(self, path=""):
 
         device = "cuda" if torch.cuda.is_available() else "cpu"
+        device_number = 0 if torch.cuda.is_available() else -1
         print(f'whisper and question_answer_model will use: {device}')
+        print(f'whisper and question_answer_model will use device_number: {device_number}')
 
         t0 = time.time()
-        self.whisper_model = whisper.load_model(self.WHISPER_MODEL_NAME).to(device)
+        self.whisper_model = whisper.load_model(self.WHISPER_MODEL_NAME).to(device_number)
         t1 = time.time()
 
         total = t1 - t0
@@ -34,10 +41,18 @@ class EndpointHandler():
 
         total = t1 - t0
         print(f'Finished loading sentence_transformer_model in {total} seconds')
-        
+
+        t0 = time.time()
+        self.summarizer = pipeline("summarization", model=self.SUMMARIZER_MODEL_NAME, device=device_number)
+        t1 = time.time()
+
+        total = t1 - t0
+        print(f'Finished loading summarizer in {total} seconds')
+
         self.question_answer_tokenizer = AutoTokenizer.from_pretrained(self.QUESTION_ANSWER_MODEL_NAME)
         t0 = time.time()
-        self.question_answer_model = AutoModelForSeq2SeqLM.from_pretrained(self.QUESTION_ANSWER_MODEL_NAME).to(device)
+        self.question_answer_model = AutoModelForSeq2SeqLM.from_pretrained \
+            (self.QUESTION_ANSWER_MODEL_NAME).to(device_number)
         t1 = time.time()
         total = t1 - t0
         print(f'Finished loading question_answer_model in {total} seconds')
@@ -59,6 +74,7 @@ class EndpointHandler():
         video_url = data.pop("video_url", None)
         query = data.pop("query", None)
         long_form_answer = data.pop("long_form_answer", None)
+        summarize = data.pop("summarize", False)
         encoded_segments = {}
         if video_url:
             video_with_transcript = self.transcribe_video(video_url)
@@ -73,6 +89,9 @@ class EndpointHandler():
                 **video_with_transcript,
                 **encoded_segments
             }
+        elif summarize:
+            summary = self.summarize_video(data["segments"])
+            return {"summary": summary}
         elif query:
             if long_form_answer:
                 context = data.pop("context", None)
@@ -167,28 +186,42 @@ class EndpointHandler():
 
         return all_batches
 
+    def summarize_video(self, segments):
+        for index, segment in enumerate(segments):
+            segment['summary'] = self.summarizer(segment['text'])
+            segment['summary'] = segment['summary'][0]['summary_text']
+            print('index', index)
+            print('length', segment['length'])
+            print('text', segment['text'])
+            print('summary', segment['summary'])
+
+        return segments
+
     def generate_answer(self, query, documents):
 
         # concatenate question and support documents into BART input
         conditioned_doc = "<P> " + " <P> ".join([d for d in documents])
         query_and_docs = "question: {} context: {}".format(query, conditioned_doc)
 
-        model_input = self.question_answer_tokenizer(query_and_docs, truncation=False, padding=True, return_tensors="pt")
+        model_input = self.question_answer_tokenizer(query_and_docs, truncation=False, padding=True,
+                                                     return_tensors="pt")
 
-        generated_answers_encoded = self.question_answer_model.generate(input_ids=model_input["input_ids"].to(self.device),
-                                                attention_mask=model_input["attention_mask"].to(self.device),
-                                                min_length=64,
-                                                max_length=256,
-                                                do_sample=False, 
-                                                early_stopping=True,
-                                                num_beams=8,
-                                                temperature=1.0,
-                                                top_k=None,
-                                                top_p=None,
-                                                eos_token_id=self.question_answer_tokenizer.eos_token_id,
-                                                no_repeat_ngram_size=3,
-                                                num_return_sequences=1)
-        answer = self.question_answer_tokenizer.batch_decode(generated_answers_encoded, skip_special_tokens=True,clean_up_tokenization_spaces=True)
+        generated_answers_encoded = self.question_answer_model.generate(
+            input_ids=model_input["input_ids"].to(self.device),
+            attention_mask=model_input["attention_mask"].to(self.device),
+            min_length=64,
+            max_length=256,
+            do_sample=False,
+            early_stopping=True,
+            num_beams=8,
+            temperature=1.0,
+            top_k=None,
+            top_p=None,
+            eos_token_id=self.question_answer_tokenizer.eos_token_id,
+            no_repeat_ngram_size=3,
+            num_return_sequences=1)
+        answer = self.question_answer_tokenizer.batch_decode(generated_answers_encoded, skip_special_tokens=True,
+                                                             clean_up_tokenization_spaces=True)
         return answer
 
     @staticmethod
