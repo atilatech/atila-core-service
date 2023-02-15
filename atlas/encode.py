@@ -1,7 +1,7 @@
 import pinecone
 from tqdm import tqdm
 
-from atlas.utils import parse_video_id, send_encoding_request, send_generate_answer_request
+from atlas.utils import parse_video_id, send_encoding_request
 from atlas.config import PINECONE_API_KEY
 
 sentence_transformer_model_model_id = "multi-qa-mpnet-base-dot-v1"
