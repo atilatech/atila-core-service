@@ -73,18 +73,3 @@ def send_encoding_request(query: Union[str, list]):
     response = requests.request("POST", HUGGING_FACE_ENDPOINT_URL, headers=headers, data=payload)
     return response.json()
 
-
-def send_generate_answer_request(query: Union[str, list], context):
-    payload = json.dumps({
-        "inputs": "",  # inputs key is not used but our endpoint requires it
-        "query": query,
-        "long_form_answer": True,
-        "context": context,
-    })
-    headers = {
-        'Authorization': f'Bearer {HUGGING_FACE_API_KEY}',
-        'Content-Type': 'application/json'
-    }
-
-    response = requests.request("POST", HUGGING_FACE_ENDPOINT_URL, headers=headers, data=payload)
-    return response.json()
