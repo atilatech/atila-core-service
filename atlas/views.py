@@ -33,7 +33,7 @@ class SearchView(APIView):
         url = request_data.get('url')
         query = request_data.get('q')
 
-        summarize = request_data.get('summarize')
+        summarize = request_data.get('summarize') or not query
         print('request_data', request_data)
         if summarize:
             return self.handle_summarization_request(url)
@@ -45,10 +45,6 @@ class SearchView(APIView):
             return Response(user_can_make_atlas_request, status=status.HTTP_400_BAD_REQUEST)
 
         video = None
-        if not query:
-            return Response({
-                'error': "missing 'q' parameter"
-            }, status=status.HTTP_400_BAD_REQUEST)
 
         if url:
             video = YouTube(url)
