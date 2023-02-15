@@ -1,5 +1,5 @@
 import hashlib
-from typing import Union
+from typing import Union, Sized
 
 from django.db.models import JSONField
 from django.db import models
@@ -45,6 +45,9 @@ class Document(models.Model):
         if self._state.adding:
             self.id = self.url_to_object_id(self.url)
 
+        if self.summaries and isinstance(self.summaries, Sized) and len(self.summaries) > 0:
+            self.description = self.summaries[0]['summary']
+
         super().save(*args, **kwargs)
 
     @staticmethod
@@ -54,4 +57,3 @@ class Document(models.Model):
         hash_object.update(url.encode())
         object_id = hash_object.hexdigest()
         return object_id
-
