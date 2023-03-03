@@ -1,6 +1,6 @@
 import os
 
-HUGGING_FACE_ENDPOINT_URL = "https://qr7d334cs4mibwrq.us-east-1.aws.endpoints.huggingface.cloud"
+HUGGING_FACE_ENDPOINT_URL = "https://gb459z884kd2elzr.us-east-1.aws.endpoints.huggingface.cloud"
 
 HUGGING_FACE_API_KEY = os.environ.get('HUGGING_FACE_API_KEY', None)
 
