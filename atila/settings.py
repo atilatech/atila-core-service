@@ -17,6 +17,9 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 import dj_database_url
 
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
@@ -151,6 +154,24 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+SENTRY_DSN = os.environ.get('SENTRY_DSN')
+
+sentry_sdk.init(
+    dsn=SENTRY_DSN,
+    integrations=[
+        DjangoIntegration(),
+    ],
+
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production.
+    traces_sample_rate=0.1,
+
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True
+)
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
