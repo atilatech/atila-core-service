@@ -27,6 +27,12 @@ atila_router = routers.DefaultRouter()
 atila_router.register(r'users', views.UserViewSet)
 atila_router.register(r'groups', views.GroupViewSet)
 
+
+# Create a function that always returns an error to test Sentry error
+def trigger_error(request):
+    division_by_zero = 1 / 0
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/token/', AtilaTokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -35,4 +41,5 @@ urlpatterns = [
     path('api/atila/', include(atila_router.urls)),
     path('api/atlas/', include('atlas.urls')),
     path('api/userprofile/', include('userprofile.urls')),
+    path('sentry-debug/', trigger_error),
 ]
