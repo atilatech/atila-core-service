@@ -1,3 +1,4 @@
+from requests import HTTPError
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -24,7 +25,6 @@ class SearchView(APIView):
         return self.handle_transcription_request(request)
 
     def handle_transcription_request(self, request):
-
         if request.method == 'GET':
             request_data = request.GET
         else:
@@ -35,25 +35,29 @@ class SearchView(APIView):
 
         summarize = request_data.get('summarize') or not query
         print('request_data', request_data)
-        if summarize:
-            return self.handle_summarization_request(url)
+        try:
+            if summarize:
+                return self.handle_summarization_request(url)
 
-        user_can_make_atlas_request = self.validate_if_user_can_make_atlas_request(request)
+            user_can_make_atlas_request = self.validate_if_user_can_make_atlas_request(request)
 
-        print('user_can_make_atlas_request', user_can_make_atlas_request)
-        if 'error' in user_can_make_atlas_request:
-            return Response(user_can_make_atlas_request, status=status.HTTP_400_BAD_REQUEST)
+            print('user_can_make_atlas_request', user_can_make_atlas_request)
+            if 'error' in user_can_make_atlas_request:
+                return Response(user_can_make_atlas_request, status=status.HTTP_400_BAD_REQUEST)
 
-        video = None
+            video = None
 
-        if url:
-            video = YouTube(url)
+            if url:
+                video = YouTube(url)
 
-        results = transcribe_and_search_video(query, url, video)
+            results = transcribe_and_search_video(query, url, video)
 
-        atlas_searches = self.update_atlas_searches_count(request)
+            atlas_searches = self.update_atlas_searches_count(request)
 
-        return Response({**results, 'atlas_searches': atlas_searches}, status=200)
+            return Response({**results, 'atlas_searches': atlas_searches}, status=200)
+
+        except HTTPError as e:
+            return Response({"error": str(e)}, status=400)
 
     @staticmethod
     def handle_summarization_request(url):
