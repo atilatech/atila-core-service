@@ -1,11 +1,11 @@
-from datetime import timedelta
 import json
 import urllib
+from datetime import timedelta
 from typing import Union
 
 import requests
 
-from atlas.config import HUGGING_FACE_API_KEY, HUGGING_FACE_ENDPOINT_URL
+from atlas.config import POPLAR_API_KEY
 
 
 def convert_seconds_to_string(seconds):
@@ -29,19 +29,16 @@ def parse_video_id(url):
         return None
 
 
-# TODO: send_transcription_request, send_encoding_request, and send_generate_answer_request can be combined togeter
+# TODO: send_transcription_request, send_encoding_request, and send_generate_answer_request can be combined together
 def send_transcription_request(url: str):
     payload = json.dumps({
         "inputs": "",  # inputs key is not used but our endpoint requires it
         # see: https://huggingface.co/docs/inference-endpoints/guides/custom_handler#2-create-endpointhandler-cp
         "video_url": url,
     })
-    headers = {
-        'Authorization': f'Bearer {HUGGING_FACE_API_KEY}',
-        'Content-Type': 'application/json'
-    }
+    request_body = {"apiKey": POPLAR_API_KEY, "modelId": "atila-atlas", "modelInput": payload}
 
-    response = requests.request("POST", HUGGING_FACE_ENDPOINT_URL, headers=headers, data=payload)
+    response = requests.post("https://api.poplarml.com/infer", json=request_body)
     return response.json()
 
 
@@ -51,12 +48,9 @@ def send_huggingface_request(payload_args: dict):
         **payload_args
     })
     print("payload", payload)
-    headers = {
-        'Authorization': f'Bearer {HUGGING_FACE_API_KEY}',
-        'Content-Type': 'application/json'
-    }
+    request_body = {"apiKey": POPLAR_API_KEY, "modelId": "atila-atlas", "modelInput": payload}
 
-    response = requests.request("POST", HUGGING_FACE_ENDPOINT_URL, headers=headers, data=payload)
+    response = requests.post("https://api.poplarml.com/infer", json=request_body)
     return response.json()
 
 
@@ -65,11 +59,7 @@ def send_encoding_request(query: Union[str, list]):
         "inputs": "",  # inputs key is not used but our endpoint requires it
         "query": query,
     })
-    headers = {
-        'Authorization': f'Bearer {HUGGING_FACE_API_KEY}',
-        'Content-Type': 'application/json'
-    }
+    request_body = {"apiKey": POPLAR_API_KEY, "modelId": "atila-atlas", "modelInput": payload}
 
-    response = requests.request("POST", HUGGING_FACE_ENDPOINT_URL, headers=headers, data=payload)
+    response = requests.post("https://api.poplarml.com/infer", json=request_body)
     return response.json()
-
