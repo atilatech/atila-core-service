@@ -1,7 +1,6 @@
 import json
 import urllib
 from datetime import timedelta
-from typing import Union
 
 import requests
 
@@ -29,36 +28,13 @@ def parse_video_id(url):
         return None
 
 
-# TODO: send_transcription_request, send_encoding_request, and send_generate_answer_request can be combined together
-def send_transcription_request(url: str):
+def send_ai_request(payload_args: dict):
     payload = json.dumps({
-        "inputs": "",  # inputs key is not used but our endpoint requires it
-        # see: https://huggingface.co/docs/inference-endpoints/guides/custom_handler#2-create-endpointhandler-cp
-        "video_url": url,
-    })
-    request_body = {"apiKey": POPLAR_API_KEY, "modelId": "atila-atlas", "modelInput": payload}
-
-    response = requests.post("https://api.poplarml.com/infer", json=request_body)
-    return response.json()
-
-
-def send_huggingface_request(payload_args: dict):
-    payload = json.dumps({
+        # TODO: Is this still required if we are using PoplarML?
         "inputs": "",  # inputs key is not used but our endpoint requires it
         **payload_args
     })
     print("payload", payload)
-    request_body = {"apiKey": POPLAR_API_KEY, "modelId": "atila-atlas", "modelInput": payload}
-
-    response = requests.post("https://api.poplarml.com/infer", json=request_body)
-    return response.json()
-
-
-def send_encoding_request(query: Union[str, list]):
-    payload = json.dumps({
-        "inputs": "",  # inputs key is not used but our endpoint requires it
-        "query": query,
-    })
     request_body = {"apiKey": POPLAR_API_KEY, "modelId": "atila-atlas", "modelInput": payload}
 
     response = requests.post("https://api.poplarml.com/infer", json=request_body)

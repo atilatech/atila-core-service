@@ -2,7 +2,7 @@ from atlas.models import Document
 from atlas.models_utils import YOUTUBE_URL_PREFIX
 from atlas.serializers import DocumentSerializer
 from atlas.transcribe import transcribe_and_search_video
-from atlas.utils import parse_video_id, send_huggingface_request
+from atlas.utils import parse_video_id, send_ai_request
 
 
 def combine_segments(segments, max_length=1000):
@@ -51,7 +51,7 @@ def summarize_video(url):
     video = document_filter.first()
     if len(video.summaries) == 0:
         segments = get_evenly_spaced_elements(combine_segments(video.segments))
-        summaries = send_huggingface_request({"summarize": True, "segments": segments})['summary']
+        summaries = send_ai_request({"summarize": True, "segments": segments})['summary']
         if "error" in summaries:
             return {"error": summaries}
         video.summaries = summaries

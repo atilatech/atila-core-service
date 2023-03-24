@@ -1,6 +1,8 @@
 import requests
 import json
 
+from atlas.config import POPLAR_API_KEY
+
 url = 'https://pastebin.com/raw/bTr2kMvw' # url of paste
 r = requests.get(url) # response will be stored from url
 outfit_ideas_video_segment = r.text  # raw text from url
@@ -47,7 +49,7 @@ combined_segments = get_evenly_spaced_elements(combine_segments(outfit_ideas_vid
 payload = {"summarize": True, "segments": combined_segments, "inputs": ""}
 
 
-request_body = {"apiKey": "[YOUR_API_KEY]", "modelId": "atila-atlas", "modelInput": payload}
+request_body = {"apiKey": POPLAR_API_KEY, "modelId": "atila-atlas", "modelInput": payload}
 
 response = requests.post("https://api.poplarml.com/infer", json=request_body)
 
