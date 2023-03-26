@@ -24,7 +24,8 @@ def transcribe_and_search_video(query, url=None, verbose=True):
         try:
             video_with_transcript = get_transcript_from_youtube(url)
             print('using Youtube Transcript')
-            video_with_transcript['encoded_segments'] = send_ai_request({"query": query})['encoded_segments']
+            video_with_transcript['encoded_segments'] = send_ai_request(
+                {"query": video_with_transcript['transcript']['segments']})['encoded_segments']
         except CouldNotRetrieveTranscript as e:
             print('CouldNotRetrieveTranscript on Youtube. Switching to transcription with whisper', e)
             video_with_transcript = send_ai_request({"video_url": url})
