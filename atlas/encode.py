@@ -1,8 +1,8 @@
 import pinecone
 from tqdm import tqdm
 
-from atlas.utils import parse_video_id, send_encoding_request
 from atlas.config import PINECONE_API_KEY
+from atlas.utils import parse_video_id, send_ai_request
 
 sentence_transformer_model_model_id = "multi-qa-mpnet-base-dot-v1"
 PINECONE_INDEX_ID = "youtube-search"
@@ -70,7 +70,7 @@ def query_model(query, video_id=""):
     """
     Return a list of matches for a given query and then optionally generate a summarized answer based on the matches.
     """
-    encoded_query = send_encoding_request(query)
+    encoded_query = send_ai_request({"query": query})
     metadata_filter = {"video_id": {"$eq": video_id}} if video_id else None
     vectors = encoded_query['encoded_segments'][0]['vectors']
 

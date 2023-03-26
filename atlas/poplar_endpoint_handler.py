@@ -1,10 +1,16 @@
-from atlas.models import Document
-from atlas.models_utils import YOUTUBE_URL_PREFIX
-from atlas.serializers import DocumentSerializer
-from atlas.transcribe import transcribe_and_search_video
-from atlas.utils import parse_video_id, send_ai_request
+import requests
+import json
 
+from atlas.config import POPLAR_API_KEY
 
+url = 'https://pastebin.com/raw/bTr2kMvw' # url of paste
+r = requests.get(url) # response will be stored from url
+outfit_ideas_video_segment = r.text  # raw text from url
+# print(outfit_ideas_video_segment) # prints content
+outfit_ideas_video_segment = json.loads(outfit_ideas_video_segment)
+print(outfit_ideas_video_segment[0])
+
+# By ChatGPT: https://imgur.com/a/ek9GI9S
 def combine_segments(segments, max_length=1000):
     combined_segments = []
     if len(segments) < 1:
@@ -19,15 +25,13 @@ def combine_segments(segments, max_length=1000):
                     current_segment[key] = segment[key]
             current_segment["text"] += segment["text"]
             current_segment["length"] = len(current_segment["text"])
-            if "duration" in segment and "duration" in current_segment:
-                current_segment["duration"] += segment["duration"]
+            current_segment["duration"] += segment["duration"]
             current_segment["end"] = segment["end"]
         else:
             combined_segments.append(current_segment)
             current_segment = segment
     combined_segments.append(current_segment)
     return combined_segments
-
 
 def get_evenly_spaced_elements(arr, elements_to_keep=10):
     if len(arr) <= elements_to_keep:
@@ -39,22 +43,14 @@ def get_evenly_spaced_elements(arr, elements_to_keep=10):
             evenly_spaced_elements.append(arr[-1])
         return evenly_spaced_elements
 
+combined_segments = get_evenly_spaced_elements(combine_segments(outfit_ideas_video_segment))
 
-def summarize_video(url):
-    video_id = parse_video_id(url)
 
-    document_filter = Document.objects.filter(url=f"{YOUTUBE_URL_PREFIX}?v={video_id}")
-    if not document_filter.exists():
-        print(f"No video with url {url} exists. Transcribing video first before summarizing")
-        transcribe_and_search_video('', url)
+payload = {"summarize": True, "segments": combined_segments, "inputs": ""}
 
-    video = document_filter.first()
-    if len(video.summaries) == 0:
-        segments = get_evenly_spaced_elements(combine_segments(video.segments))
-        summaries = send_ai_request({"summarize": True, "segments": segments})['summary']
-        if "error" in summaries:
-            return {"error": summaries}
-        video.summaries = summaries
-        video.save()
 
-    return {"video": DocumentSerializer(video).data}
+request_body = {"apiKey": POPLAR_API_KEY, "modelId": "atila-atlas", "modelInput": payload}
+
+response = requests.post("https://api.poplarml.com/infer", json=request_body)
+
+print("response", response.text)

@@ -1,14 +1,15 @@
 import time
 from typing import Union
 
+from pytube import YouTube
+from youtube_transcript_api import YouTubeTranscriptApi, CouldNotRetrieveTranscript
+from youtube_transcript_api.formatters import TextFormatter, JSONFormatter
+
 from atlas.encode import upload_transcripts_to_vector_db, query_model, does_video_exist_in_pinecone
 from atlas.models import Document
 from atlas.models_utils import save_transcribed_video_to_atila_database, YOUTUBE_URL_PREFIX
 from atlas.serializers import DocumentSerializer
-from atlas.utils import convert_seconds_to_string, parse_video_id, send_transcription_request, send_encoding_request
-from youtube_transcript_api import YouTubeTranscriptApi, CouldNotRetrieveTranscript
-from youtube_transcript_api.formatters import TextFormatter, JSONFormatter
-from pytube import YouTube
+from atlas.utils import convert_seconds_to_string, parse_video_id, send_ai_request
 
 
 def transcribe_and_search_video(query, url=None, verbose=True):
@@ -23,11 +24,11 @@ def transcribe_and_search_video(query, url=None, verbose=True):
         try:
             video_with_transcript = get_transcript_from_youtube(url)
             print('using Youtube Transcript')
-            video_with_transcript['encoded_segments'] = send_encoding_request(
-                video_with_transcript['transcript']['segments'])['encoded_segments']
+            video_with_transcript['encoded_segments'] = send_ai_request(
+                {"query": video_with_transcript['transcript']['segments']})['encoded_segments']
         except CouldNotRetrieveTranscript as e:
             print('CouldNotRetrieveTranscript on Youtube. Switching to transcription with whisper', e)
-            video_with_transcript = send_transcription_request(url)
+            video_with_transcript = send_ai_request({"video_url": url})
             if 'transcription_source' not in video_with_transcript.get('transcript'):
                 video_with_transcript['transcript']['transcription_source'] = 'whisper'
 
