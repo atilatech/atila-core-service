@@ -27,13 +27,13 @@ def parse_video_id(url):
         return None
 
 
-def send_ai_request(request_args: dict, provider="huggingface"):
+def send_ai_request(request_args: dict, provider="poplar"):
     headers = {}
     if provider in ['poplar', 'huggingface']:
-        request_args = json.dumps({
+        request_args = {
             "inputs": "",  # inputs key is not used but Hugging Face endpoint requires it
             **request_args
-        })
+        }
     if provider == "poplar":
         url = "https://api.poplarml.com/infer"
         request_body = {
@@ -41,6 +41,8 @@ def send_ai_request(request_args: dict, provider="huggingface"):
             "modelId": "atila-atlas",
             "modelInput": request_args,
         }
+        request_body = json.dumps(request_body)
+        headers["Content-Type"] = "application/json"
     elif provider == "huggingface":
         url = HUGGING_FACE_ENDPOINT_URL
         request_body = request_args
