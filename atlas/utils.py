@@ -72,7 +72,6 @@ def send_ai_request(request_args: dict, provider="poplar"):
     else:
         raise ValueError(f"Unknown AI provider: {provider}")
 
-    print('request_body', request_body)
     response = requests.post(url, data=request_body, headers=headers)
     if 'error' in response.json():
         raise HTTPError(response.json())
