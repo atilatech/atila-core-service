@@ -49,23 +49,6 @@ def send_ai_request(request_args: dict, provider="poplar"):
         headers["Authorization"] = f"Bearer {HUGGING_FACE_API_KEY}"
         headers["Content-Type"] = "application/json"
     elif provider == "openai":
-
-        # example_prompt may not be necessary
-        example_prompt = """
-        1: steve madden makes a good shoe and i would also recommend topshop i think these are like kind of a british style shoe so i think they have some on their website as well. this took me so long to figure out but victoria's secret broads suck somehow they have managed to throw shoes I would wear with this outfit probably airforces if we're being honest but I feel like it would also look really cute with some platform sandals alright
-
-        2: so here's the next outfit I'm wearing this skirt again from Tilly's and then I just have this like halter kind of top not really halter I don't dress with chunky platform shoes or boots with some type of hardware on them i just think it looks really cool and casual and it's such a foolproof combination.
-        
-        1: https://www.youtube.com/watch?v=qaIBka_zHKI
-        
-        2: https://www.youtube.com/watch?v=PCOo8AW4oI0
-        
-        question: what shoes should I wear
-        
-        answer: You should wear Airforces [1] or chunky platform shoes or boots with some type of hardware on them [2]
-        1: https://www.youtube.com/watch?v=qaIBka_zHKI
-        2: https://www.youtube.com/watch?v=PCOo8AW4oI0
-        """
         prompt = "Given the following context. Answer the question using the provided context." \
                  "Indicate which youtube video you are referenced in your answer using numbered footnotes." \
                  "and the link of the source." \
