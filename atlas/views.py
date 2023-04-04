@@ -11,6 +11,7 @@ from atlas.summarize import summarize_video
 from atlas.transcribe import transcribe_and_search_video
 from pytube import YouTube
 
+from atlas.utils import send_ai_request
 from userprofile.models import UserProfile
 
 MAX_VIDEO_LENGTH = 900  # TODO: Fix, can't transcribe videos longer than 900 seconds due to timeout errors.
@@ -33,7 +34,8 @@ class SearchView(APIView):
         url = request_data.get('url')
         query = request_data.get('q')
 
-        summarize = request_data.get('summarize') or not query
+        question = request_data.get('question')
+        summarize = request_data.get('summarize') or not query and not question
         print('request_data', request_data)
         try:
             if summarize:
@@ -44,6 +46,9 @@ class SearchView(APIView):
             print('user_can_make_atlas_request', user_can_make_atlas_request)
             if 'error' in user_can_make_atlas_request:
                 return Response(user_can_make_atlas_request, status=status.HTTP_400_BAD_REQUEST)
+
+            if question:
+                return self.handle_question_answer_request(request_data)
 
             video = None
 
@@ -74,6 +79,16 @@ class SearchView(APIView):
         results = summarize_video(url)
 
         return Response({**results}, status=400 if "error" in results else 200)
+
+    @staticmethod
+    def handle_question_answer_request(request_data):
+
+        question = request_data.get('question')
+        context = request_data.get('context')
+
+        results = send_ai_request({'question': question, 'context': context}, 'openai')
+
+        return Response({"results": results}, status=200)
 
     @staticmethod
     def validate_if_user_can_make_atlas_request(request):
