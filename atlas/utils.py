@@ -41,7 +41,6 @@ def send_ai_request(request_args: dict, provider="huggingface"):
             "modelId": "atila-atlas",
             "modelInput": request_args,
         }
-        request_body = json.dumps(request_body)
         headers["Content-Type"] = "application/json"
     elif provider == "huggingface":
         url = HUGGING_FACE_ENDPOINT_URL
@@ -65,16 +64,16 @@ def send_ai_request(request_args: dict, provider="huggingface"):
           "presence_penalty": 0,
           "stop": ["\n"]
         }
-        request_body = json.dumps(request_body)
         url = "https://api.openai.com/v1/completions"
         headers["Authorization"] = f"Bearer {OPENAI_API_KEY}"
         headers["Content-Type"] = "application/json"
     else:
         raise ValueError(f"Unknown AI provider: {provider}")
 
+    request_body = json.dumps(request_body)
     response = requests.post(url, data=request_body, headers=headers)
+    response.raise_for_status()
     if 'error' in response.json():
         raise HTTPError(response.json())
-    response.raise_for_status()
 
     return response.json()
