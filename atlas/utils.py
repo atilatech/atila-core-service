@@ -73,8 +73,8 @@ def send_ai_request(request_args: dict, provider="huggingface"):
         raise ValueError(f"Unknown AI provider: {provider}")
 
     response = requests.post(url, data=request_body, headers=headers)
+    response.raise_for_status()
     if 'error' in response.json():
         raise HTTPError(response.json())
-    response.raise_for_status()
 
     return response.json()
