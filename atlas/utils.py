@@ -27,7 +27,7 @@ def parse_video_id(url):
         return None
 
 
-def send_ai_request(request_args: dict, provider="poplar"):
+def send_ai_request(request_args: dict, provider="huggingface"):
     headers = {}
     if provider in ['poplar', 'huggingface']:
         request_args = {
