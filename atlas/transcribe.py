@@ -2,6 +2,7 @@ import time
 from typing import Union
 
 from pytube import YouTube
+import pytube
 from youtube_transcript_api import YouTubeTranscriptApi, CouldNotRetrieveTranscript
 from youtube_transcript_api.formatters import TextFormatter, JSONFormatter
 
@@ -11,6 +12,7 @@ from atlas.models_utils import save_transcribed_video_to_atila_database, YOUTUBE
 from atlas.serializers import DocumentSerializer
 from atlas.utils import convert_seconds_to_string, parse_video_id, send_ai_request
 
+pytube.innertube._default_clients['ANDROID']=pytube.innertube._default_clients['WEB']
 
 def transcribe_and_search_video(query, url=None, verbose=True):
     t0 = time.time()
@@ -124,6 +126,7 @@ def combine_group(group):
 
 def add_video_metadata_to_transcript(video_transcript, url):
     video = YouTube(url)
+    print('video', video)
     video_metadata = {
         "id": video.video_id,
         "thumbnail": video.thumbnail_url,
