@@ -3,12 +3,13 @@ import json
 
 from atlas.config import POPLAR_API_KEY
 
-url = 'https://pastebin.com/raw/bTr2kMvw' # url of paste
-r = requests.get(url) # response will be stored from url
+url = 'https://pastebin.com/raw/bTr2kMvw'  # url of paste
+r = requests.get(url)  # response will be stored from url
 outfit_ideas_video_segment = r.text  # raw text from url
 # print(outfit_ideas_video_segment) # prints content
 outfit_ideas_video_segment = json.loads(outfit_ideas_video_segment)
 print(outfit_ideas_video_segment[0])
+
 
 # By ChatGPT: https://imgur.com/a/ek9GI9S
 def combine_segments(segments, max_length=1000):
@@ -33,6 +34,7 @@ def combine_segments(segments, max_length=1000):
     combined_segments.append(current_segment)
     return combined_segments
 
+
 def get_evenly_spaced_elements(arr, elements_to_keep=10):
     if len(arr) <= elements_to_keep:
         return arr
@@ -43,11 +45,10 @@ def get_evenly_spaced_elements(arr, elements_to_keep=10):
             evenly_spaced_elements.append(arr[-1])
         return evenly_spaced_elements
 
+
 combined_segments = get_evenly_spaced_elements(combine_segments(outfit_ideas_video_segment))
 
-
 payload = {"summarize": True, "segments": combined_segments, "inputs": ""}
-
 
 request_body = {"apiKey": POPLAR_API_KEY, "modelId": "atila-atlas", "modelInput": payload}
 
