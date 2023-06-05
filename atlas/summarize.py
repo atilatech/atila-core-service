@@ -44,9 +44,11 @@ def summarize_video(url):
     video_id = parse_video_id(url)
 
     document_filter = Document.objects.filter(url=f"{YOUTUBE_URL_PREFIX}?v={video_id}")
+    created = False
     if not document_filter.exists():
         print(f"No video with url {url} exists. Transcribing video first before summarizing")
         transcribe_and_search_video('', url)
+        created = True
 
     video = document_filter.first()
     if len(video.summaries) == 0:
@@ -57,4 +59,4 @@ def summarize_video(url):
         video.summaries = summaries
         video.save()
 
-    return {"video": DocumentSerializer(video).data}
+    return {"video": DocumentSerializer(video).data, "created": created}
