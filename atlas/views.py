@@ -1,5 +1,6 @@
 from requests import HTTPError
 from rest_framework import viewsets, status
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -11,6 +12,7 @@ from atlas.summarize import summarize_video
 from atlas.transcribe import transcribe_and_search_video
 from pytube import YouTube
 
+from atlas.transcribe_collection import calculate_cost_for_transcribing_a_collection
 from atlas.utils import send_ai_request
 from userprofile.models import UserProfile
 
@@ -24,6 +26,19 @@ class SearchView(APIView):
 
     def post(self, request):
         return self.handle_transcription_request(request)
+
+    @staticmethod
+    @api_view(['POST'])
+    def calculate_cost(request):
+        url = request.data.get("url")
+        phone = request.data.get("phone")
+        email = request.data.get("email")
+        metadata = {
+            'phone': phone,
+            'email': email,
+        }
+        result = calculate_cost_for_transcribing_a_collection(url, metadata)
+        return Response(result)
 
     def handle_transcription_request(self, request):
         if request.method == 'GET':

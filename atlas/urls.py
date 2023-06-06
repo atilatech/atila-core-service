@@ -8,5 +8,6 @@ router.register(r'documents', views.DocumentViewSet)
 
 urlpatterns = [
     path('search', views.SearchView.as_view(), name='atlas-search'),
+    path('search/cost', views.SearchView.calculate_cost, name='calculate'),
     path('', include(router.urls)),
 ]

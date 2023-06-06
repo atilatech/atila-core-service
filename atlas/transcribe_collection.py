@@ -47,6 +47,10 @@ def get_videos_from_playlist(url, limit=MAX_VIDEOS_TO_RETRIEVE):
 
 
 def get_videos_from_channel(url):
+    if '.com/@' in url:
+        new_url = url.replace('.com/@', '.com/channel/')
+        print('replaced_url', url, 'new_url', new_url)
+        url = new_url
     channel = Channel(url)
     # Retrieve the channel's uploads playlist ID
     channels_response = youtube.channels().list(part="snippet,contentDetails", id=channel.channel_id).execute()
