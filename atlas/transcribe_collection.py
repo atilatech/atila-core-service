@@ -2,7 +2,7 @@ import os
 
 import pytube
 import stripe
-from pytube import Playlist, Channel, YouTube
+from pytube import Playlist, Channel
 from googleapiclient.discovery import build
 
 pytube.innertube._default_clients['ANDROID'] = pytube.innertube._default_clients['WEB']
@@ -28,6 +28,7 @@ def get_videos_from_playlist(url, limit=MAX_VIDEOS_TO_RETRIEVE):
 
     playlist_info = {
         "title": playlist.title,
+        "url": playlist.playlist_url
     }
 
     for video in playlist.videos:
@@ -46,22 +47,36 @@ def get_videos_from_playlist(url, limit=MAX_VIDEOS_TO_RETRIEVE):
     }
 
 
-def get_videos_from_channel(url):
-    if '.com/@' in url:
-        new_url = url.replace('.com/@', '.com/channel/')
-        print('replaced_url', url, 'new_url', new_url)
-        url = new_url
-    channel = Channel(url)
+def get_videos_from_channel(url: str):
+    if '@' in url:
+        username = url.split('@')[-1]
+        request = youtube.search().list(
+            part="snippet",
+            q=username,
+            type="channel"
+        )
+        response = request.execute()
+        if len(response['items']) > 0:
+            channel_id = response['items'][0]['id']['channelId']
+        else:
+            raise Exception(f'No matching channels found for {url}')
+    else:
+        channel = Channel(url)
+        channel_id = channel.channel_id
+
     # Retrieve the channel's uploads playlist ID
-    channels_response = youtube.channels().list(part="snippet,contentDetails", id=channel.channel_id).execute()
+    channels_response = youtube.channels().list(part="snippet,contentDetails", id=channel_id).execute()
+
     playlist_id = channels_response["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
 
     # Retrieve the videos from the uploads playlist
     playlist_url = f"https://www.youtube.com/playlist?list={playlist_id}"
+    channel_url = f"https://www.youtube.com/channel/{channel_id}"
     result = get_videos_from_playlist(playlist_url)
 
     channel_info = {
         "title": channels_response["items"][0]["snippet"]["title"],
+        "url": channel_url,
     }
 
     return {
@@ -79,7 +94,7 @@ def generate_cost_explanation(metadata):
     title = metadata["title"]
     videos_type = metadata["type"]
 
-    explanation = f"Cost breakdown for {videos_type} {title}:\n"
+    explanation = f"Cost breakdown for transcribing {title} {videos_type}:\n"
     explanation += f"  - Price for {video_count} videos: ${price_for_video_count}\n"
     explanation += f"  - Price for {total_length_hours} hours of video: ${price_for_video_length}\n"
     explanation += f"Total cost: ${total_cost}"
@@ -91,15 +106,16 @@ def calculate_cost_for_transcribing_a_collection(url, metadata=None):
     if metadata is None:
         metadata = {}
 
-    metadata['url'] = url
     if '/playlist' in url:
+        metadata['type'] = 'playlist'
         result = get_videos_from_playlist(url)
         metadata['title'] = result['playlist']['title']
-        metadata['type'] = 'playlist'
+        metadata['url'] = result['playlist']['url']
     else:
+        metadata['type'] = 'channel'
         result = get_videos_from_channel(url)
         metadata['title'] = result['channel']['title']
-        metadata['type'] = 'channel'
+        metadata['url'] = result['channel']['url']
 
     metadata['total_videos_count'] = result['playlist']['total_videos_count']
 
@@ -142,5 +158,4 @@ def calculate_cost_for_transcribing_a_collection(url, metadata=None):
     metadata['payment_link'] = payment_link['url']
     metadata['cost_breakdown_text'] = generate_cost_explanation(metadata)
 
-    print('metadata', metadata)
     return metadata
