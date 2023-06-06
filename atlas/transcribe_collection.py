@@ -8,7 +8,7 @@ from googleapiclient.discovery import build
 pytube.innertube._default_clients['ANDROID'] = pytube.innertube._default_clients['WEB']
 
 price_per_video = 1
-price_per_hour = 0.10
+price_per_hour = 1
 
 stripe.api_key = os.getenv('STRIPE_API_KEY')
 YOUTUBE_API_KEY = os.getenv('YOUTUBE_API_KEY')
@@ -18,23 +18,26 @@ youtube = build("youtube", "v3", developerKey=YOUTUBE_API_KEY)
 MAX_VIDEOS_TO_RETRIEVE = 100
 
 
-def get_videos_from_playlist(url):
+def get_videos_from_playlist(url, limit=MAX_VIDEOS_TO_RETRIEVE):
     playlist = Playlist(url)
 
     videos = []
+
+    if limit is None or limit > MAX_VIDEOS_TO_RETRIEVE:
+        limit = MAX_VIDEOS_TO_RETRIEVE
 
     playlist_info = {
         "title": playlist.title,
     }
 
     for video in playlist.videos:
-        playlist_info['total_videos'] = len(playlist.video_urls)
+        playlist_info['total_videos_count'] = len(playlist.video_urls)
         videos.append({
             "title": video.title,
             "url": video.watch_url,
             "length": video.length
         })
-        if len(videos) == MAX_VIDEOS_TO_RETRIEVE:
+        if len(videos) == limit:
             break
 
     return {
@@ -63,6 +66,23 @@ def get_videos_from_channel(url):
     }
 
 
+def generate_cost_explanation(metadata):
+    price_for_video_count = metadata["price_for_video_count"]
+    price_for_video_length = metadata["price_for_video_length"]
+    total_cost = metadata["total_cost"]
+    total_length_hours = metadata["total_length_hours"]
+    video_count = metadata["video_count"]
+    title = metadata["title"]
+    videos_type = metadata["type"]
+
+    explanation = f"Cost breakdown for {videos_type} {title}:\n"
+    explanation += f"  - Price for {video_count} videos: ${price_for_video_count}\n"
+    explanation += f"  - Price for {total_length_hours} hours of video: ${price_for_video_length}\n"
+    explanation += f"Total cost: ${total_cost}"
+
+    return explanation
+
+
 def calculate_cost_for_transcribing_a_collection(url, metadata=None):
     if metadata is None:
         metadata = {}
@@ -77,24 +97,30 @@ def calculate_cost_for_transcribing_a_collection(url, metadata=None):
         metadata['title'] = result['channel']['title']
         metadata['type'] = 'channel'
 
+    metadata['total_videos_count'] = result['playlist']['total_videos_count']
+
     videos = result['videos']
     price_for_video_count = len(videos) * price_per_video
+    metadata['price_per_video'] = price_per_video
     metadata['price_for_video_count'] = price_for_video_count
 
     video_count = len(videos)
     metadata['video_count'] = video_count
 
-    total_length_hours = sum([video["length"] for video in videos]) / 60
-    price_for_video_length = total_length_hours * price_per_hour
+    total_length_hours = sum([video["length"] for video in videos]) / (60 * 60)
+    total_length_hours = '{0:.2f}'.format(total_length_hours)
+    # pycharm type hinting thought the price_for_video_length was a string so casting to float to prevent ambiguity
+    price_for_video_length = float(total_length_hours * price_per_hour)
 
+    metadata['price_per_hour'] = price_per_hour
     metadata['total_length_hours'] = total_length_hours
     metadata['price_for_video_length'] = price_for_video_length
 
-    metadata['total_cost'] = '{0:.2f}'.format(price_for_video_count+price_for_video_length)
+    metadata['total_cost'] = '{0:.2f}'.format(price_for_video_count + price_for_video_length)
 
     currency = "usd"
     stripe_price = stripe.Price.create(
-        unit_amount=int((price_for_video_count+price_for_video_length) * 100),
+        unit_amount=int((price_for_video_count + price_for_video_length) * 100),
         currency=currency,
         product=STRIPE_TRANSCRIBE_PLAYLIST_PRODUCT_ID,
     )
@@ -109,4 +135,8 @@ def calculate_cost_for_transcribing_a_collection(url, metadata=None):
         metadata=metadata
     )
 
-    return payment_link
+    metadata['payment_link'] = payment_link['url']
+    metadata['cost_breakdown_text'] = generate_cost_explanation(metadata)
+
+    print('metadata', metadata)
+    return metadata
