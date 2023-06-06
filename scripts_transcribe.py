@@ -12,8 +12,8 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "atila.settings")
 django.setup()
 
 # import statements must come AFTER django.setup() has been called
-from atlas.transcribe import get_transcript_from_youtube
 
+from atlas.transcribe_collection import calculate_cost_for_transcribing_a_collection
 # url = "https://www.youtube.com/watch?v=aUlLLnsvwKE"  # 24 Hours With Emma Chamberlain in Copenhagen | Vogue
 url = "https://www.youtube.com/watch?v=WNvOtwP_yf4"  # Making Friends with Machine Learning: Regression
 # Sam Parr: From Jail To $20+ Million By 32 | The Danny Miranda Podcast 243
@@ -25,4 +25,8 @@ url = "https://www.youtube.com/watch?v=WNvOtwP_yf4"  # Making Friends with Machi
 
 # print("get_transcript_from_youtube(url)", get_transcript_from_youtube(url))
 
-print("get_transcript_from_youtube(url)", get_transcript_from_youtube(url, save_to_file='json'))
+if __name__ == "__main__":
+    playlist_url = 'https://www.youtube.com/playlist?list=PLS1QulWo1RIaJECMeUT4LFwJ-ghgoSH6n'
+    channel_url = 'https://www.youtube.com/c/ProgrammingKnowledge'
+    channel_url = 'https://www.youtube.com/channel/UCG2iWiYgJYkjBl4EdYGI5mw'
+    print("get_transcript_from_youtube(url)", calculate_cost_for_transcribing_a_collection(channel_url))
