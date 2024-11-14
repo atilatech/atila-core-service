@@ -13,7 +13,8 @@ class UserPermission(permissions.BasePermission):
             return True
         else:
             user_profile = UserProfile.get_user_profile_from_request(request)
-            return user_profile and user_profile.is_atila_admin
+
+            return user_profile and user_profile.user.is_staff
 
     def has_object_permission(self, request, view, obj: User):
         user_profile = UserProfile.get_user_profile_from_request(request)
