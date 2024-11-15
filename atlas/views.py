@@ -124,29 +124,17 @@ class SearchView(APIView):
 
         if not request.user.is_authenticated:
             atlas_credits = request.session.get('atlas_credits', 5)
-            if atlas_credits >= GUEST_STARTING_CREDITS:
-                return {
-                    'error': f"You have passed the {GUEST_STARTING_CREDITS} search limit for guest users. "
-                             f"Please make a free account to make more searches.",
-                    'error_code': GUEST_SEARCH_LIMIT_REACHED,
-                    'atlas_credits': atlas_credits,
-                }
+            error_message = "You have run out of credits. Please make a free account to get more credits."
         else:
             user_profile = UserProfile.get_user_profile_from_request(request)
             atlas_credits = user_profile.atlas_credits
-            if user_profile.is_premium:  # premium users have no search limit
-                return {
-                    'success': "Premium users have no search limit.",
-                    'atlas_credits': atlas_credits,
-                }
-            if atlas_credits >= REGISTERED_STARTING_CREDITS \
-                    and atlas_credits > user_profile.atlas_credits_custom_limit:
-                return {
-                    'error': f"You have passed the {REGISTERED_STARTING_CREDITS} search limit for free users. "
-                             f"Please upgrade your account to make more searches",
-                    'error_code': REGISTERED_FREE_SEARCH_LIMIT_REACHED,
-                    'atlas_credits': atlas_credits,
-                }
+            error_message = "You have run out of credits. To continue using Atlas, purchase more credits."
+        if atlas_credits == 0:
+            return {
+                'error': error_message,
+                'error_code': GUEST_SEARCH_LIMIT_REACHED,
+                'atlas_credits': atlas_credits,
+            }
         return {
             'success': "User is within search limit",
             'atlas_credits': atlas_credits,
