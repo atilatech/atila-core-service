@@ -122,7 +122,7 @@ class SearchView(APIView):
             if atlas_searches >= MAX_GUEST_SEARCHES:
                 return {
                     'error': f"You have passed the {MAX_GUEST_SEARCHES} search limit for guest users. "
-                             f"Please make a free account to make more searches",
+                             f"Please make a free account to make more searches.",
                     'error_code': GUEST_SEARCH_LIMIT_REACHED,
                     'atlas_searches': atlas_searches,
                 }

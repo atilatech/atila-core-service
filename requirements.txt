@@ -75,7 +75,9 @@ pandocfilters==1.5.0
 parso==0.8.3
 pexpect==4.8.0
 pickleshare==0.7.5
-pinecone-client==2.0.13
+pinecone-client==5.0.1
+pinecone-plugin-inference==1.1.0
+pinecone-plugin-interface==0.0.7
 platformdirs==2.6.2
 prometheus-client==0.15.0
 prompt-toolkit==3.0.36

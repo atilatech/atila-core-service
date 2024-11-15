@@ -1,4 +1,5 @@
 import pinecone
+from pinecone import Pinecone
 from tqdm import tqdm
 
 from atlas.config import PINECONE_API_KEY
@@ -8,12 +9,8 @@ sentence_transformer_model_model_id = "multi-qa-mpnet-base-dot-v1"
 PINECONE_INDEX_ID = "youtube-search"
 batch_size = 64
 
-pinecone.init(
-    api_key=PINECONE_API_KEY,
-    environment="us-west1-gcp"
-)
-
-pinecone_index = pinecone.Index(PINECONE_INDEX_ID)
+pc = Pinecone(api_key=PINECONE_API_KEY)
+pinecone_index = pc.Index(PINECONE_INDEX_ID)
 
 
 def initialize_pinecone_index():
@@ -74,7 +71,7 @@ def query_model(query, video_id=""):
     metadata_filter = {"video_id": {"$eq": video_id}} if video_id else None
     vectors = encoded_query['encoded_segments'][0]['vectors']
 
-    results = pinecone_index.query(vectors, top_k=5,
+    results = pinecone_index.query(vector=vectors, top_k=5,
                                    include_metadata=True,
                                    filter=metadata_filter).to_dict()
 

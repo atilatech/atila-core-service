@@ -8,5 +8,23 @@ Atlas is a service for finding anything on YouTube.
 
 For a more detailed breakdown of how Atlas works, see: [Atlas: Find Anything on Youtube](https://atila.ca/blog/tomiwa/atlas)
 
+
+**Services**
+1. [Huggingface Inference Endpoint: video-summarize-and-search](https://ui.endpoints.huggingface.co/tomiwa1a/endpoints/video-summarize-and-search)
+2. [Pinecone Index: youtube-search](https://app.pinecone.io/organizations/-NJtg2syoPWRDg1eVwga/projects/ff3f45c0-03c1-4246-8de3-186799f6fbf8/indexes/youtube-search/browser)
+
 ## Quickstart
 
+Test that the [HuggingFace inference endpoint](https://ui.endpoints.huggingface.co/tomiwa1a/endpoints/video-summarize-and-search) is working with cURL
+
+```shell
+curl "https://x3s08981hxsn2r2t.us-east-1.aws.endpoints.huggingface.cloud" \
+-X POST \
+-H "Accept: application/json" \
+-H "Authorization: Bearer hf_abc1213" \
+-H "Content-Type: application/json" \
+-d '{"query": "cookies", "inputs": "https://www.youtube.com/watch?v=m6fnJ6rQPok"}'
+```
+### Pinecone Index
+
+[View Index in Pinecone](https://app.pinecone.io/organizations/-NJtg2syoPWRDg1eVwga/projects/ff3f45c0-03c1-4246-8de3-186799f6fbf8/indexes/youtube-search/browser)
