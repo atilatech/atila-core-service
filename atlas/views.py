@@ -72,9 +72,9 @@ class SearchView(APIView):
 
             results = transcribe_and_search_video(query, url, video)
 
-            atlas_searches = self.update_atlas_searches_count(request)
+            atlas_credits = self.update_atlas_credits_count(request)
 
-            return Response({**results, 'atlas_searches': atlas_searches}, status=200)
+            return Response({**results, 'atlas_credits': atlas_credits}, status=200)
 
         except HTTPError as e:
             return Response({"error": str(e)}, status=400)

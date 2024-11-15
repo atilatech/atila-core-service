@@ -3,7 +3,7 @@ from rest_framework import serializers
 from atila.serializers import UserSerializer
 from userprofile.models import UserProfile
 
-userprofile_fields = ['id', 'user', 'atlas_searches', 'atlas_transcriptions', 'is_premium',
+userprofile_fields = ['id', 'user', 'atlas_credits', 'atlas_transcriptions', 'is_premium',
                       'date_created', 'date_modified']
 
 
