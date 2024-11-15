@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from atlas.constants import MAX_GUEST_SEARCHES, GUEST_SEARCH_LIMIT_REACHED, MAX_REGISTERED_FREE_SEARCHES, \
+from atlas.constants import GUEST_STARTING_CREDITS, GUEST_SEARCH_LIMIT_REACHED, REGISTERED_STARTING_CREDITS, \
     REGISTERED_FREE_SEARCH_LIMIT_REACHED
 from atlas.models import Document
 from atlas.serializers import DocumentSerializer, DocumentPreviewSerializer
@@ -108,6 +108,11 @@ class SearchView(APIView):
     @staticmethod
     def validate_if_user_can_make_atlas_request(request):
         """
+        1. Unregistered users get 5 credits
+        2. Registered users get 20 credits
+        3. Buying additional credits cost $1/10 credits
+        4. 1 video transcription uses 1 credit
+
         1. If user is not logged in, they can only make 10 searches.
         2. If they are logged in but a free account they can make 20 searches.
         3. If they are logged in and have a premium account they can make unlimited searches every month.
@@ -118,49 +123,49 @@ class SearchView(APIView):
         # Number of visits to this view, as counted in the session variable.
 
         if not request.user.is_authenticated:
-            atlas_searches = request.session.get('atlas_searches', 0)
-            if atlas_searches >= MAX_GUEST_SEARCHES:
+            atlas_credits = request.session.get('atlas_credits', 5)
+            if atlas_credits >= GUEST_STARTING_CREDITS:
                 return {
-                    'error': f"You have passed the {MAX_GUEST_SEARCHES} search limit for guest users. "
+                    'error': f"You have passed the {GUEST_STARTING_CREDITS} search limit for guest users. "
                              f"Please make a free account to make more searches.",
                     'error_code': GUEST_SEARCH_LIMIT_REACHED,
-                    'atlas_searches': atlas_searches,
+                    'atlas_credits': atlas_credits,
                 }
         else:
             user_profile = UserProfile.get_user_profile_from_request(request)
-            atlas_searches = user_profile.atlas_searches
+            atlas_credits = user_profile.atlas_credits
             if user_profile.is_premium:  # premium users have no search limit
                 return {
                     'success': "Premium users have no search limit.",
-                    'atlas_searches': atlas_searches,
+                    'atlas_credits': atlas_credits,
                 }
-            if atlas_searches >= MAX_REGISTERED_FREE_SEARCHES \
-                    and atlas_searches > user_profile.atlas_searches_custom_limit:
+            if atlas_credits >= REGISTERED_STARTING_CREDITS \
+                    and atlas_credits > user_profile.atlas_credits_custom_limit:
                 return {
-                    'error': f"You have passed the {MAX_REGISTERED_FREE_SEARCHES} search limit for free users. "
+                    'error': f"You have passed the {REGISTERED_STARTING_CREDITS} search limit for free users. "
                              f"Please upgrade your account to make more searches",
                     'error_code': REGISTERED_FREE_SEARCH_LIMIT_REACHED,
-                    'atlas_searches': atlas_searches,
+                    'atlas_credits': atlas_credits,
                 }
         return {
             'success': "User is within search limit",
-            'atlas_searches': atlas_searches,
+            'atlas_credits': atlas_credits,
         }
 
     @staticmethod
-    def update_atlas_searches_count(request):
+    def update_atlas_credits_count(request):
 
         user_profile = UserProfile.get_user_profile_from_request(request)
 
         if user_profile:
-            user_profile.atlas_searches += 1
+            user_profile.atlas_credits -= 1
             user_profile.save()
-            atlas_searches = user_profile.atlas_searches
+            atlas_credits = user_profile.atlas_credits
         else:
-            request.session['atlas_searches'] = request.session.get('atlas_searches', 0) + 1
-            atlas_searches = request.session['atlas_searches']
+            request.session['atlas_credits'] = request.session.get('atlas_credits', GUEST_STARTING_CREDITS) - 1
+            atlas_credits = request.session['atlas_credits']
 
-        return atlas_searches
+        return atlas_credits
 
 
 class DocumentViewSet(viewsets.ModelViewSet):
