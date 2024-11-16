@@ -35,8 +35,11 @@ def transcribe_and_search_video(query, url=None, verbose=True):
             if 'transcription_source' not in video_with_transcript.get('transcript'):
                 video_with_transcript['transcript']['transcription_source'] = 'whisper'
 
-        save_transcribed_video_to_atila_database(video_with_transcript)
-        upload_transcripts_to_vector_db(video_with_transcript['encoded_segments'])
+        if not document_filter.exists():
+            save_transcribed_video_to_atila_database(video_with_transcript)
+        if not does_video_exist_in_pinecone(url):
+            upload_transcripts_to_vector_db(video_with_transcript['encoded_segments'])
+
     else:
         print(f'Skipping transcribing and embedding. ')
         if not url:
