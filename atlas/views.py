@@ -123,7 +123,7 @@ class SearchView(APIView):
         # Number of visits to this view, as counted in the session variable.
 
         if not request.user.is_authenticated:
-            atlas_credits = request.session.get('atlas_credits', 5)
+            atlas_credits = request.session.get('atlas_credits', GUEST_STARTING_CREDITS)
             error_message = "You have run out of credits. Please make a free account to get more credits."
         else:
             user_profile = UserProfile.get_user_profile_from_request(request)
@@ -151,8 +151,8 @@ class SearchView(APIView):
             atlas_credits = user_profile.atlas_credits
         else:
             request.session['atlas_credits'] = request.session.get('atlas_credits', GUEST_STARTING_CREDITS) - 1
+            request.session.save()
             atlas_credits = request.session['atlas_credits']
-
         return atlas_credits
 
 
