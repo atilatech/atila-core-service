@@ -1,0 +1,218 @@
+{
+  "api_version": "2019-10-17",
+  "created": 1731891892,
+  "data": {
+    "object": {
+      "amount": 2000,
+      "amount_capturable": 0,
+      "amount_details": {
+        "tip": {}
+      },
+      "amount_received": 2000,
+      "application": null,
+      "application_fee_amount": null,
+      "automatic_payment_methods": null,
+      "canceled_at": null,
+      "cancellation_reason": null,
+      "capture_method": "automatic",
+      "charges": {
+        "data": [
+          {
+            "amount": 2000,
+            "amount_captured": 2000,
+            "amount_refunded": 0,
+            "application": null,
+            "application_fee": null,
+            "application_fee_amount": null,
+            "balance_transaction": "txn_3QMJOZHeg0qPyG6k1DPcgNsk",
+            "billing_details": {
+              "address": {
+                "city": null,
+                "country": null,
+                "line1": null,
+                "line2": null,
+                "postal_code": null,
+                "state": null
+              },
+              "email": "tomiademidun@gmail.com",
+              "name": "Tomiwa Ademidun",
+              "phone": null
+            },
+            "calculated_statement_descriptor": "ATILA INC.",
+            "captured": true,
+            "created": 1731891891,
+            "currency": "usd",
+            "customer": null,
+            "description": "(created by Stripe CLI)",
+            "destination": null,
+            "dispute": null,
+            "disputed": false,
+            "failure_balance_transaction": null,
+            "failure_code": null,
+            "failure_message": null,
+            "fraud_details": {},
+            "id": "ch_3QMJOZHeg0qPyG6k1A7SBEBW",
+            "invoice": null,
+            "livemode": false,
+            "metadata": {},
+            "object": "charge",
+            "on_behalf_of": null,
+            "order": null,
+            "outcome": {
+              "network_advice_code": null,
+              "network_decline_code": null,
+              "network_status": "approved_by_network",
+              "reason": null,
+              "risk_level": "normal",
+              "risk_score": 26,
+              "seller_message": "Payment complete.",
+              "type": "authorized"
+            },
+            "paid": true,
+            "payment_intent": "pi_3QMJOZHeg0qPyG6k1divTyoK",
+            "payment_method": "pm_1QMJOZHeg0qPyG6kmaFNY9ba",
+            "payment_method_details": {
+              "card": {
+                "amount_authorized": 2000,
+                "authorization_code": null,
+                "brand": "visa",
+                "checks": {
+                  "address_line1_check": null,
+                  "address_postal_code_check": null,
+                  "cvc_check": "pass"
+                },
+                "country": "US",
+                "exp_month": 11,
+                "exp_year": 2025,
+                "extended_authorization": {
+                  "status": "disabled"
+                },
+                "fingerprint": "ZACOJYzGuHiqQ7dZ",
+                "funding": "credit",
+                "incremental_authorization": {
+                  "status": "unavailable"
+                },
+                "installments": null,
+                "last4": "4242",
+                "mandate": null,
+                "multicapture": {
+                  "status": "unavailable"
+                },
+                "network": "visa",
+                "network_token": {
+                  "used": false
+                },
+                "overcapture": {
+                  "maximum_amount_capturable": 2000,
+                  "status": "unavailable"
+                },
+                "three_d_secure": null,
+                "wallet": null
+              },
+              "type": "card"
+            },
+            "radar_options": {},
+            "receipt_email": null,
+            "receipt_number": null,
+            "receipt_url": "https://pay.stripe.com/receipts/payment/CAcaFwoVYWNjdF8xRldVUW1IZWcwcVB5RzZrKLSl6rkGMgYIpX3ZoOY6LBYaLHGDbP2zU02jVFtySHJnp-vVLZnMGrS2m1EhneBkHPLgIObcwguti74b",
+            "refunded": false,
+            "refunds": {
+              "data": [],
+              "has_more": false,
+              "object": "list",
+              "total_count": 0,
+              "url": "/v1/charges/ch_3QMJOZHeg0qPyG6k1A7SBEBW/refunds"
+            },
+            "review": null,
+            "shipping": {
+              "address": {
+                "city": "San Francisco",
+                "country": "US",
+                "line1": "510 Townsend St",
+                "line2": null,
+                "postal_code": "94103",
+                "state": "CA"
+              },
+              "carrier": null,
+              "name": "Jenny Rosen",
+              "phone": null,
+              "tracking_number": null
+            },
+            "source": null,
+            "source_transfer": null,
+            "statement_descriptor": null,
+            "statement_descriptor_suffix": null,
+            "status": "succeeded",
+            "transfer_data": null,
+            "transfer_group": null
+          }
+        ],
+        "has_more": false,
+        "object": "list",
+        "total_count": 1,
+        "url": "/v1/charges?payment_intent=pi_3QMJOZHeg0qPyG6k1divTyoK"
+      },
+      "client_secret": "pi_3QMJOZHeg0qPyG6k1divTyoK_secret_GrYWUTj6skZwq3XE3mBqmyl4A",
+      "confirmation_method": "automatic",
+      "created": 1731891891,
+      "currency": "usd",
+      "customer": null,
+      "description": "(created by Stripe CLI)",
+      "id": "pi_3QMJOZHeg0qPyG6k1divTyoK",
+      "invoice": null,
+      "last_payment_error": null,
+      "latest_charge": "ch_3QMJOZHeg0qPyG6k1A7SBEBW",
+      "livemode": false,
+      "metadata": {},
+      "next_action": null,
+      "object": "payment_intent",
+      "on_behalf_of": null,
+      "payment_method": "pm_1QMJOZHeg0qPyG6kmaFNY9ba",
+      "payment_method_configuration_details": null,
+      "payment_method_options": {
+        "card": {
+          "installments": null,
+          "mandate_options": null,
+          "network": null,
+          "request_three_d_secure": "automatic"
+        }
+      },
+      "payment_method_types": [
+        "card"
+      ],
+      "processing": null,
+      "receipt_email": null,
+      "review": null,
+      "setup_future_usage": null,
+      "shipping": {
+        "address": {
+          "city": "San Francisco",
+          "country": "US",
+          "line1": "510 Townsend St",
+          "line2": null,
+          "postal_code": "94103",
+          "state": "CA"
+        },
+        "carrier": null,
+        "name": "Jenny Rosen",
+        "phone": null,
+        "tracking_number": null
+      },
+      "source": null,
+      "statement_descriptor": null,
+      "statement_descriptor_suffix": null,
+      "status": "succeeded",
+      "transfer_data": null,
+      "transfer_group": null
+    }
+  },
+  "id": "evt_3QMJOZHeg0qPyG6k1BjMb7sR",
+  "livemode": false,
+  "object": "event",
+  "pending_webhooks": 3,
+  "request": {
+    "id": "req_OY3dyvG3OLQIjl",
+    "idempotency_key": "5aeb1081-3c0c-4f4b-aa89-c632f7f5eee3"
+  },
+  "type": "payment_intent.succeeded"
+}

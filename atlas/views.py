@@ -158,9 +158,11 @@ class SearchView(APIView):
         return atlas_credits
 
 
-class PaymentView(APIView):
+class CreditsView(APIView):
 
-    def post(self, request):
+    @staticmethod
+    @api_view(['POST'])
+    def buy(request):
         payload = request.body
         try:
             event = stripe.Event.construct_from(
@@ -179,6 +181,11 @@ class PaymentView(APIView):
             print('Unhandled event type {}'.format(event.type))
 
         return Response(status=200)
+
+    @staticmethod
+    @api_view(['POST'])
+    def apply(request):
+        pass
 
 
 class DocumentViewSet(viewsets.ModelViewSet):

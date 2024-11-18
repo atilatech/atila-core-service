@@ -28,3 +28,13 @@ curl "https://x3s08981hxsn2r2t.us-east-1.aws.endpoints.huggingface.cloud" \
 ### Pinecone Index
 
 [View Index in Pinecone](https://app.pinecone.io/organizations/-NJtg2syoPWRDg1eVwga/projects/ff3f45c0-03c1-4246-8de3-186799f6fbf8/indexes/youtube-search/browser)
+
+## Test Payment Intent Succeeded
+Replace `data-raw` with json data in `data/payment_intent_succeeded_event.json`
+```shell
+curl --location --request POST 'http://127.0.0.1:8000/api/atlas/credits/buy' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "limit": 10
+}'
+```

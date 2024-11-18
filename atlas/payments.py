@@ -11,7 +11,7 @@ def handle_payment_intent_succeeded(payment_intent: PaymentIntent):
     name = payment_intent["charges"]["data"][0]["billing_details"]["name"]
 
     # divide by 100 = convert cents into dollars. Multiply by ATLAS_CREDITS_PER_DOLLAR = Convert dollars to credits
-    atlas_credits = payment_intent["amount_received"] / 100 * ATLAS_CREDITS_PER_DOLLAR
+    atlas_credits = int(payment_intent["amount_received"] / 100 * ATLAS_CREDITS_PER_DOLLAR)
     send_atlas_credits_email(email, name, atlas_credits)
 
     pass
