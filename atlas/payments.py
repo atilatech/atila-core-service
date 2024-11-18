@@ -4,6 +4,7 @@ import os
 from sendgrid.helpers.mail import Mail, Email, To, Content
 
 from atlas.constants import ATLAS_CREDITS_PER_DOLLAR
+from atlas.models import CreditsCode
 
 
 def handle_payment_intent_succeeded(payment_intent: PaymentIntent):
@@ -12,20 +13,20 @@ def handle_payment_intent_succeeded(payment_intent: PaymentIntent):
 
     # divide by 100 = convert cents into dollars. Multiply by ATLAS_CREDITS_PER_DOLLAR = Convert dollars to credits
     atlas_credits = int(payment_intent["amount_received"] / 100 * ATLAS_CREDITS_PER_DOLLAR)
-    send_atlas_credits_email(email, name, atlas_credits)
 
-    pass
+    credits_code = CreditsCode.objects.create(atlas_credits=atlas_credits)
+    send_atlas_credits_email(email, name, credits_code)
 
 
-def send_atlas_credits_email(to_email, name, atlas_credits):
+def send_atlas_credits_email(to_email, name, credits_code):
     sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
     from_email = Email("info@atila.ca", "Atila Tech")  # Change to your verified sender
     to_email = To(to_email)  # Change to your recipient
     subject = "Atlas Credits"
     data = {
         "name": name,
-        "credits_code": "abc123",
-        "atla_credits": atlas_credits,
+        "credits_code": credits_code.code,
+        "atla_credits": credits_code.atlas_credits,
     }
     email_body = """
     Hey {name},

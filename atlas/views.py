@@ -1,6 +1,7 @@
 import json
 
 import stripe
+from django.core.exceptions import ObjectDoesNotExist
 from pytube import YouTube
 from requests import HTTPError
 from rest_framework import viewsets, status
@@ -9,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from atlas.constants import GUEST_STARTING_CREDITS, GUEST_SEARCH_LIMIT_REACHED
-from atlas.models import Document
+from atlas.models import Document, CreditsCode
 from atlas.payments import handle_payment_intent_succeeded
 from atlas.serializers import DocumentSerializer, DocumentPreviewSerializer
 from atlas.summarize import summarize_video
@@ -185,7 +186,28 @@ class CreditsView(APIView):
     @staticmethod
     @api_view(['POST'])
     def apply(request):
-        pass
+        payload = json.loads(request.body)
+
+        email = payload['email']
+        code = payload['code']
+
+        try:
+            user_profile = UserProfile.objects.get(email=email)
+        except ObjectDoesNotExist as e:
+            return Response({'error': f'UserProfile Not Found for given email: {email}'}, status=400)
+
+        try:
+            credits_code = CreditsCode.objects.get(code=code)
+        except ObjectDoesNotExist as e:
+            return Response({'error': 'Invalid code provided'}, status=400)
+
+        user_profile.atlas_credits += credits_code.atlas_credits
+        user_profile.save()
+        credits_code.used_by = user_profile
+        credits_code.save()
+
+        message = f"{credits_code.atlas_credits} added to user {user_profile}"
+        return Response(data={'response': message}, status=200)
 
 
 class DocumentViewSet(viewsets.ModelViewSet):
