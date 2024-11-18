@@ -131,7 +131,8 @@ class SearchView(APIView):
         else:
             user_profile = UserProfile.get_user_profile_from_request(request)
             atlas_credits = user_profile.atlas_credits
-            error_message = "You have run out of credits. To continue using Atlas, purchase more credits."
+            error_message = "You have run out of credits. To continue using Atlas, " \
+                            "visit your profile and purchase more credits."
         if atlas_credits == 0:
             return {
                 'error': error_message,
