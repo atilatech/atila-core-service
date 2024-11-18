@@ -1,8 +1,9 @@
 import hashlib
 from typing import Union, Sized
 
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db.models import JSONField
-from django.db import models
+from django.db import models, transaction
 from django.utils import timezone
 
 from atila.utils import random_string, ModelUtils
@@ -72,3 +73,19 @@ class CreditsCode(models.Model):
     date_created = models.DateTimeField(default=timezone.now)
     date_modified = models.DateTimeField(auto_now=True)
     objects = models.Manager()
+
+    def apply_credits(self, email):
+        if self.used_by is not None:
+            raise ValidationError(f"This code has already been used.")
+        try:
+            with transaction.atomic():
+                user_profile = UserProfile.objects.get(user__email=email)
+                user_profile.atlas_credits += self.atlas_credits
+                user_profile.save()
+
+                self.used_by = user_profile
+                self.save()
+
+                return {'success': f"{self.atlas_credits} credits added to user {user_profile}"}
+        except ObjectDoesNotExist:
+            raise ValidationError(f"UserProfile not found for email: {email}")

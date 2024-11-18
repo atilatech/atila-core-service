@@ -43,9 +43,10 @@ curl --location --request POST 'http://127.0.0.1:8000/api/atlas/credits/buy' \
 ### Test Applying Credits
 
 ```shell
-curl --location --request POST 'http://127.0.0.1:8000/api/atlas/credits/buy' \
+curl --location --request POST 'http://127.0.0.1:8000/api/atlas/credits/apply' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "limit": 10
+    "email": "tomiwa@atila.ca",
+    "code": "fbsx0xnguf0wavx5"
 }'
 ```

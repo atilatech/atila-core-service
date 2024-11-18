@@ -1,7 +1,7 @@
 import json
 
 import stripe
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from pytube import YouTube
 from requests import HTTPError
 from rest_framework import viewsets, status
@@ -186,28 +186,27 @@ class CreditsView(APIView):
     @staticmethod
     @api_view(['POST'])
     def apply(request):
-        payload = json.loads(request.body)
-
-        email = payload['email']
-        code = payload['code']
-
         try:
-            user_profile = UserProfile.objects.get(email=email)
-        except ObjectDoesNotExist as e:
-            return Response({'error': f'UserProfile Not Found for given email: {email}'}, status=400)
+            payload = json.loads(request.body)
+            email = payload['email']
+            code = payload['code']
 
-        try:
+            # Fetch the credits code object
             credits_code = CreditsCode.objects.get(code=code)
-        except ObjectDoesNotExist as e:
+
+            # Apply the credits
+            response = credits_code.apply_credits(email)
+
+            return Response(data=response, status=200)
+
+        except CreditsCode.DoesNotExist:
             return Response({'error': 'Invalid code provided'}, status=400)
 
-        user_profile.atlas_credits += credits_code.atlas_credits
-        user_profile.save()
-        credits_code.used_by = user_profile
-        credits_code.save()
+        except ValidationError as e:
+            return Response({'error': str(e)}, status=400)
 
-        message = f"{credits_code.atlas_credits} added to user {user_profile}"
-        return Response(data={'response': message}, status=200)
+        except KeyError as e:
+            return Response({'error': f'Missing key: {str(e)}'}, status=400)
 
 
 class DocumentViewSet(viewsets.ModelViewSet):
