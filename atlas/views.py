@@ -1,17 +1,19 @@
+import json
+
+import stripe
+from pytube import YouTube
 from requests import HTTPError
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from atlas.constants import GUEST_STARTING_CREDITS, GUEST_SEARCH_LIMIT_REACHED, REGISTERED_STARTING_CREDITS, \
-    REGISTERED_FREE_SEARCH_LIMIT_REACHED
+from atlas.constants import GUEST_STARTING_CREDITS, GUEST_SEARCH_LIMIT_REACHED
 from atlas.models import Document
+from atlas.payments import handle_payment_intent_succeeded
 from atlas.serializers import DocumentSerializer, DocumentPreviewSerializer
 from atlas.summarize import summarize_video
 from atlas.transcribe import transcribe_and_search_video
-from pytube import YouTube
-
 from atlas.transcribe_collection import calculate_cost_for_transcribing_a_collection
 from atlas.utils import send_ai_request
 from userprofile.models import UserProfile
@@ -154,6 +156,31 @@ class SearchView(APIView):
             request.session.save()
             atlas_credits = request.session['atlas_credits']
         return atlas_credits
+
+
+class AtlasPaymentView(APIView):
+
+    @staticmethod
+    @api_view(['POST'])
+    def payment_intent_succeeded(request):
+        payload = request.body
+        try:
+            event = stripe.Event.construct_from(
+                json.loads(payload), stripe.api_key
+            )
+        except ValueError as e:
+            # Invalid payload
+            return Response(data={"error": str(e)}, status=400)
+
+        print('event', event)
+        # Handle the event
+        if event.type == 'payment_intent.succeeded':
+            payment_intent = event.data.object  # contains a stripe.PaymentIntent
+            handle_payment_intent_succeeded(payment_intent)
+        else:
+            print('Unhandled event type {}'.format(event.type))
+
+        return Response(status=200)
 
 
 class DocumentViewSet(viewsets.ModelViewSet):
