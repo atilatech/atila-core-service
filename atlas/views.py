@@ -158,11 +158,9 @@ class SearchView(APIView):
         return atlas_credits
 
 
-class AtlasPaymentView(APIView):
+class PaymentView(APIView):
 
-    @staticmethod
-    @api_view(['POST'])
-    def payment_intent_succeeded(request):
+    def post(self, request):
         payload = request.body
         try:
             event = stripe.Event.construct_from(
