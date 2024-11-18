@@ -169,6 +169,8 @@ Sometimes you just want to quickly run a function without running the entire Dja
 
 You can run this in the `quick_scripts.py` file using `python quick_scripts.py`
 
+`python scripts_send_email.py`
+
 You can also make your own file and put the following at the top of the file, making sure to
 put any Django-specific imports after you call `django.setup()`
 
