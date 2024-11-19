@@ -31,7 +31,8 @@ curl "https://x3s08981hxsn2r2t.us-east-1.aws.endpoints.huggingface.cloud" \
 
 ## Testing Atlas Credits
 ### Test Buying Credits
-Replace `data-raw` with json data in `data/payment_intent_succeeded_event.json`
+1. Replace `data-raw` with json data in `data/payment_intent_succeeded_event.json`
+2. Replace URL in prod with: http://127.0.0.1:8000/api/atlas/credits/buy
 ```shell
 curl --location --request POST 'http://127.0.0.1:8000/api/atlas/credits/buy' \
 --header 'Content-Type: application/json' \
