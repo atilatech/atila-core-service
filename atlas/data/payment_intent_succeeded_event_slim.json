@@ -1,0 +1,26 @@
+{
+  "api_version": "2019-10-17",
+  "created": 1731891892,
+  "data": {
+    "object": {
+      "amount": 2000,
+      "amount_received": 2000,
+      "charges": {
+        "data": [
+          {
+            "amount": 2000,
+            "amount_captured": 2000,
+            "billing_details": {
+              "address": {},
+              "email": "tomiademidun@gmail.com",
+              "name": "Tomiwa Ademidun",
+              "phone": null
+            }
+          }
+        ]
+      },
+      "object": "payment_intent"
+    }
+  },
+  "type": "payment_intent.succeeded"
+}
