@@ -44,5 +44,4 @@ def send_atlas_credits_email(to_email, name, credits_code):
 
     # Send an HTTP POST request to /mail/send
     response = sg.client.mail.send.post(request_body=mail_json)
-    print(response.status_code)
-    print(response.headers)
+    print("mail sent", response.status_code)

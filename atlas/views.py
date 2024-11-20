@@ -174,7 +174,7 @@ class CreditsView(APIView):
             # Invalid payload
             return Response(data={"error": str(e)}, status=400)
 
-        print('event', event)
+        print('event.type', event.type)
         # Handle the event
         if event.type == 'payment_intent.succeeded':
             payment_intent = event.data.object  # contains a stripe.PaymentIntent
