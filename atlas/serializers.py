@@ -6,6 +6,8 @@ document_fields_preview = ['id', 'url', 'title', 'description', 'image', 'views'
                            'date_created', 'date_modified']
 document_fields = document_fields_preview + ['text', 'segments', 'summaries']
 
+credits_code_serializer_fields = ['id', 'code', 'used_by', 'atlas_credits', 'date_created', 'date_modified']
+
 
 class DocumentPreviewSerializer(serializers.ModelSerializer):
     class Meta:

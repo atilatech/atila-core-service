@@ -1,7 +1,7 @@
 from django.contrib import admin
-from atlas.models import Document
+from atlas.models import Document, CreditsCode
 
-from atlas.serializers import document_fields
+from atlas.serializers import document_fields, credits_code_serializer_fields
 
 
 class DocumentAdmin(admin.ModelAdmin):
@@ -32,4 +32,11 @@ class DocumentAdmin(admin.ModelAdmin):
         return obj.segments[:2]
 
 
+class CreditsCodeAdmin(admin.ModelAdmin):
+    list_display = credits_code_serializer_fields
+
+    search_fields = credits_code_serializer_fields
+
+
 admin.site.register(Document, DocumentAdmin)
+admin.site.register(CreditsCode, CreditsCodeAdmin)

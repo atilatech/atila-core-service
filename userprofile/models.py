@@ -9,6 +9,7 @@ from rest_framework.request import Request
 
 from atila.settings import ATILA_STAGE
 from atila.utils import random_string
+from atlas.constants import REGISTERED_STARTING_CREDITS
 from userprofile.constants import RESERVED_USERNAMES
 
 
@@ -20,10 +21,7 @@ class UserProfile(models.Model):  # add this class and the following fields
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     id = models.CharField(max_length=128, primary_key=True, default=random_string)
 
-    atlas_searches = models.IntegerField(default=0)
-    atlas_searches_custom_limit = models.IntegerField(default=0,
-                                                      help_text='Allow certain users to bypass the '
-                                                                'MAX_REGISTERED_FREE_SEARCHES.')
+    atlas_credits = models.IntegerField(default=REGISTERED_STARTING_CREDITS)
     atlas_transcriptions = models.IntegerField(default=0)
     date_created = models.DateTimeField(default=timezone.now)
     date_modified = models.DateTimeField(auto_now=True)

@@ -35,9 +35,10 @@ ATILA_STAGE = os.environ.get('ATILA_STAGE', 'dev')
 
 CORS_ORIGIN_WHITELIST = (
     'https://atlas.atila.ca',
+    'https://staging.atlas.atila.ca'
 )
 
-ALLOWED_HOSTS = ['atila-core-service.herokuapp.com']
+ALLOWED_HOSTS = ['atila-core-service.herokuapp.com', 'atila-core-service-299c222291ba.herokuapp.com']
 
 if DEBUG:
     ALLOWED_HOSTS += ['localhost', '127.0.0.1', '0.0.0.0']

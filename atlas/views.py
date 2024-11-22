@@ -1,17 +1,20 @@
+import json
+
+import stripe
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from pytube import YouTube
 from requests import HTTPError
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from atlas.constants import MAX_GUEST_SEARCHES, GUEST_SEARCH_LIMIT_REACHED, MAX_REGISTERED_FREE_SEARCHES, \
-    REGISTERED_FREE_SEARCH_LIMIT_REACHED
-from atlas.models import Document
+from atlas.constants import GUEST_STARTING_CREDITS, GUEST_SEARCH_LIMIT_REACHED
+from atlas.models import Document, CreditsCode
+from atlas.payments import handle_payment_intent_succeeded
 from atlas.serializers import DocumentSerializer, DocumentPreviewSerializer
 from atlas.summarize import summarize_video
 from atlas.transcribe import transcribe_and_search_video
-from pytube import YouTube
-
 from atlas.transcribe_collection import calculate_cost_for_transcribing_a_collection
 from atlas.utils import send_ai_request
 from userprofile.models import UserProfile
@@ -72,9 +75,9 @@ class SearchView(APIView):
 
             results = transcribe_and_search_video(query, url, video)
 
-            atlas_searches = self.update_atlas_searches_count(request)
+            atlas_credits = self.update_atlas_credits_count(request)
 
-            return Response({**results, 'atlas_searches': atlas_searches}, status=200)
+            return Response({**results, 'atlas_credits': atlas_credits}, status=200)
 
         except HTTPError as e:
             return Response({"error": str(e)}, status=400)
@@ -108,6 +111,11 @@ class SearchView(APIView):
     @staticmethod
     def validate_if_user_can_make_atlas_request(request):
         """
+        1. Unregistered users get 5 credits
+        2. Registered users get 20 credits
+        3. Buying additional credits cost $1/10 credits
+        4. 1 video transcription uses 1 credit
+
         1. If user is not logged in, they can only make 10 searches.
         2. If they are logged in but a free account they can make 20 searches.
         3. If they are logged in and have a premium account they can make unlimited searches every month.
@@ -118,49 +126,88 @@ class SearchView(APIView):
         # Number of visits to this view, as counted in the session variable.
 
         if not request.user.is_authenticated:
-            atlas_searches = request.session.get('atlas_searches', 0)
-            if atlas_searches >= MAX_GUEST_SEARCHES:
-                return {
-                    'error': f"You have passed the {MAX_GUEST_SEARCHES} search limit for guest users. "
-                             f"Please make a free account to make more searches",
-                    'error_code': GUEST_SEARCH_LIMIT_REACHED,
-                    'atlas_searches': atlas_searches,
-                }
+            atlas_credits = request.session.get('atlas_credits', GUEST_STARTING_CREDITS)
+            error_message = "You have run out of credits. Please make a free account to get more credits."
         else:
             user_profile = UserProfile.get_user_profile_from_request(request)
-            atlas_searches = user_profile.atlas_searches
-            if user_profile.is_premium:  # premium users have no search limit
-                return {
-                    'success': "Premium users have no search limit.",
-                    'atlas_searches': atlas_searches,
-                }
-            if atlas_searches >= MAX_REGISTERED_FREE_SEARCHES \
-                    and atlas_searches > user_profile.atlas_searches_custom_limit:
-                return {
-                    'error': f"You have passed the {MAX_REGISTERED_FREE_SEARCHES} search limit for free users. "
-                             f"Please upgrade your account to make more searches",
-                    'error_code': REGISTERED_FREE_SEARCH_LIMIT_REACHED,
-                    'atlas_searches': atlas_searches,
-                }
+            atlas_credits = user_profile.atlas_credits
+            error_message = "You have run out of credits. To continue using Atlas, " \
+                            "visit your profile and purchase more credits."
+        if atlas_credits == 0:
+            return {
+                'error': error_message,
+                'error_code': GUEST_SEARCH_LIMIT_REACHED,
+                'atlas_credits': atlas_credits,
+            }
         return {
             'success': "User is within search limit",
-            'atlas_searches': atlas_searches,
+            'atlas_credits': atlas_credits,
         }
 
     @staticmethod
-    def update_atlas_searches_count(request):
+    def update_atlas_credits_count(request):
 
         user_profile = UserProfile.get_user_profile_from_request(request)
 
         if user_profile:
-            user_profile.atlas_searches += 1
+            user_profile.atlas_credits -= 1
             user_profile.save()
-            atlas_searches = user_profile.atlas_searches
+            atlas_credits = user_profile.atlas_credits
         else:
-            request.session['atlas_searches'] = request.session.get('atlas_searches', 0) + 1
-            atlas_searches = request.session['atlas_searches']
+            request.session['atlas_credits'] = request.session.get('atlas_credits', GUEST_STARTING_CREDITS) - 1
+            request.session.save()
+            atlas_credits = request.session['atlas_credits']
+        return atlas_credits
 
-        return atlas_searches
+
+class CreditsView(APIView):
+
+    @staticmethod
+    @api_view(['POST'])
+    def buy(request):
+        payload = request.body
+        try:
+            event = stripe.Event.construct_from(
+                json.loads(payload), stripe.api_key
+            )
+        except ValueError as e:
+            # Invalid payload
+            return Response(data={"error": str(e)}, status=400)
+
+        print('event.type', event.type)
+        # Handle the event
+        if event.type == 'payment_intent.succeeded':
+            payment_intent = event.data.object  # contains a stripe.PaymentIntent
+            handle_payment_intent_succeeded(payment_intent)
+        else:
+            print('Unhandled event type {}'.format(event.type))
+
+        return Response(status=200)
+
+    @staticmethod
+    @api_view(['POST'])
+    def apply(request):
+        try:
+            payload = json.loads(request.body)
+            email = payload['email']
+            code = payload['code']
+
+            # Fetch the credits code object
+            credits_code = CreditsCode.objects.get(code=code)
+
+            # Apply the credits
+            response = credits_code.apply_credits(email)
+
+            return Response(data=response, status=200)
+
+        except CreditsCode.DoesNotExist:
+            return Response({'error': 'Invalid code provided'}, status=400)
+
+        except ValidationError as e:
+            return Response({'error': str(e)}, status=400)
+
+        except KeyError as e:
+            return Response({'error': f'Missing key: {str(e)}'}, status=400)
 
 
 class DocumentViewSet(viewsets.ModelViewSet):

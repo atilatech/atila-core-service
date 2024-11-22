@@ -1,11 +1,13 @@
 import hashlib
 from typing import Union, Sized
 
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db.models import JSONField
-from django.db import models
+from django.db import models, transaction
 from django.utils import timezone
 
 from atila.utils import random_string, ModelUtils
+from userprofile.models import UserProfile
 
 
 class DocumentManager(models.Manager):
@@ -57,3 +59,33 @@ class Document(models.Model):
         hash_object.update(url.encode())
         object_id = hash_object.hexdigest()
         return object_id
+
+
+class CreditsCode(models.Model):
+    """
+    Used to add atlas_credits to user accounts.
+    """
+    id = models.CharField(max_length=32, primary_key=True, default=random_string)
+    code = models.CharField(max_length=32, default=random_string, unique=True)
+    used_by = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, null=True, default=None, blank=True)
+    atlas_credits = models.IntegerField(default=0)
+
+    date_created = models.DateTimeField(default=timezone.now)
+    date_modified = models.DateTimeField(auto_now=True)
+    objects = models.Manager()
+
+    def apply_credits(self, email):
+        if self.used_by is not None:
+            raise ValidationError(f"This code has already been used.")
+        try:
+            with transaction.atomic():
+                user_profile = UserProfile.objects.get(user__email=email)
+                user_profile.atlas_credits += self.atlas_credits
+                user_profile.save()
+
+                self.used_by = user_profile
+                self.save()
+
+                return {'success': f"{self.atlas_credits} credits added to user {user_profile}"}
+        except ObjectDoesNotExist:
+            raise ValidationError(f"UserProfile not found for email: {email}")
