@@ -41,7 +41,7 @@ CORS_ORIGIN_WHITELIST = (
 ALLOWED_HOSTS = ['atila-core-service.herokuapp.com', 'atila-core-service-299c222291ba.herokuapp.com']
 
 if DEBUG:
-    ALLOWED_HOSTS += ['localhost', '127.0.0.1', '0.0.0.0']
+    ALLOWED_HOSTS += ['localhost', '127.0.0.1', '0.0.0.0', 'host.docker.internal']
     CORS_ORIGIN_WHITELIST += (
         'http://127.0.0.1:3000',
         'http://localhost:3000',)

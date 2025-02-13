@@ -1,8 +1,7 @@
-import time
 from typing import Union
 
-from pytube import YouTube
 import pytube
+from pytube import YouTube
 from youtube_transcript_api import YouTubeTranscriptApi, CouldNotRetrieveTranscript
 from youtube_transcript_api.formatters import TextFormatter, JSONFormatter
 
@@ -14,58 +13,70 @@ from atlas.utils import convert_seconds_to_string, parse_video_id, send_ai_reque
 
 pytube.innertube._default_clients['ANDROID'] = pytube.innertube._default_clients['WEB']
 
+import time
 
-def transcribe_and_search_video(query, url=None, verbose=True):
+
+def transcribe_and_search_video(query, url=None, verbose=True, use_ai=True):
     t0 = time.time()
     video_id = parse_video_id(url)
-    # Transcribe the video if a video url has been provided and either the video transcript
-    # hasn't been uploaded to our database or the video vectors haven't been uploaded to Pinecone.
-    document_filter = Document.objects.filter(url=f"{YOUTUBE_URL_PREFIX}?v={video_id}")
-    if url and (not document_filter.exists()
-                or not does_video_exist_in_pinecone(url)):
 
+    # Check if the video exists in the database or Pinecone
+    document_filter = Document.objects.filter(url=f"{YOUTUBE_URL_PREFIX}?v={video_id}")
+
+    # If no video exists or needs to be transcribed
+    if url and (not document_filter.exists() or not does_video_exist_in_pinecone(url)):
         try:
-            video_with_transcript = get_transcript_from_youtube(url)
-            print('using Youtube Transcript')
-            video_with_transcript['encoded_segments'] = send_ai_request(
-                {"query": video_with_transcript['transcript']['segments']})['encoded_segments']
+            if use_ai:
+                # Use AI-based transcription when use_ai is True
+                video_with_transcript = get_transcript_from_youtube(url)
+                print('Using YouTube Transcript')
+                video_with_transcript['encoded_segments'] = send_ai_request(
+                    {"query": video_with_transcript['transcript']['segments']}
+                )['encoded_segments']
+            else:
+                # Fallback to Whisper transcription if AI is disabled
+                print('AI transcription disabled. Using Whisper.')
+                video_with_transcript = send_ai_request({"video_url": url})
+                if 'transcription_source' not in video_with_transcript.get('transcript'):
+                    video_with_transcript['transcript']['transcription_source'] = 'whisper'
         except CouldNotRetrieveTranscript as e:
-            print('CouldNotRetrieveTranscript on Youtube. Switching to transcription with whisper', e)
+            print('Could not retrieve transcript from YouTube. Switching to transcription with Whisper.', e)
             video_with_transcript = send_ai_request({"video_url": url})
             if 'transcription_source' not in video_with_transcript.get('transcript'):
                 video_with_transcript['transcript']['transcription_source'] = 'whisper'
 
+        # Save transcript if not already in the database
         if not document_filter.exists():
             save_transcribed_video_to_atila_database(video_with_transcript)
+
+        # Upload to Pinecone if necessary
         if not does_video_exist_in_pinecone(url):
             upload_transcripts_to_vector_db(video_with_transcript['encoded_segments'])
-
     else:
-        print(f'Skipping transcribing and embedding. ')
+        print(f'Skipping transcription and embedding. Video already exists or no URL provided.')
         if not url:
-            print('No URL provided, searching all videos')
+            print('No URL provided, searching all videos.')
         else:
-            print(f'Video already exists:{url}')
+            print(f'Video already exists: {url}')
 
+    # Search for the video if a query is provided
+    results = {'matches': []}
     if query:
         results = query_model(query, video_id)
         t1 = time.time()
-        total = t1 - t0
+        total_time = t1 - t0
         if verbose:
-            video_length = f"{convert_seconds_to_string(results['matches'][0]['metadata']['length'])} " \
-                           "long video" \
+            video_length = f"{convert_seconds_to_string(results['matches'][0]['metadata']['length'])} long video" \
                 if len(results['matches']) > 0 else 'no video found'
-            print(f'Transcribed and searched {video_length} in {total} seconds')
-    else:
-        results = {'matches': []}
+            print(f'Transcribed and searched {video_length} in {total_time} seconds')
 
+    # Fetch video details if it exists in the database
     video = None
     if document_filter.exists():
         video = document_filter.get()
         video = DocumentSerializer(video).data
-    return {'results': results,
-            'video': video
-            }
+
+    return {'results': results, 'video': video}
 
 
 def get_transcript_from_youtube(url, add_metadata=True, save_to_file=None):
