@@ -72,8 +72,17 @@ def send_ai_request(request_args: dict, provider="huggingface"):
 
     request_body = json.dumps(request_body)
     response = requests.post(url, data=request_body, headers=headers)
-    response.raise_for_status()
-    if 'error' in response.json():
-        raise HTTPError(response.json())
+
+    try:
+        response.raise_for_status()  # Raise an exception for 4xx/5xx errors
+        response_data = response.json()
+
+        if 'error' in response_data:
+            print("Error in response:", response_data)  # Print the error before raising
+            raise HTTPError(response_data)  # Raise the error with the response data
+
+    except HTTPError as err:
+        print(f"HTTPError occurred: {err}")  # You can log or print the error here if needed
+        raise  # Re-raise the exception if needed to propagate further
 
     return response.json()
