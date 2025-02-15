@@ -19,8 +19,11 @@ class UserProfileViewSet(viewsets.ModelViewSet):
         if not username:
             return Response({'error': 'Username is required'}, status=status.HTTP_400_BAD_REQUEST)
 
-        send_verification_code_email(username)
-        return Response({'message': 'Verification code sent successfully'}, status=status.HTTP_200_OK)
+        success, message = send_verification_code_email(username)
+        return Response(
+            {"message": message} if success else {"error": message},
+            status=status.HTTP_200_OK if success else status.HTTP_400_BAD_REQUEST
+        )
 
     @action(detail=False, methods=['post'], url_path='verify-phone-number')
     def verify_phone_number(self, request):

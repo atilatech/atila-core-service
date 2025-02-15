@@ -13,7 +13,7 @@ def send_verification_code_email(username: str, create_code: bool = True):
         if not user_profile.user.email:
             raise ValueError("Missing email address.")
     except ObjectDoesNotExist:
-        raise ValueError("User profile not found.")
+        return False, "User profile not found."
 
     if create_code:
         user_profile.verification_code = random_string(6, numbers_only=True)
@@ -25,6 +25,7 @@ def send_verification_code_email(username: str, create_code: bool = True):
         'subject': "Atlas Verification Code",
         'to_email': user_profile.user.email,
     }, "ses")
+    return True, "Verification code sent successfully."
 
 
 def verify_phone_number(phone_number: str, username: str, verification_code: str):
