@@ -37,4 +37,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             request.data['verification_code']
         )
 
-        return Response({"message": message}, status=status.HTTP_200_OK if success else status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"message": message} if success else {"error": message},
+            status=status.HTTP_200_OK if success else status.HTTP_400_BAD_REQUEST
+        )
