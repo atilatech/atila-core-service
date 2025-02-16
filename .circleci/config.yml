@@ -1,0 +1,153 @@
+# Python CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-python/ for more details
+#
+version: 2.1
+
+orbs:
+  python: circleci/python@2.0.3
+
+# The following stanza defines a map named defaults with a variable that may be inserted using the YAML merge (<<: *) key
+# later in the file to save some typing. See http://yaml.org/type/merge.html for details.
+
+defaults: &defaults
+    docker:
+      # specify the version you desire here
+      # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
+      - image: cimg/python:3.9
+        environment:
+          SECRET_KEY: 'testsecretkeycircleci'
+          DJANGO_DEBUG: true
+          POSTGRES_USERNAME: circleci
+      - image: cimg/postgres:9.6.24 # an example of how to specify a service container
+        environment:
+          POSTGRES_USER: circleci
+          POSTGRES_DB: circle_test
+    resource_class: large
+
+jobs:
+  build:
+    <<: *defaults
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image:w cimg/postgres:9.4
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "requirements.txt" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+      - python/install-packages:
+            pkg-manager: pip
+      - run:
+          name: Show current location
+          command: pwd
+      - run:
+          name: Show directory contents
+          command: ls
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+
+      - store_artifacts:
+          path: test-reports
+          destination: test-reports
+  test:
+    <<: *defaults
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image:w cimg/postgres:9.4
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "requirements.txt" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+      - python/install-packages:
+          pkg-manager: pip
+      - run:
+          name: Show current location
+          command: pwd
+      - run:
+          name: Show directory contents
+          command: ls
+
+      # run tests!
+      # this example uses Django's built-in test-runner
+      # other common Python testing frameworks include pytest and nose
+      # https://pytest.org
+      # https://nose.readthedocs.io
+      - run:
+          name: verify env var before
+          command: |
+            echo $ATILA_ENV
+      - run:
+          name: run tests
+          command: |
+            export ATILA_TEST=True
+            python manage.py test -v 3 --no-input --keepdb --debug-mode
+      - run:
+          name: verify env var after
+          command: |
+            echo $ATILA_ENV
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+
+      - store_artifacts:
+          path: test-reports
+          destination: test-reports
+      - store_test_results:
+          path: test-reports/
+  deploy:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Install sentry CLI
+          command: curl -sL https://sentry.io/get-cli/ | bash
+      - run:
+          name: Create Release and Associate Commits
+          command: |
+                # Assumes you're in a git repository
+                export SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN
+                export SENTRY_ORG=atila-7
+                export SENTRY_LOG_LEVEL=debug
+                VERSION=$(sentry-cli releases propose-version)
+                sentry-cli releases new -p atila-7 $VERSION
+                sentry-cli releases set-commits --auto $VERSION
+      - run:
+          name: Deploy $CIRCLE_BRANCH to Heroku
+          command: |
+                echo 'deploying to prod';
+                git push https://heroku:$HEROKU_API_KEY@git.heroku.com/atila-core-service.git master
+workflows:
+  version: 2
+  test-build-and-deploy:
+    jobs:
+      - test
+      - build:
+          requires:
+            - test
+      - deploy:
+          requires:
+            - test
+            - build
+pro-only: true
