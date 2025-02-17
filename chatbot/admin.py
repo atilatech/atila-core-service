@@ -4,7 +4,7 @@ from .models import ServiceProvider
 
 @admin.register(ServiceProvider)
 class ServiceProviderAdmin(admin.ModelAdmin):
-    list_display = ("id", "user", "name", "description", "calendar_url")  # Display these fields in the admin list
+    list_display = ("id", "user", "name", "description", "cal_com_event_type_slug", "cal_com_username")
     search_fields = ("id", "user__email", "name")  # Enable searching by ID, user email, and name
     list_filter = ("user",)
     ordering = ("id",)
