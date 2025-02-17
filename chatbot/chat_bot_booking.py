@@ -79,11 +79,20 @@ class BookingChatBot(ChatBot):
 
         # Format the available slots response
         response_text = f"📅 *Available Slots for {provider.name}:*\n"
+
+        # Initialize a variable to keep track of the global slot index
+        global_slot_index = 1
+
         for date, slots in data.items():
-            response_text += f"\n📆 {date}:\n"
+            # Convert date to day name and format (e.g., Tuesday, February 18)
+            formatted_date = datetime.strptime(date, "%Y-%m-%d").strftime("%A, %B %d")
+            response_text += f"\n📆 {date} ({formatted_date}):\n"
+
+            # List all available slots with AM/PM format and continue numbering
             for slot in slots:
-                time = slot["start"].split("T")[1][:5]  # Extract HH:MM from timestamp
-                response_text += f"   🕒 {time}\n"
+                time = datetime.fromisoformat(slot["start"]).strftime("%I:%M %p")  # Convert to AM/PM format
+                response_text += f"   {global_slot_index}. 🕒 {time}\n"
+                global_slot_index += 1
 
         return ChatBotResponse(response_text)
 
