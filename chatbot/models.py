@@ -5,6 +5,8 @@ from userprofile.models import UserProfile
 
 
 class ServiceProvider(models.Model):
+    objects = models.Manager()
+
     id = models.CharField(max_length=32, primary_key=True, default=random_string)
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="service_providers")
 

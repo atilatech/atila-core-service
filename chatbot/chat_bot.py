@@ -2,9 +2,12 @@ from abc import ABC, abstractmethod
 from rest_framework import status
 from atila.settings import ATILA_STAGE
 
+DEFAULT_CHAT_BOT_RESPONSE = "Invalid command.\n\nPlease type book <search_term> to book a service provider."
+
 
 class ChatBotResponse:
-    def __init__(self, text: str, media_url: str = None, http_status: int = status.HTTP_200_OK):
+    def __init__(self, text: str = DEFAULT_CHAT_BOT_RESPONSE,
+                 media_url: str = None, http_status: int = status.HTTP_200_OK):
         self.text = text
         self.media_url = media_url
         self.status = http_status
