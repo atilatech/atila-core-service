@@ -2,6 +2,8 @@ import re
 import string
 import random
 
+from django.core.validators import RegexValidator
+
 
 def random_string(n=16, use_letters=True):
     choices = string.digits
@@ -47,3 +49,8 @@ def validate_substituted_variables(check_string, raise_exception=True):
                          f"Given the following input string: {check_string}")
 
     return unsubstituted_variables
+
+
+phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
+                             message="Phone number must be entered in the format: '+1905123456'. Up to 15 digits "
+                                     "allowed.")
