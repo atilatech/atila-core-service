@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "corsheaders",
     'userprofile',
     'atlas',
+    'chatbot',
     'rest_framework',
     'rest_framework_simplejwt',
 ]
