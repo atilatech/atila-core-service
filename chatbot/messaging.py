@@ -12,12 +12,14 @@ else:
     print("Warning: TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN have not been set")
     client = None
 
-TWILIO_CHARACTER_LIMIT = 1000  # Twilio has a 1600 character limit. https://www.twilio.com/docs/errors/21617
+# Twilio has a 1600 character limit. https://www.twilio.com/docs/errors/21617
+# Some characters such as emojis will be counted as multiple characters so set a limit below 1600 to be safe
+TWILIO_CHARACTER_LIMIT = 1400
 
 SMS_NUMBER = "+19058758867"
 
 
-def send_whatsapp_message(text, destination_number: str, media_url: str = None, skip_wait: bool = False):
+def send_whatsapp_message(text: str, destination_number: str, media_url: str = None, skip_wait: bool = False):
     if not destination_number.startswith('whatsapp:'):
         destination_number = f'whatsapp:{destination_number}'
 

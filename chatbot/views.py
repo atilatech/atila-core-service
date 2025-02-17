@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -6,8 +5,6 @@ from chatbot.chat_bot import ChatBotResponse
 from chatbot.chat_bot_booking import BookingChatBot
 from chatbot.messaging import send_whatsapp_message
 
-
-# Create your views here.
 
 class ChatBotViews:
 
@@ -21,5 +18,5 @@ class ChatBotViews:
         if command_string.lower().startswith(BookingChatBot.command_prefix):
             response = BookingChatBot.handle_command(command_string, incoming_whatsapp_number)
 
-        send_whatsapp_message(response, incoming_whatsapp_number, media_url)
-        return Response({'message': response}, status=response.status)
+        send_whatsapp_message(response.text, incoming_whatsapp_number, media_url)
+        return Response({'message': response.text}, status=response.status)
