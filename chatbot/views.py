@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from chatbot.chat_bot import ChatBotResponse
-from chatbot.chat_bot_booking import ServiceProviderChatBot
+from chatbot.chat_bot_service_provider import ServiceProviderChatBot
 from chatbot.chat_bot_service_client import ServiceClientChatBot
 from chatbot.messaging import send_whatsapp_message
 
