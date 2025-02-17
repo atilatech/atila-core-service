@@ -3,9 +3,19 @@ import string
 import random
 
 
-def random_string(n=16):
-    random_string_value = ''.join(random.choices(string.ascii_lowercase + string.digits, k=n))
+def random_string(n=16, use_letters=True):
+    choices = string.digits
+    if use_letters:
+        choices += string.ascii_lowercase
+    random_string_value = ''.join(random.choices(choices, k=n))
     return random_string_value
+
+
+def random_code():
+    """
+    6-digit numerical codes to match pattern used for 2FA
+    """
+    return random_string(6, False)
 
 
 class ModelUtils:

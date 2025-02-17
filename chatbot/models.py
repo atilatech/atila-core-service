@@ -1,13 +1,13 @@
 from django.db import models
 
-from atila.utils import random_string
+from atila.utils import random_code
 from userprofile.models import UserProfile
 
 
 class ServiceProvider(models.Model):
     objects = models.Manager()
 
-    id = models.CharField(max_length=32, primary_key=True, default=random_string)
+    id = models.CharField(max_length=32, primary_key=True, default=random_code)
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="service_providers")
 
     name = models.CharField(max_length=128, default="")
