@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from chatbot.chat_bot import ChatBotResponse
-from chatbot.chat_bot_booking import BookingChatBot
+from chatbot.chat_bot_booking import ServiceProviderChatBot
 from chatbot.chat_bot_service_client import ServiceClientChatBot
 from chatbot.messaging import send_whatsapp_message
 
@@ -19,8 +19,8 @@ class ChatBotViews:
         response = ChatBotResponse()
         if command_string.lower().startswith(ServiceClientChatBot.command_prefix):
             response = ServiceClientChatBot.handle_command(command_string, incoming_whatsapp_number)
-        if command_string.lower().startswith(BookingChatBot.command_prefix):
-            response = BookingChatBot.handle_command(command_string, incoming_whatsapp_number)
+        if command_string.lower().startswith(ServiceProviderChatBot.command_prefix):
+            response = ServiceProviderChatBot.handle_command(command_string, incoming_whatsapp_number)
 
         send_whatsapp_message(response.text, incoming_whatsapp_number, media_url)
         return Response({'message': response.text}, status=response.status)

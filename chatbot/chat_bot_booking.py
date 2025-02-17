@@ -7,7 +7,7 @@ from chatbot.chat_bot import ChatBot, ChatBotResponse
 from chatbot.models import ServiceProvider
 
 
-class BookingChatBot(ChatBot):
+class ServiceProviderChatBot(ChatBot):
     command_prefix = "service"
 
     @classmethod
