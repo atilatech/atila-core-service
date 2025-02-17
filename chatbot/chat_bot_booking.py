@@ -19,10 +19,10 @@ class BookingChatBot(ChatBot):
 
             # Format the response for WhatsApp
             if providers:
-                response_text = f"*Top Service Providers for '{search_term}':* 📅\n"
+                response_text = f"*Top Service Providers for '{search_term}':*\n"
                 for idx, provider in enumerate(providers, start=1):
-                    response_text += f"{idx}. *{provider.name}*\n"  # Adjust if UserProfile has a name field
-                    response_text += f"   _{provider.description}_\n"
+                    response_text += f"{idx}. *{provider.name}* ({provider.id})\n"
+                    response_text += f"   {provider.description}\n"
             else:
                 response_text = f"❌ No service providers found for '{search_term}'. Try another keyword."
 
