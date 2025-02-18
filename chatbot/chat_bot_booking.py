@@ -12,39 +12,38 @@ class BookingChatBot(ChatBot):
     @classmethod
     def handle_command(cls, command_string: str, phone_number: str) -> ChatBotResponse:
         # Check if the command matches the "service book <payment_intent_id>" format
-        if command_string.startswith("service book "):
-            payment_intent_id = command_string[len("service book "):].strip()
+        if command_string.lower().startswith("service search "):
+            return cls._handle_service_booking(command_string)
 
-            try:
-                # Retrieve the PaymentIntent object from Stripe API
-                stripe.api_key = cls.STRIPE_API_KEY
-                payment_intent = stripe.PaymentIntent.retrieve(payment_intent_id)
+    @classmethod
+    def _handle_service_booking(cls, message: str) -> ChatBotResponse:
+        payment_intent_id = message[len("service book "):].strip()
 
-                # Check if the PaymentIntent status is "succeeded"
-                if payment_intent.status != 'succeeded':
-                    return ChatBotResponse(
-                        text=f"Payment for {payment_intent_id} has not been completed successfully."
-                             f" Status: {payment_intent.status}.",
-                        http_status=400
-                    )
+        try:
+            # Retrieve the PaymentIntent object from Stripe API
+            stripe.api_key = cls.STRIPE_API_KEY
+            payment_intent = stripe.PaymentIntent.retrieve(payment_intent_id)
 
-                # Call handle_payment_intent_succeeded with the retrieved PaymentIntent
-                return cls.handle_payment_intent_succeeded(payment_intent)
+            # Check if the PaymentIntent status is "succeeded"
+            if payment_intent.status != 'succeeded':
+                return ChatBotResponse(
+                    text=f"Payment for {payment_intent_id} has not been completed successfully."
+                         f" Status: {payment_intent.status}.",
+                    http_status=400
+                )
 
-            except stripe.ErrorObject.StripeError as e:
-                # Handle Stripe API errors
-                error_message = f"Stripe error: {str(e)}"
-                return ChatBotResponse(text=error_message, http_status=400)
+            # Call handle_payment_intent_succeeded with the retrieved PaymentIntent
+            return cls.handle_payment_intent_succeeded(payment_intent)
 
-            except Exception as e:
-                # Handle any other errors
-                error_message = f"An error occurred: {str(e)}"
-                return ChatBotResponse(text=error_message, http_status=500)
+        except stripe.ErrorObject.StripeError as e:
+            # Handle Stripe API errors
+            error_message = f"Stripe error: {str(e)}"
+            return ChatBotResponse(text=error_message, http_status=400)
 
-        # If command is not recognized
-        return ChatBotResponse(
-            text="Invalid command.\n\nPlease type 'service book <payment_intent_id>' to book a service.",
-            http_status=200)
+        except Exception as e:
+            # Handle any other errors
+            error_message = f"An error occurred: {str(e)}"
+            return ChatBotResponse(text=error_message, http_status=500)
 
     @classmethod
     def handle_payment_intent_succeeded(cls, payment_intent: stripe.PaymentIntent) -> ChatBotResponse:
