@@ -33,7 +33,27 @@ class ServiceClient(models.Model):
 
     date_created = models.DateTimeField(default=timezone.now)
 
-    objects = models.Manager()  # Default manager
+    objects = models.Manager()
 
     def __str__(self):
-        return f"{self.name}"
+        return self.name
+
+
+class ServiceBooking(models.Model):
+    id = models.CharField(max_length=32, primary_key=True, default=random_code)
+    client = models.OneToOneField(to=ServiceClient, on_delete=models.deletion.SET_NULL, null=True)
+    provider = models.OneToOneField(to=ServiceProvider, on_delete=models.deletion.SET_NULL, null=True)
+
+    start_date = models.DateTimeField(blank=True, null=True)
+
+    date_created = models.DateTimeField(default=timezone.now)
+
+    objects = models.Manager()
+
+    def __str__(self):
+        if self.start_date:
+            formatted_date = self.start_date.strftime("%A, %B %d, %Y %I:%M %p")
+        else:
+            formatted_date = "No date set"
+
+        return f"{self.client} booking with {self.provider} on {formatted_date}"

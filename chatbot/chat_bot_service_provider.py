@@ -4,7 +4,7 @@ import pytz
 import requests
 from django.db.models import Q
 from chatbot.chat_bot import ChatBot, ChatBotResponse
-from chatbot.models import ServiceProvider, ServiceClient
+from chatbot.models import ServiceProvider, ServiceClient, ServiceBooking
 
 
 class ServiceProviderChatBot(ChatBot):
@@ -115,6 +115,13 @@ class ServiceProviderChatBot(ChatBot):
         slot_start = datetime.fromisoformat(selected_slot["start"])
         # Convert to UTC
         slot_start_utc = slot_start.astimezone(pytz.utc)
+        service_booking = ServiceBooking.objects.create(client=service_client, provider=provider,
+                                                        start_date=slot_start_utc)
+
+        return cls._send_booking_request(phone_number, provider, service_client, slot_start, slot_start_utc)
+
+    @classmethod
+    def _send_booking_request(cls, phone_number, provider, service_client, slot_start, slot_start_utc):
         # Format as ISO 8601 string in UTC
         start_iso_8601 = slot_start_utc.isoformat()
         payload = {
@@ -128,15 +135,14 @@ class ServiceProviderChatBot(ChatBot):
                 "language": "en"
             },
         }
-
         headers = {
             "Authorization": f"Bearer {provider.cal_com_api_key}",  # Use the correct API key
             "cal-api-version": "2024-08-13",
             "Content-Type": "application/json"
         }
-
         # Send request to create booking
         try:
+
             bookings_url = "https://api.cal.com/v2/bookings"
             booking_response = requests.post(bookings_url, json=payload, headers=headers)
             if booking_response.status_code == 201:

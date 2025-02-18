@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ServiceProvider, ServiceClient
+from .models import ServiceProvider, ServiceClient, ServiceBooking
 
 
 @admin.register(ServiceProvider)
@@ -28,3 +28,21 @@ class ServiceClientAdmin(admin.ModelAdmin):
 
     # Make phone_number and email fields editable in the list view
     list_editable = ('phone_number', 'email')
+
+
+@admin.register(ServiceBooking)
+class ServiceBookingAdmin(admin.ModelAdmin):
+    # Display fields in the list view
+    list_display = ('id', 'client', 'provider', 'start_date', 'date_created')
+
+    # Add search capability for related client and provider names
+    search_fields = ('client__name', 'client__phone_number', 'provider__name')
+
+    # Filter bookings by start date and creation date
+    list_filter = ('start_date', 'date_created')
+
+    # Allow sorting by start_date and date_created
+    ordering = ('-date_created',)
+
+    # Make start_date editable in the list view
+    list_editable = ('start_date',)
