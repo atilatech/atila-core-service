@@ -125,6 +125,7 @@ terminado==0.17.1
 tinycss2==1.2.1
 tornado==6.2
 tqdm==4.64.1
+twilio==9.4.5
 traitlets==5.8.1
 typing_extensions==4.4.0
 uri-template==1.2.0

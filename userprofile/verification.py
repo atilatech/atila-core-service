@@ -1,6 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from atila.email import send_email
-from atila.helpers import random_string
+from atila.utils import random_string
 from userprofile.models import UserProfile
 
 
@@ -16,7 +16,7 @@ def send_verification_code_email(username: str, create_code: bool = True):
         return False, "User profile not found."
 
     if create_code:
-        user_profile.verification_code = random_string(6, numbers_only=True)
+        user_profile.verification_code = random_string(6)
         user_profile.save()
 
     send_email({

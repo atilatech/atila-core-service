@@ -41,5 +41,6 @@ urlpatterns = [
     path('api/atila/', include(atila_router.urls)),
     path('api/atlas/', include('atlas.urls')),
     path('api/userprofile/', include('userprofile.urls')),
+    path('api/chatbot/', include('chatbot.urls')),
     path('sentry-debug/', trigger_error),
 ]
