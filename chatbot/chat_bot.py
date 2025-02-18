@@ -18,7 +18,7 @@ class ChatBot(ABC):
 
     @classmethod
     @abstractmethod
-    def handle_command(cls, command_string: str, phone_number: str) -> "ChatBotResponse":
+    def handle_command(cls, command_string: str, phone_number: str) -> ChatBotResponse:
         """Handle incoming commands and return a ChatBotResponse."""
 
     @classmethod

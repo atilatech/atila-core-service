@@ -44,6 +44,8 @@ class ServiceBooking(models.Model):
     client = models.OneToOneField(to=ServiceClient, on_delete=models.deletion.SET_NULL, null=True)
     provider = models.OneToOneField(to=ServiceProvider, on_delete=models.deletion.SET_NULL, null=True)
 
+    reservation_uid = models.CharField(blank=True, null=True)
+
     start_date = models.DateTimeField(blank=True, null=True)
 
     date_created = models.DateTimeField(default=timezone.now)

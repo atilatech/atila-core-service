@@ -6,7 +6,7 @@ class ServiceClientChatBot(ChatBot):
     command_prefix = "client"
 
     @classmethod
-    def handle_command(cls, command_string: str, phone_number: str) -> ChatBotResponse:
+    def handle_command(cls, command_string: str, phone_number: str) -> dict:
         # Check if the command starts with the client prefix
         if command_string.lower().startswith(f"{cls.command_prefix} name "):
             return cls._handle_client_name(command_string, phone_number)
