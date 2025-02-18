@@ -13,3 +13,11 @@ curl -X POST \
   -d "Body=help&WaId=19058758867&ProfileName=Tomiwa[CURL]" \
   http://127.0.0.1:8001/api/chatbot/handle-incoming-message/
 ```
+
+# ChatBot Payments
+
+1. See: 
+
+```shell
+stripe listen --forward-to localhost:8001/api/chatbot/handle-stripe-payment-event/
+```

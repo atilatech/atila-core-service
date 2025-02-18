@@ -10,7 +10,7 @@ pytube.innertube._default_clients['ANDROID'] = pytube.innertube._default_clients
 price_per_video = 1
 price_per_hour = 1
 
-stripe.api_key = os.getenv('STRIPE_API_KEY')
+# stripe.api_key = os.getenv('STRIPE_API_KEY')
 YOUTUBE_API_KEY = os.getenv('YOUTUBE_API_KEY')
 STRIPE_TRANSCRIBE_PLAYLIST_PRODUCT_ID = os.getenv('STRIPE_TRANSCRIBE_PLAYLIST_PRODUCT_ID')
 youtube = build("youtube", "v3", developerKey=YOUTUBE_API_KEY)

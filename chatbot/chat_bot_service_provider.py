@@ -16,8 +16,12 @@ class ServiceProviderChatBot(ChatBot):
 
     @classmethod
     def get_payment_link(cls) -> str:
-        """Determine if the app is running in a development environment."""
-        if cls._is_dev():
+        """
+        Manage Payment Links:
+        https://dashboard.stripe.com/test/payment-links/plink_1QtrzoHeg0qPyG6k5XbtLyOv
+        https://dashboard.stripe.com/payment-links/plink_1QtdjVHeg0qPyG6kmDWowgtM
+        """
+        if cls.is_dev():
             return "https://buy.stripe.com/test_aEU29W7n85andNe8wE"
         else:
             return "https://buy.stripe.com/5kAdUigIlfdf3VC00f"
@@ -77,11 +81,14 @@ class ServiceProviderChatBot(ChatBot):
         service_booking, _ = ServiceBooking.objects.get_or_create(client=service_client,
                                                                   provider=provider,
                                                                   start_date=slot_start)
-        reservation = cls.cal_com_service.reserve_a_slot(provider, slot_start)
+        reservation = cls.cal_com_service.reserve_a_slot(service_booking)
         print("reservation", reservation)
         service_booking.reservation_uid = reservation["reservationUid"]
         service_booking.save()
         payment_link = cls.get_payment_link()
+        if cls.is_dev():
+            payment_link += "\n\nTest with 4242424242424242 and any future date and any CVV"
+
         return ChatBotResponse("🗓 Your reservation has been held for 5 minutes.\n\n"
                                f"💵 Pay the $5 deposit to secure your spot: {payment_link}")
 

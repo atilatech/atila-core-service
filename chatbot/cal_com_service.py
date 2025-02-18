@@ -49,15 +49,16 @@ class CalComService:
         except requests.exceptions.RequestException as e:
             return {"error": str(e)}
 
-    def reserve_a_slot(self, provider: ServiceProvider, slot_start: datetime) -> dict:
+    def reserve_a_slot(self, booking: ServiceBooking) -> dict:
         """
         Reserve a specific slot for a given event type.
         """
         endpoint = "slots/reservations"
         url = f"{self.BASE_URL}/{endpoint}"
+        provider = booking.provider
 
         # Ensure slot_start is in UTC
-        slot_start_utc = slot_start.astimezone(pytz.utc)
+        slot_start_utc = booking.start_date.astimezone(pytz.utc)
 
         payload = {
             "eventTypeId": int(provider.cal_com_event_type_id),
@@ -74,6 +75,29 @@ class CalComService:
             if response.status_code != 201:
                 return {"error": response.json()}
             return response.json().get("data", {})
+        except requests.exceptions.RequestException as e:
+            return {"error": str(e)}
+
+    def delete_reservation(self, booking: ServiceBooking) -> dict:
+        """
+        Delete a specific reservation by UID.
+        """
+        endpoint = "slots/reservations"
+        url = f"{self.BASE_URL}/{endpoint}/{booking.reservation_uid}"
+        provider = booking.provider
+
+        try:
+            response = requests.request("DELETE",
+                                        url,
+                                        headers=self._get_headers(endpoint,
+                                                                  provider.cal_com_api_key))
+            response.raise_for_status()
+
+            if response.status_code != 200:
+                return {"error": response.json()}
+
+            return {"message": "Reservation successfully deleted"}
+
         except requests.exceptions.RequestException as e:
             return {"error": str(e)}
 

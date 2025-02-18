@@ -25,7 +25,7 @@ class ChatBot(ABC):
         """Handle incoming commands and return a ChatBotResponse."""
 
     @classmethod
-    def _is_dev(cls) -> bool:
+    def is_dev(cls) -> bool:
         """Determine if the app is running in a development environment."""
         return ATILA_STAGE == "dev"
 
