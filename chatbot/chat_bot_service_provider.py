@@ -15,58 +15,75 @@ class ServiceProviderChatBot(ChatBot):
     cal_com_service = CalComService()
 
     @classmethod
+    def get_payment_link(cls) -> str:
+        """Determine if the app is running in a development environment."""
+        if cls._is_dev():
+            return "https://buy.stripe.com/test_aEU29W7n85andNe8wE"
+        else:
+            return "https://buy.stripe.com/5kAdUigIlfdf3VC00f"
+
+    @classmethod
     def handle_command(cls, message: str, phone_number: str) -> ChatBotResponse:
         if message.lower().startswith(f"{cls.command_prefix} "):
             if message.lower().startswith("service search "):
                 return cls._handle_service_search(message)
             elif message.lower().startswith("service slots "):
                 return cls._handle_service_slots(message)
-            elif message.lower().startswith("service book "):
+            elif message.lower().startswith("service reserve "):
                 return cls._handle_service_reservation(message, phone_number)
 
         return ChatBotResponse(
             "❌ Invalid command. Use 'service search <search_term>', 'service slots <service_provider_id>', "
-            "or 'service book <service_provider_id> <slot_index>'.")
+            "or 'service reserve <service_provider_id> <slot_index>'.")
 
     @classmethod
     def _handle_service_reservation(cls, message: str, phone_number: str) -> ChatBotResponse:
         parts = message.split()
         if len(parts) < 4:
-            return ChatBotResponse("❌ Invalid command format. Please use: service book <service_provider_id> "
+            return ChatBotResponse("❌ Invalid command format. Please use: service reserve <service_provider_id> "
                                    "<slot_index>.")
+
+        service_client, created = ServiceClient.objects.get_or_create(phone_number=phone_number)
+        if created:
+            return ChatBotResponse("❌ Please set your name and email before reserving a slot,"
+                                   " using the following 2 commands\n\n"
+                                   "1: client name <full_name>\n\n"
+                                   "1: client email <email>",
+                                   http_status=400)
+        elif not service_client.name:
+            return ChatBotResponse("❌ Please set your name using: *client name <full_name>*", http_status=400)
+        elif not service_client.email:
+            return ChatBotResponse("❌ Please set your email using: *client email <email>.*", http_status=400)
 
         service_provider_id = parts[2]
         slot_index = int(parts[3]) - 1
 
         try:
             provider = ServiceProvider.objects.get(id=service_provider_id)
-        except ServiceProvider.objects.DoesNotExist:
+        except ServiceProvider.DoesNotExist:
             return ChatBotResponse(f"❌ Service provider with ID {service_provider_id} not found.")
 
         slots = cls.cal_com_service.get_available_slots(provider)
-        if isinstance(slots, ChatBotResponse):
-            return slots
+
+        # Flatten the dictionary into a list of slot dictionaries
+        slots = [slot for date_slots in slots.values() for slot in date_slots]
 
         if slot_index < 0 or slot_index >= len(slots):
             return ChatBotResponse("❌ Invalid slot index. Please choose a valid slot.")
 
-        selected_slot = slots[slot_index]
-        try:
-            service_client = ServiceClient.objects.get(phone_number=phone_number)
-        except ServiceClient.objects.DoesNotExist:
-            return ChatBotResponse("❌ No service client found. Please set your name and email first.", http_status=400)
+        selected_slot = slots[slot_index]["start"]
 
-        if not service_client.name:
-            return ChatBotResponse("❌ Please set your name using: client name <full_name>.", http_status=400)
-        if not service_client.email:
-            return ChatBotResponse("❌ Please set your email using: client email <email>.", http_status=400)
-
-        slot_start = datetime.fromisoformat(selected_slot["start"]).astimezone(pytz.utc)
-        service_booking = ServiceBooking.objects.create(client=service_client, provider=provider, start_date=slot_start)
-        reservation = cls.cal_com_service.reserve_a_slot(service_booking, slot_start)
+        slot_start = datetime.fromisoformat(selected_slot).astimezone(pytz.utc)
+        service_booking, _ = ServiceBooking.objects.get_or_create(client=service_client,
+                                                                  provider=provider,
+                                                                  start_date=slot_start)
+        reservation = cls.cal_com_service.reserve_a_slot(provider, slot_start)
+        print("reservation", reservation)
         service_booking.reservation_uid = reservation["reservationUid"]
         service_booking.save()
-        return ChatBotResponse("❌ Please set your email using: client email <email>.", http_status=400)
+        payment_link = cls.get_payment_link()
+        return ChatBotResponse("🗓 Your reservation has been held for 5 minutes.\n\n"
+                               f"💵 Pay the $5 deposit to secure your spot: {payment_link}")
 
     @classmethod
     def _handle_service_search(cls, message: str) -> ChatBotResponse:
@@ -89,7 +106,7 @@ class ServiceProviderChatBot(ChatBot):
         service_provider_id = parts[2]
         try:
             provider = ServiceProvider.objects.get(id=service_provider_id)
-        except ServiceProvider.objects.DoesNotExist:
+        except ServiceProvider.DoesNotExist:
             return ChatBotResponse(f"❌ Service provider with ID {service_provider_id} not found.")
 
         data = cls.cal_com_service.get_available_slots(provider)
@@ -118,4 +135,3 @@ class ServiceProviderChatBot(ChatBot):
                 global_slot_index += 1
 
         return ChatBotResponse(response_text)
-

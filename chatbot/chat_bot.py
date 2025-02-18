@@ -1,6 +1,9 @@
 from abc import ABC, abstractmethod
+from typing import Union
+
 from rest_framework import status
 from atila.settings import ATILA_STAGE
+from chatbot.models import ServiceClient
 
 DEFAULT_CHAT_BOT_RESPONSE = "Invalid command.\n\nPlease type book <search_term> to book a service provider."
 

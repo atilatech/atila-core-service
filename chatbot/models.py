@@ -1,3 +1,4 @@
+import pytz
 from django.db import models
 from django.utils import timezone
 
@@ -44,7 +45,7 @@ class ServiceBooking(models.Model):
     client = models.OneToOneField(to=ServiceClient, on_delete=models.deletion.SET_NULL, null=True)
     provider = models.OneToOneField(to=ServiceProvider, on_delete=models.deletion.SET_NULL, null=True)
 
-    reservation_uid = models.CharField(blank=True, null=True)
+    reservation_uid = models.CharField(max_length=280, blank=True, null=True)
 
     start_date = models.DateTimeField(blank=True, null=True)
 
@@ -54,7 +55,14 @@ class ServiceBooking(models.Model):
 
     def __str__(self):
         if self.start_date:
-            formatted_date = self.start_date.strftime("%A, %B %d, %Y %I:%M %p")
+            # Set timezone to America/Toronto
+            toronto_tz = pytz.timezone('America/Toronto')
+
+            # Localize the datetime to America/Toronto timezone
+            localized_start_date = self.start_date.astimezone(toronto_tz)
+
+            # Format the date in the specified format
+            formatted_date = localized_start_date.strftime("%A, %B %d, %Y %I:%M %p")
         else:
             formatted_date = "No date set"
 
