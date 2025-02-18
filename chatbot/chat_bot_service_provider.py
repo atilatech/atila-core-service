@@ -1,3 +1,4 @@
+import urllib.parse
 from datetime import datetime
 
 import pytz
@@ -15,16 +16,22 @@ class ServiceProviderChatBot(ChatBot):
     cal_com_service = CalComService()
 
     @classmethod
-    def get_payment_link(cls) -> str:
+    def get_payment_link(cls, prefilled_email=None) -> str:
         """
         Manage Payment Links:
         https://dashboard.stripe.com/test/payment-links/plink_1QtrzoHeg0qPyG6k5XbtLyOv
         https://dashboard.stripe.com/payment-links/plink_1QtdjVHeg0qPyG6kmDWowgtM
         """
         if cls.is_dev():
-            return "https://buy.stripe.com/test_aEU29W7n85andNe8wE"
+            payment_link = "https://buy.stripe.com/test_aEU29W7n85andNe8wE"
         else:
-            return "https://buy.stripe.com/5kAdUigIlfdf3VC00f"
+            payment_link = "https://buy.stripe.com/5kAdUigIlfdf3VC00f"
+
+        if prefilled_email:
+            encoded_email = urllib.parse.quote(prefilled_email)
+            payment_link = f"{payment_link}?prefilled_email={encoded_email}"
+
+        return payment_link
 
     @classmethod
     def handle_command(cls, message: str, phone_number: str) -> ChatBotResponse:
@@ -85,12 +92,13 @@ class ServiceProviderChatBot(ChatBot):
         print("reservation", reservation)
         service_booking.reservation_uid = reservation["reservationUid"]
         service_booking.save()
-        payment_link = cls.get_payment_link()
+        payment_link = cls.get_payment_link(service_client.email)
         if cls.is_dev():
-            payment_link += "\n\nTest with 4242424242424242 and any future date and any CVV"
+            payment_link += "\n\nTest with 4242424242424242 and any future date and any CVC"
 
-        return ChatBotResponse("🗓 Your reservation has been held for 5 minutes.\n\n"
-                               f"💵 Pay the $5 deposit to secure your spot: {payment_link}")
+        return ChatBotResponse("🗓 Your reservation has been held for 10 minutes.\n\n"
+                               f"💵 Pay the $5 deposit to secure your spot: {payment_link}\n\n"
+                               f"✉️ Use {service_client.email} as the email in your payment")
 
     @classmethod
     def _handle_service_search(cls, message: str) -> ChatBotResponse:

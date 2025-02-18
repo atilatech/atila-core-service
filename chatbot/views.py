@@ -4,7 +4,7 @@ import stripe
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from chatbot.booking import Booking
+from chatbot.chat_bot_booking import BookingChatBot
 from chatbot.chat_bot import ChatBotResponse
 from chatbot.chat_bot_service_provider import ServiceProviderChatBot
 from chatbot.chat_bot_service_client import ServiceClientChatBot
@@ -44,9 +44,18 @@ class ChatBotViews:
         # Handle the event
         if event.type == 'payment_intent.succeeded':
             payment_intent = event.data.object  # contains a stripe.PaymentIntent
+            email = payment_intent.charges.data[0].billing_details.email
+            print("email", email)
+            if not email:
+                error_message = "No email in payment intent. Cannot link payment to a client"
+                print("error_message", error_message)
+                print("payment_intent.id", payment_intent.id)
+                return Response(data=error_message, status=400)
 
-            # Then define and call a method to handle the successful payment intent.
-            Booking.handle_payment_intent_succeeded(payment_intent)
+            response = BookingChatBot.handle_payment_intent_succeeded(payment_intent)
+            if response.destination_number:
+                send_whatsapp_message(response.text, response.destination_number)
+            return Response(response.text, status=response.status)
         else:
             print('Unhandled event type {}'.format(event.type))
 

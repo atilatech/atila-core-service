@@ -3,3 +3,4 @@ import os
 TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID', False)
 TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN', False)
 WHATSAPP_NUMBER = os.getenv('WHATSAPP_NUMBER', False)
+STRIPE_API_KEY = os.getenv('STRIPE_API_KEY', False)

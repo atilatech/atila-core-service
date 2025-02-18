@@ -42,14 +42,18 @@ class ServiceClient(models.Model):
 
 class ServiceBooking(models.Model):
     id = models.CharField(max_length=32, primary_key=True, default=random_code)
-    client = models.OneToOneField(to=ServiceClient, on_delete=models.deletion.SET_NULL, null=True)
-    provider = models.OneToOneField(to=ServiceProvider, on_delete=models.deletion.SET_NULL, null=True)
+    client = models.ForeignKey(to=ServiceClient, on_delete=models.deletion.SET_NULL, null=True)
+    provider = models.ForeignKey(to=ServiceProvider, on_delete=models.deletion.SET_NULL, null=True)
 
     reservation_uid = models.CharField(max_length=280, blank=True, null=True)
+    booking_uid = models.CharField(max_length=280, blank=True, null=True)
 
     start_date = models.DateTimeField(blank=True, null=True)
 
     date_created = models.DateTimeField(default=timezone.now)
+
+    deposit_paid = models.BooleanField(default=False)
+    deposit_payment_intent_id = models.CharField(max_length=32, blank=True, null=True)
 
     objects = models.Manager()
 

@@ -10,10 +10,13 @@ DEFAULT_CHAT_BOT_RESPONSE = "Invalid command.\n\nPlease type book <search_term> 
 
 class ChatBotResponse:
     def __init__(self, text: str = DEFAULT_CHAT_BOT_RESPONSE,
-                 media_url: str = None, http_status: int = status.HTTP_200_OK):
+                 media_url: str = None,
+                 http_status: int = status.HTTP_200_OK,
+                 destination_number: Union[int, str] = None):
         self.text = text
         self.media_url = media_url
         self.status = http_status
+        self.destination_number = destination_number
 
 
 class ChatBot(ABC):

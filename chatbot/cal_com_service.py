@@ -6,6 +6,7 @@ from chatbot.models import ServiceBooking, ServiceProvider
 
 class CalComService:
     BASE_URL = "https://api.cal.com/v2"
+    RESERVATION_DURATION = 10  # minutes
 
     API_VERSIONS = {
         "slots": "2024-09-04",
@@ -49,7 +50,7 @@ class CalComService:
         except requests.exceptions.RequestException as e:
             return {"error": str(e)}
 
-    def reserve_a_slot(self, booking: ServiceBooking) -> dict:
+    def reserve_a_slot(self, booking: ServiceBooking, reservation_duration: int = RESERVATION_DURATION) -> dict:
         """
         Reserve a specific slot for a given event type.
         """
@@ -63,6 +64,7 @@ class CalComService:
         payload = {
             "eventTypeId": int(provider.cal_com_event_type_id),
             "slotStart": slot_start_utc.isoformat(),
+            "reservationDuration": reservation_duration,
         }
 
         try:
@@ -129,7 +131,7 @@ class CalComService:
                                      headers=self._get_headers(end_point, provider.cal_com_api_key))
             response.raise_for_status()
             # Check if the API response is successful
-            if response.status_code != 200:
+            if response.status_code != 201:
                 return {"error": response.json()}
             return response.json().get("data", {})
         except requests.exceptions.RequestException as e:
