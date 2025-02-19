@@ -62,7 +62,7 @@ class ServiceProviderManageChatBot(ChatBot):
         # Split command and validate
         command_parts = self.current_command.split()
         if not command_parts:
-            return ChatBotResponse("Empty command.")
+            return ChatBotResponse("Please enter a command. Type 'service edit help' for assistance.")
 
         # Extract base command (up to 3 parts for commands like "service edit name")
         base_command = " ".join(command_parts[:3]) if len(command_parts) > 2 else " ".join(command_parts)
@@ -72,55 +72,70 @@ class ServiceProviderManageChatBot(ChatBot):
             if base_command.startswith(cmd):
                 handler = getattr(self, config["handler"], None)
                 if not handler:
-                    return ChatBotResponse(f"Handler {config['handler']} not implemented.")
+                    return ChatBotResponse(f"Oops! It seems there’s an issue with the command handler."
+                                           f" Please try again.")
 
                 # Extract arguments based on actual command length
                 args = command_parts[len(cmd.split()):]
-                if len(args) != config.get("args_count", 0):
-                    return ChatBotResponse(f"Invalid number of arguments for '{cmd}'.")
+
+                # Handle multi-word descriptions/names
+                if config.get("field") in ["name", "description"] and len(args) > 1:
+                    # Multi-word case for name/description
+                    value = " ".join(args[1:])  # Join all remaining arguments as the field value
+                    args = [args[0], value]  # Recreate args with the service provider ID and value
+                elif len(args) != config.get("args_count", 0):
+                    return ChatBotResponse(f"Invalid number of arguments for '{cmd}'. Make sure to follow the format: "
+                                           f"{config['pattern']}")
 
                 try:
                     return handler(*args)
                 except Exception as e:
-                    return ChatBotResponse(f"Error processing command: {str(e)}")
+                    return ChatBotResponse(f"Error processing command: {str(e)}."
+                                           f" If you're stuck, try 'service edit help' for guidance.")
 
-        return ChatBotResponse("Invalid command.")
+        return ChatBotResponse("Sorry, I didn’t understand that command. "
+                               "Please type 'service edit help' to get a list of available commands.")
 
     def _handle_create_service(self) -> ChatBotResponse:
         """Create a new service provider for the client."""
         try:
             service = ServiceProvider.objects.create(client=self.client)
-            return ChatBotResponse(f"Service created with ID: {service.id}")
+            next_steps_help = self._handle_edit_help().text
+            return ChatBotResponse(f"Your service has been created successfully! Service ID: {service.id}\n\n"
+                                   f"{next_steps_help}")
         except Exception as e:
-            return ChatBotResponse(f"Error creating service: {str(e)}")
+            return ChatBotResponse(f"Something went wrong while creating the service: {str(e)}. Please try again or "
+                                   f"contact support.")
 
     def _handle_edit_service(self, service_provider_id: str, value: str) -> ChatBotResponse:
         """Edit a service provider field."""
         try:
             field = self._extract_field_from_command()
             if not field:
-                return ChatBotResponse("Invalid edit command.")
+                return ChatBotResponse("Invalid edit command. Please specify what you want to edit (e.g., name, "
+                                       "description).")
 
-            service = ServiceProvider.objects.get(
-                id=service_provider_id,
-                client=self.client
-            )
+            service = ServiceProvider.objects.get(id=service_provider_id)
             setattr(service, field, value)
             service.save()
-            return ChatBotResponse(f"Service {field} updated successfully.")
+            return ChatBotResponse(f"Service {field} has been successfully updated to: {value}.")
         except ServiceProvider.DoesNotExist:
-            return ChatBotResponse("Service provider not found.")
+            return ChatBotResponse(f"Service provider with ID {service_provider_id} not found. Please check and try "
+                                   f"again.")
         except Exception as e:
-            return ChatBotResponse(f"Error updating service: {str(e)}")
+            return ChatBotResponse(f"Error updating service: {str(e)}. Please ensure your input is correct.")
 
     def _handle_edit_help(self) -> ChatBotResponse:
         """Return help text for available commands."""
         commands = "\n".join([
-            config["pattern"]
+            f"• {config['pattern']}"  # Make help more readable
             for cmd, config in self.COMMANDS.items()
             if "edit" in cmd
         ])
-        return ChatBotResponse(f"Available commands:\nservice create\n{commands}")
+        return ChatBotResponse(f"Here are the available commands to manage your service:\n\n"
+                               f"{commands}\n\n"
+                               f"For step-by-step guidance on setting up your schedule, visit:\n"
+                               f"https://info.atila.ca/How-to-Make-a-Cal-Com-Account-1889da443a0e807fadaeff80eaa817e4")
 
     def _extract_field_from_command(self) -> Optional[str]:
         """Extract the field name from the current command."""
