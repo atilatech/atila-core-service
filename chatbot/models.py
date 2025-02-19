@@ -15,9 +15,7 @@ class ServiceProvider(models.Model):
     name = models.CharField(max_length=128, default="")
     description = models.TextField(blank=True, null=True, default="")
 
-    cal_com_username = models.CharField(max_length=128, default="")
     cal_com_event_type_id = models.CharField(max_length=128, default="")
-    cal_com_event_type_slug = models.CharField(max_length=280, default="")
     cal_com_api_key = models.TextField(blank=True, null=True, default="")
 
     date_created = models.DateTimeField(default=timezone.now)

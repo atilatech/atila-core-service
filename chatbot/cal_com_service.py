@@ -33,8 +33,7 @@ class CalComService:
         query_params = {
             "start": current_date.isoformat(),
             "end": end_date.isoformat(),
-            "eventTypeSlug": provider.cal_com_event_type_slug,
-            "username": provider.cal_com_username,
+            "eventTypeId": provider.cal_com_event_type_id,
             "timeZone": "America/Toronto"
         }
 
