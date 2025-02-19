@@ -7,6 +7,7 @@ from rest_framework import status
 
 from chatbot.cal_com_service import CalComService
 from chatbot.chat_bot import ChatBot, ChatBotResponse
+from chatbot.chat_bot_service_provider_manage import ServiceProviderManageChatBot
 from chatbot.models import ServiceProvider, ServiceClient, ServiceBooking
 
 
@@ -14,10 +15,17 @@ class ServiceProviderChatBot(ChatBot):
     command_prefix = "service"
 
     cal_com_service = CalComService()
+    service_provider_manage_chat_bot = ServiceProviderManageChatBot()
 
     @classmethod
     def handle_command(cls, message: str, phone_number: str) -> ChatBotResponse:
         if message.lower().startswith(f"{cls.command_prefix} "):
+            # Delegate to ServiceProviderManageChatBot for manage commands
+            if any(message.lower().startswith(prefix) for prefix in
+                   cls.service_provider_manage_chat_bot.command_prefix):
+                return cls.service_provider_manage_chat_bot.handle_command(message, phone_number)
+
+            # Handle regular service commands like search, slots, and reservation
             if message.lower().startswith("service search "):
                 return cls._handle_service_search(message)
             elif message.lower().startswith("service slots "):
@@ -27,7 +35,8 @@ class ServiceProviderChatBot(ChatBot):
 
         return ChatBotResponse(
             "❌ Invalid command. Use 'service search <search_term>', 'service slots <service_provider_id>', "
-            "or 'service reserve <service_provider_id> <slot_index>'.")
+            "or 'service reserve <service_provider_id> <slot_index>'."
+        )
 
     @classmethod
     def _handle_service_reservation(cls, message: str, phone_number: str) -> ChatBotResponse:

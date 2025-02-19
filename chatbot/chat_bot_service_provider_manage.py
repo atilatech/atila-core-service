@@ -5,7 +5,7 @@ from chatbot.chat_bot import ChatBotResponse, ChatBot
 
 
 class ServiceProviderManageChatBot(ChatBot):
-    command_prefix = "service"
+    command_prefix = ["service create", "service edit"]
 
     COMMANDS = {
         "service create": {
