@@ -25,6 +25,9 @@ class ServiceProviderChatBot(ChatBot):
                    cls.service_provider_manage_chat_bot.command_prefix):
                 return cls.service_provider_manage_chat_bot.handle_command(message, phone_number)
 
+            # Handle regular service commands like list, search, slots, and reservation
+            if message.lower().startswith("service list"):
+                return cls._handle_service_list()
             # Handle regular service commands like search, slots, and reservation
             if message.lower().startswith("service search "):
                 return cls._handle_service_search(message)
@@ -37,6 +40,18 @@ class ServiceProviderChatBot(ChatBot):
             "❌ Invalid command. Use 'service search <search_term>', 'service slots <service_provider_id>', "
             "or 'service reserve <service_provider_id> <slot_index>'."
         )
+
+    @classmethod
+    def _handle_service_list(cls) -> ChatBotResponse:
+        """Handle the "service list" command to show all services"""
+        providers = ServiceProvider.objects.all()[:5]  # Show top 5 providers for now
+        if providers:
+            response_text = "*List of Services Available:*\n"
+            for idx, provider in enumerate(providers, start=1):
+                response_text += f"{idx}. *{provider.name}* ({provider.id})\n   {provider.description}\n"
+        else:
+            response_text = "❌ No services available."
+        return ChatBotResponse(response_text)
 
     @classmethod
     def _handle_service_reservation(cls, message: str, phone_number: str) -> ChatBotResponse:
