@@ -38,10 +38,10 @@ class ChatBot(ABC):
         return ChatBotResponse(message, http_status=status.HTTP_400_BAD_REQUEST)
 
     @classmethod
-    def is_valid_client(cls, phone_number) -> Union[ChatBotResponse, ServiceClient]:
+    def is_valid_client(cls, phone_number, action) -> Union[ChatBotResponse, ServiceClient]:
         service_client, created = ServiceClient.objects.get_or_create(phone_number=phone_number)
         if created:
-            return ChatBotResponse("❌ Please set your name and email before reserving a slot,"
+            return ChatBotResponse(f"❌ Please set your name and email before {action},"
                                    " using the following 2 commands\n\n"
                                    "1: client name <full_name>\n\n"
                                    "1: client email <email>",

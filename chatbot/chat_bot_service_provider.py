@@ -1,5 +1,6 @@
 import urllib.parse
 from datetime import datetime
+from typing import Optional
 
 import pytz
 from django.db.models import Q
@@ -14,35 +15,35 @@ from chatbot.models import ServiceProvider, ServiceClient, ServiceBooking
 class ServiceProviderChatBot(ChatBot):
     command_prefix = "service"
 
-    cal_com_service = CalComService()
-    service_provider_manage_chat_bot = ServiceProviderManageChatBot()
+    def __init__(self):
+        self.cal_com_service = CalComService()
+        self.service_provider_manage_chat_bot = ServiceProviderManageChatBot()
+        self.client: Optional[ServiceClient] = None
 
-    @classmethod
-    def handle_command(cls, message: str, phone_number: str) -> ChatBotResponse:
-        if message.lower().startswith(f"{cls.command_prefix} "):
+    def handle_command(self, message: str, phone_number: str) -> ChatBotResponse:
+        if message.lower().startswith(f"{self.command_prefix} "):
             # Delegate to ServiceProviderManageChatBot for manage commands
             if any(message.lower().startswith(prefix) for prefix in
-                   cls.service_provider_manage_chat_bot.command_prefix):
-                return cls.service_provider_manage_chat_bot.handle_command(message, phone_number)
+                   self.service_provider_manage_chat_bot.command_prefix):
+                return self.service_provider_manage_chat_bot.handle_command(message, phone_number)
 
             # Handle regular service commands like list, search, slots, and reservation
             if message.lower().startswith("service list"):
-                return cls._handle_service_list()
-            # Handle regular service commands like search, slots, and reservation
+                return self._handle_service_list()
             if message.lower().startswith("service search "):
-                return cls._handle_service_search(message)
+                return self._handle_service_search(message)
             elif message.lower().startswith("service slots "):
-                return cls._handle_service_slots(message)
+                return self._handle_service_slots(message)
             elif message.lower().startswith("service reserve "):
-                return cls._handle_service_reservation(message, phone_number)
+                return self._handle_service_reservation(message, phone_number)
 
         return ChatBotResponse(
             "❌ Invalid command. Use 'service search <search_term>', 'service slots <service_provider_id>', "
             "or 'service reserve <service_provider_id> <slot_index>'."
         )
 
-    @classmethod
-    def _handle_service_list(cls) -> ChatBotResponse:
+    @staticmethod
+    def _handle_service_list() -> ChatBotResponse:
         """Handle the "service list" command to show all services"""
         providers = ServiceProvider.objects.all()[:5]  # Show top 5 providers for now
         if providers:
@@ -53,24 +54,17 @@ class ServiceProviderChatBot(ChatBot):
             response_text = "❌ No services available."
         return ChatBotResponse(response_text)
 
-    @classmethod
-    def _handle_service_reservation(cls, message: str, phone_number: str) -> ChatBotResponse:
+    def _handle_service_reservation(self, message: str, phone_number: str) -> ChatBotResponse:
         parts = message.split()
         if len(parts) < 4:
             return ChatBotResponse("❌ Invalid command format. Please use: service reserve <service_provider_id> "
                                    "<slot_index>.")
 
-        service_client, created = ServiceClient.objects.get_or_create(phone_number=phone_number)
-        if created:
-            return ChatBotResponse("❌ Please set your name and email before reserving a slot,"
-                                   " using the following 2 commands\n\n"
-                                   "1: client name <full_name>\n\n"
-                                   "1: client email <email>",
-                                   http_status=400)
-        elif not service_client.name:
-            return ChatBotResponse("❌ Please set your name using: *client name <full_name>*", http_status=400)
-        elif not service_client.email:
-            return ChatBotResponse("❌ Please set your email using: *client email <email>.*", http_status=400)
+        # Validate client
+        response = self.is_valid_client(phone_number, "reserving a slot")
+        if isinstance(response, ChatBotResponse):
+            return response
+        self.client = response
 
         service_provider_id = parts[2]
         slot_index = int(parts[3]) - 1
@@ -80,7 +74,7 @@ class ServiceProviderChatBot(ChatBot):
         except ServiceProvider.DoesNotExist:
             return ChatBotResponse(f"❌ Service provider with ID {service_provider_id} not found.")
 
-        slots = cls.cal_com_service.get_available_slots(provider)
+        slots = self.cal_com_service.get_available_slots(provider)
 
         # Flatten the dictionary into a list of slot dictionaries
         slots = [slot for date_slots in slots.values() for slot in date_slots]
@@ -91,23 +85,22 @@ class ServiceProviderChatBot(ChatBot):
         selected_slot = slots[slot_index]["start"]
 
         slot_start = datetime.fromisoformat(selected_slot).astimezone(pytz.utc)
-        service_booking, _ = ServiceBooking.objects.get_or_create(client=service_client,
+        service_booking, _ = ServiceBooking.objects.get_or_create(client=self.client,
                                                                   provider=provider,
                                                                   start_date=slot_start)
-        reservation = cls.cal_com_service.reserve_a_slot(service_booking)
-        print("reservation", reservation)
+        reservation = self.cal_com_service.reserve_a_slot(service_booking)
         service_booking.reservation_uid = reservation["reservationUid"]
         service_booking.save()
-        payment_link = cls._get_payment_link(service_client.email)
-        if cls.is_dev():
+        payment_link = self._get_payment_link(self.client.email)
+        if self.is_dev():
             payment_link += "\n\nTest with 4242424242424242 and any future date and any CVC"
 
         return ChatBotResponse("🗓 Your reservation has been held for 10 minutes.\n\n"
                                f"💵 Pay the $5 deposit to secure your spot: {payment_link}\n\n"
-                               f"✉️ Use {service_client.email} as the email in your payment")
+                               f"✉️ Use {self.client.email} as the email in your payment")
 
-    @classmethod
-    def _handle_service_search(cls, message: str) -> ChatBotResponse:
+    @staticmethod
+    def _handle_service_search(message: str) -> ChatBotResponse:
         search_term = message[len("service search") + 1:].strip()
         providers = ServiceProvider.objects.filter(Q(description__icontains=search_term))[:5]
         if providers:
@@ -118,8 +111,7 @@ class ServiceProviderChatBot(ChatBot):
             response_text = f"❌ No service providers found for '{search_term}'."
         return ChatBotResponse(response_text)
 
-    @classmethod
-    def _handle_service_slots(cls, message: str) -> ChatBotResponse:
+    def _handle_service_slots(self, message: str) -> ChatBotResponse:
         parts = message.split()
         if len(parts) < 3:
             return ChatBotResponse("❌ Invalid command format. Please use: service slots <service_provider_id>.")
@@ -130,7 +122,7 @@ class ServiceProviderChatBot(ChatBot):
         except ServiceProvider.DoesNotExist:
             return ChatBotResponse(f"❌ Service provider with ID {service_provider_id} not found.")
 
-        data = cls.cal_com_service.get_available_slots(provider)
+        data = self.cal_com_service.get_available_slots(provider)
 
         if "error" in data:
             return ChatBotResponse(data["error"], http_status=status.HTTP_400_BAD_REQUEST)
@@ -157,14 +149,13 @@ class ServiceProviderChatBot(ChatBot):
 
         return ChatBotResponse(response_text)
 
-    @classmethod
-    def _get_payment_link(cls, prefilled_email=None) -> str:
+    def _get_payment_link(self, prefilled_email=None) -> str:
         """
         Manage Payment Links:
         https://dashboard.stripe.com/test/payment-links/plink_1QtrzoHeg0qPyG6k5XbtLyOv
         https://dashboard.stripe.com/payment-links/plink_1QtdjVHeg0qPyG6kmDWowgtM
         """
-        if cls.is_dev():
+        if self.is_dev():
             payment_link = "https://buy.stripe.com/test_aEU29W7n85andNe8wE"
         else:
             payment_link = "https://buy.stripe.com/5kAdUigIlfdf3VC00f"

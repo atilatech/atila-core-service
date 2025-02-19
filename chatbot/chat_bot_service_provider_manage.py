@@ -54,7 +54,7 @@ class ServiceProviderManageChatBot(ChatBot):
         self.current_command = command_string.strip()
 
         # Validate client
-        response = self.is_valid_client(phone_number)
+        response = self.is_valid_client(phone_number, "managing a service")
         if isinstance(response, ChatBotResponse):
             return response
         self.client = response

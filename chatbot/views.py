@@ -21,10 +21,12 @@ class ChatBotViews:
         print("incoming_whatsapp_number", incoming_whatsapp_number)
         media_url = None
         response = ChatBotResponse()
-        if command_string.lower().startswith(ServiceClientChatBot.command_prefix):
-            response = ServiceClientChatBot.handle_command(command_string, incoming_whatsapp_number)
-        if command_string.lower().startswith(ServiceProviderChatBot.command_prefix):
-            response = ServiceProviderChatBot.handle_command(command_string, incoming_whatsapp_number)
+        service_provider_chat_bot = ServiceProviderChatBot()
+        service_client_chat_bot = ServiceClientChatBot()
+        if command_string.lower().startswith(service_client_chat_bot.command_prefix):
+            response = service_client_chat_bot.handle_command(command_string, incoming_whatsapp_number)
+        if command_string.lower().startswith(service_provider_chat_bot.command_prefix):
+            response = service_provider_chat_bot.handle_command(command_string, incoming_whatsapp_number)
 
         send_whatsapp_message(response.text, incoming_whatsapp_number, media_url)
         return Response({'message': response.text}, status=response.status)
