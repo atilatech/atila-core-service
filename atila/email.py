@@ -6,8 +6,8 @@ from sendgrid.helpers.mail import Content, Mail, Category, CustomArg
 import boto3
 from botocore.exceptions import ClientError
 
-from atila.utils import validate_substituted_variables
 from atila.settings import ATILA_STAGE
+from atila.utils import validate_substituted_variables
 import logging
 
 from python_http_client.exceptions import HTTPError

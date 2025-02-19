@@ -4,12 +4,12 @@ from .models import ServiceProvider, ServiceClient, ServiceBooking
 
 @admin.register(ServiceProvider)
 class ServiceProviderAdmin(admin.ModelAdmin):
-    list_display = ("id", "user", "name", "description", "cal_com_event_type_id")
-    search_fields = ("id", "user__email", "name")  # Enable searching by ID, user email, and name
-    list_filter = ("user",)
+    list_display = ("id", "client", "name", "description", "cal_com_event_type_id")
+    search_fields = ("id", "client__email", "name")  # Enable searching by ID, client email, and name
+    list_filter = ("client",)
     ordering = ("id",)
     list_editable = ("name", "description")  # Enable inline editing for these fields
-    list_display_links = ("id", "user")  # Prevent name and description from being clickable links
+    list_display_links = ("id", "client")  # Prevent name and description from being clickable links
 
 
 @admin.register(ServiceClient)

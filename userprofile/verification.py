@@ -1,6 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
-from atila.email import send_email
 from atila.utils import random_string
+from atila.email import send_email
 from userprofile.models import UserProfile
 
 

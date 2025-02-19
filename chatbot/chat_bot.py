@@ -36,3 +36,19 @@ class ChatBot(ABC):
     def _send_error_message(cls, message: str):
         """Send an error message as a ChatBotResponse."""
         return ChatBotResponse(message, http_status=status.HTTP_400_BAD_REQUEST)
+
+    @classmethod
+    def is_valid_client(cls, phone_number) -> Union[ChatBotResponse, ServiceClient]:
+        service_client, created = ServiceClient.objects.get_or_create(phone_number=phone_number)
+        if created:
+            return ChatBotResponse("❌ Please set your name and email before reserving a slot,"
+                                   " using the following 2 commands\n\n"
+                                   "1: client name <full_name>\n\n"
+                                   "1: client email <email>",
+                                   http_status=400)
+        elif not service_client.name:
+            return ChatBotResponse("❌ Please set your name using: *client name <full_name>*", http_status=400)
+        elif not service_client.email:
+            return ChatBotResponse("❌ Please set your email using: *client email <email>.*", http_status=400)
+
+        return service_client
